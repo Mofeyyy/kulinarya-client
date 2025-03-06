@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { ThemeProvider } from "@/context/theme-provider";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { ModeToggle } from "./components/mode-toggle";
 
 function App() {
   // Test DB Connection
@@ -17,11 +19,12 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-gray-900 flex justify-center items-center">
-      <Toaster />
-
-      <p className="text-5xl font-bold text-white">Kulinarya Frontend</p>
-    </div>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <div className="h-screen w-screen bg-background flex justify-center items-center">
+        <Toaster />
+        <ModeToggle />
+      </div>
+    </ThemeProvider>
   );
 }
 
