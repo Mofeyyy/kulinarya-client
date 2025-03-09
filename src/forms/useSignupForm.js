@@ -38,7 +38,7 @@ const useSignupForm = () => {
     }
 
     reset();
-    document.querySelector("#emailInput").focus();
+    document.querySelector(".emailInput").focus();
   };
 
   return {

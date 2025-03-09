@@ -16,12 +16,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import InputPopupMessage from "@/components/form/InputPopupMessage";
 
 // Imported Stores
 import useAuthStore from "@/stores/useAuthStore";
 
 // Imported Forms
 import useSignupForm from "@/forms/useSignupForm";
+
+// Imported Assets
+import Logo from "@/components/Logo";
 
 // ----------------------------------------------------------------
 
@@ -45,11 +49,12 @@ export function LoginForm({ className, ...props }) {
         className={cn("flex flex-col gap-6", className)}
         {...props}
       >
+        <Logo className="self-center size-24 lg:hidden" />
         <div className="flex flex-col items-center gap-2 text-center">
-          <p className="text-2xl font-bold">Login to your account</p>
+          <p className="text-2xl font-bold">Hello Again!</p>
 
           <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+            Login and share your amazing Filipino recipes!
           </p>
         </div>
 
@@ -62,7 +67,7 @@ export function LoginForm({ className, ...props }) {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  id="emailInput"
+                  className="emailInput"
                   type="email"
                   placeholder="m@example.com"
                   {...field}
@@ -91,7 +96,7 @@ export function LoginForm({ className, ...props }) {
               </div>
 
               <FormControl>
-                <Input id="passwordInput" type="password" {...field} />
+                <Input type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -126,19 +131,3 @@ export function LoginForm({ className, ...props }) {
     </Form>
   );
 }
-
-const InputPopupMessage = ({ message, isError }) => {
-  return (
-    <div
-      className={`w-full border-2 px-3 py-3 rounded-lg text-sm ${
-        isError ? `border-red-600 bg-red-200 ` : `border-green-600 bg-green-300`
-      }  `}
-    >
-      <p
-        className={`font-medium ${isError ? "text-red-600" : "text-green-600"}`}
-      >
-        {message}
-      </p>
-    </div>
-  );
-};

@@ -9,14 +9,14 @@ const Login = () => {
 
   useEffect(() => {
     document.title = "Login | Kulinarya";
-    document.querySelector("#emailInput").focus();
+    document.querySelector(".emailInput").focus();
   }, []);
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <CircleArrowLeft
-          className="size-12 cursor-pointer hover:text-primary transition"
+          className="size-10 sm:size-12 cursor-pointer hover:text-primary transition"
           onClick={() => navigate("/")}
         />
 
