@@ -18,25 +18,25 @@ import {
 } from "@/components/ui/form";
 
 // Imported Forms
-import useLoginForm from "@/forms/useLoginForm";
+import useSignupForm from "@/forms/useSignupForm";
 
 // Imported Assets
 import Logo from "@/components/Logo";
 
 // ----------------------------------------------------------------
 
-export function LoginForm({ className, ...props }) {
+const SignupForm = ({ className, ...props }) => {
   const {
-    loginForm,
+    signupForm,
     control,
     handleSubmit,
     isSubmitting,
     onSubmit,
     isPending,
-  } = useLoginForm();
+  } = useSignupForm();
 
   return (
-    <Form {...loginForm}>
+    <Form {...signupForm}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn("flex flex-col gap-6", className)}
@@ -44,12 +44,42 @@ export function LoginForm({ className, ...props }) {
       >
         <Logo className="self-center size-24 lg:hidden" />
         <div className="flex flex-col items-center gap-2 text-center">
-          <p className="text-2xl font-bold">Hello Again!</p>
+          <p className="text-2xl font-bold">Welcome to Kulinarya!</p>
 
           <p className="text-muted-foreground text-sm text-balance">
-            Login and share your amazing Filipino recipes!
+            Signup and share your amazing Filipino recipes!
           </p>
         </div>
+
+        {/* First Name Input */}
+        <FormField
+          control={control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Sean" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Last Name Input */}
+        <FormField
+          control={control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Bakal" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Email Input */}
         <FormField
@@ -72,17 +102,22 @@ export function LoginForm({ className, ...props }) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <div className="flex justify-between">
-                <FormLabel>Password</FormLabel>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="••••••" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                <Link
-                  to="/forgot-password"
-                  className="text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-
+        {/* Confirm Password */}
+        <FormField
+          control={control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="••••••" {...field} />
               </FormControl>
@@ -102,20 +137,22 @@ export function LoginForm({ className, ...props }) {
           {isSubmitting || isPending ? (
             <LoaderCircle className="animate-spin" />
           ) : (
-            "Login"
+            "Signup"
           )}
         </Button>
 
         <p className="text-center text-sm">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link
             to="/signup"
             className="underline underline-offset-4 hover:opacity-80 transition"
           >
-            Sign up
+            Login
           </Link>
         </p>
       </form>
     </Form>
   );
-}
+};
+
+export default SignupForm;

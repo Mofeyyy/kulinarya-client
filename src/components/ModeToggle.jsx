@@ -1,5 +1,5 @@
 // Imported Stores
-import useThemeStore from "@/stores/useThemeStore";
+import useThemeStore from "@/hooks/stores/useThemeStore";
 
 // Imported Components
 import { Button } from "@/components/ui/button";

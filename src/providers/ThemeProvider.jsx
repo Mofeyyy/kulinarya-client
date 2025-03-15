@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // Imported Stores
-import useThemeStore from "@/stores/useThemeStore";
+import useThemeStore from "@/hooks/stores/useThemeStore";
 
 // -------------------------------------------------------------------
 

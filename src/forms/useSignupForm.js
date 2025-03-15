@@ -1,53 +1,63 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/schemas/authSchema";
-import useAuthStore from "@/stores/useAuthStore";
+import { signupSchema } from "@/schemas/authSchema";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import useSignupMutation from "@/hooks/mutations/useSignupMutation";
+
+// ----------------------------------------------------------------
 
 const useSignupForm = () => {
-  const { login } = useAuthStore();
+  const { mutate, isPending } = useSignupMutation();
   const navigateTo = useNavigate();
 
-  const loginForm = useForm({
+  const signupForm = useForm({
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
     mode: "onTouched",
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(signupSchema),
   });
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitSuccessful, isSubmitting },
-  } = loginForm;
+    setFocus,
+    formState: { isSubmitting },
+  } = signupForm;
 
   const onSubmit = async (data) => {
-    console.log(data);
+    const { email, password, firstName, lastName } = data;
 
-    const { email, password } = data;
-    const result = await login(email, password);
-
-    if (result.success) {
-      toast.success("Login Success!");
-      navigateTo("/");
-      reset();
-    }
-
-    reset();
-    document.querySelector(".emailInput").focus();
+    mutate(
+      { email, password, firstName, lastName },
+      {
+        onSuccess: () => {
+          toast.success("Signup Success!, Please Login");
+          navigateTo("/login");
+          reset();
+        },
+        onError: (error) => {
+          toast.error(error?.message || "Signup Failed! Please try again.");
+          setFocus("firstName");
+          reset();
+        },
+      }
+    );
   };
 
   return {
-    loginForm,
+    signupForm,
     control,
     handleSubmit,
-    isSubmitSuccessful,
     isSubmitting,
     onSubmit,
+    isPending,
   };
 };
 

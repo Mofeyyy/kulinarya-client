@@ -5,7 +5,6 @@ import toast, { Toaster } from "react-hot-toast";
 
 // Imported Context
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import useAuthStore from "@/stores/useAuthStore.js";
 
 // Imported Layouts
 import AppLayout from "@/layouts/AppLayout";
@@ -16,13 +15,16 @@ import ScreenLoader from "@/components/ScreenLoader";
 // Imported Pages With Lazy Loading
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
 const LoginPage = lazy(() => import("@/pages/auth/Login.jsx"));
+const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
+
+// Imported Hooks
+import useFetchUserDetails from "./hooks/queries/useUserDetails";
+import useAuthStore from "./hooks/stores/useAuthStore";
 
 // --------------------------------------------------------------------
 
 function App() {
-  const { fetchUser } = useAuthStore();
-
   // Initial Login and Test DB Connection
   useEffect(() => {
     axios
@@ -36,10 +38,15 @@ function App() {
       .catch((error) => console.log(`Error: ${error}`));
   }, []);
 
-  // Auto Fetch Login Credentials If User Is Already Logged In
+  // Fetching the user details on page load
+  const { setUserDetails, isLoggedIn } = useAuthStore();
+  const { data: fetchedUserData } = useFetchUserDetails(isLoggedIn);
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    if (fetchedUserData) {
+      const { user } = fetchedUserData;
+      setUserDetails(user);
+    }
+  }, [fetchedUserData, setUserDetails]);
 
   return (
     <ThemeProvider>
@@ -49,6 +56,7 @@ function App() {
         <Suspense fallback={<ScreenLoader />}>
           <Routes>
             <Route path="login" element={<LoginPage />} />
+            <Route path="signup" element={<SignupPage />} />
 
             <Route path="/" element={<AppLayout />}>
               <Route index element={<HomePage />} />
