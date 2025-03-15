@@ -16,10 +16,11 @@ import ScreenLoader from "@/components/ScreenLoader";
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
 const LoginPage = lazy(() => import("@/pages/auth/Login.jsx"));
 const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
+const VerifyPage = lazy(() => import("@/pages/auth/Verify.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
 
 // Imported Hooks
-import useFetchUserDetails from "./hooks/queries/useUserDetails";
+import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
 import useAuthStore from "./hooks/stores/useAuthStore";
 
 // --------------------------------------------------------------------
@@ -57,6 +58,7 @@ function App() {
           <Routes>
             <Route path="login" element={<LoginPage />} />
             <Route path="signup" element={<SignupPage />} />
+            <Route path="verify-email" element={<VerifyPage />} />
 
             <Route path="/" element={<AppLayout />}>
               <Route index element={<HomePage />} />

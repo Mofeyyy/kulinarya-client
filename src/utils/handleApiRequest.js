@@ -3,6 +3,11 @@ const handleApiRequest = async (fn) => {
     const response = await fn();
     return response.data;
   } catch (error) {
+    console.error(
+      "API Error:",
+      error?.response?.data?.message || "Something went wrong"
+    );
+
     if (error.response) {
       // Extract the status and message from the response
       const { data } = error.response;
