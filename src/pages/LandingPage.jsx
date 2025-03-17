@@ -57,56 +57,62 @@ const LandingPage = () => {
     <div className={`w-full min-h-screen flex flex-col items-center ${isDarkMode ? 'bg-black text-white' : 'bg-gray-100 text-white'}`}>
       
       {/* Hero Section */}
-      <section className="relative w-full h-[80vh] flex flex-col items-center justify-center text-center">
-        {/* Background Image with Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(/src/assets/landing-page-food.jpg)`,
-            filter: "brightness(40%)"
-          }}
-        ></div>
+      <section className="relative w-full h-[80vh] flex flex-col items-center justify-center text-center p-4 md:p-0">
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{
+      backgroundImage: `url(/src/assets/landing-page-food.jpg)`,
+      filter: "brightness(40%)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+  ></div>
 
-        {/* Content */}
-        <div className="relative z-10">
-          <h1 className="text-5xl font-bold">Kulinarya</h1>
-          <p className="text-lg mt-2">Where Flavor Meets Tradition</p>
-          <Link 
-            to="/recipes"
-            className="mt-4 inline-block bg-orange-500 text-white px-6 py-3 rounded-lg text-lg shadow-md hover:opacity-80 transition-all">Start Cooking Today!</Link>
-        </div>
-      </section>
+  {/* Content */}
+  <div className="relative z-10 max-w-md md:max-w-lg lg:max-w-2xl px-4">
+    <h1 className="text-4xl sm:text-5xl font-bold">Kulinarya</h1>
+    <p className="text-lg mt-2">Where Flavor Meets Tradition</p>
+    <Link 
+      to="/recipes"
+      className="mt-4 inline-block bg-orange-500 text-white px-6 py-3 rounded-lg text-lg shadow-md hover:opacity-80 transition-all"
+    >
+      Start Cooking Today!
+    </Link>
+  </div>
+</section>
+
 
       {/* Swiper.js Slideshow */}
-      <section className="w-full h-[80vh] flex flex-col md:flex-row items-center justify-center p-10">
-        <div className="md:w-1/2 text-center md:text-left">
-          <h1 className="text-4xl md:text-6xl font-bold text-orange-500">Share, Discover, and Enjoy!</h1>
-          <p className={`text-lg md:text-xl mt-4 max-w-md ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Kulinarya is a community-driven platform where foodies and home cooks can share their favorite recipes, explore new dishes, and connect with like-minded individuals.
-          </p>
-          <Link to="/about-us" className="mt-4 inline-block bg-orange-500 text-white px-6 py-3 rounded-lg text-lg shadow-md hover:opacity-80">Our Purpose</Link>
-        </div>
-        <div className="md:w-1/2 flex justify-center mt-6 md:mt-0">
-          <Swiper
-            modules={[Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            autoplay={{ delay: 3000 }}
-            pagination={{ clickable: true }}
-            className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto"
-          >
-            {heroImages.map((image, index) => (
-              <SwiperSlide key={index} className="flex justify-center items-center">
-                <img 
-                  src={image} 
-                  alt={`Slide ${index + 1}`} 
-                  className="w-full h-[300px] object-cover rounded-lg"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-      </section>
+      <section className="w-full h-auto flex flex-col md:flex-row items-center justify-center p-4 md:p-10">
+  <div className="md:w-1/2 text-center md:text-left">
+    <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-orange-500">Share, Discover, and Enjoy!</h1>
+    <p className={`text-lg md:text-xl mt-4 max-w-md ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      Kulinarya is a community-driven platform where foodies and home cooks can share their favorite recipes, explore new dishes, and connect with like-minded individuals.
+    </p>
+    <Link to="/about-us" className="mt-4 inline-block bg-orange-500 text-white px-6 py-3 rounded-lg text-lg shadow-md hover:opacity-80">Our Purpose</Link>
+  </div>
+  <div className="md:w-1/2 flex justify-center mt-6 md:mt-0">
+    <Swiper
+      modules={[Pagination, Autoplay]}
+      spaceBetween={20}
+      slidesPerView={1}
+      autoplay={{ delay: 3000 }}
+      pagination={{ clickable: true }}
+      className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto"
+    >
+      {heroImages.map((image, index) => (
+        <SwiperSlide key={index} className="flex justify-center items-center">
+          <img 
+            src={image} 
+            alt={`Slide ${index + 1}`} 
+            className="w-full h-[200px] sm:h-[300px] md:h-[400px] object-cover rounded-lg"
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  </div>
+</section>
+
 
       {/* Featured Recipes */}
       <section className="w-full max-w-6xl p-10">
