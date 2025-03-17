@@ -17,6 +17,7 @@ const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
 const LoginPage = lazy(() => import("@/pages/auth/Login.jsx"));
 const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
 const VerifyPage = lazy(() => import("@/pages/auth/Verify.jsx"));
+const RecipePage = lazy(() => import("@/pages/recipe/Recipe.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
 
 // Imported Hooks
@@ -63,7 +64,7 @@ function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<HomePage />} />
 
-              {/* <Route path="recipes" element={<RecipePage />} /> */}
+              <Route path="recipes" element={<RecipePage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

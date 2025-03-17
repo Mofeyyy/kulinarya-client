@@ -38,8 +38,8 @@ const useSignupForm = () => {
       { email, password, firstName, lastName },
       {
         onSuccess: () => {
-          toast.success("Signup Success!, Please Login");
-          navigateTo("/login");
+          toast.success("Signup Success!, Please verify your email.");
+          navigateTo("/");
           reset();
         },
         onError: (error) => {

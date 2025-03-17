@@ -144,7 +144,7 @@ const SignupForm = ({ className, ...props }) => {
         <p className="text-center text-sm">
           Already have an account?{" "}
           <Link
-            to="/signup"
+            to="/login"
             className="underline underline-offset-4 hover:opacity-80 transition"
           >
             Login
