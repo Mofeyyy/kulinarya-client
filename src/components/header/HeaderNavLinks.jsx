@@ -4,7 +4,7 @@ const HeaderNavLinks = () => {
   const links = [
     {
       name: "Home",
-      href: "/",
+      href: "/home",
     },
     {
       name: "Recipes",

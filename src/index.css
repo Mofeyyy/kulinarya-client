@@ -136,3 +136,15 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
+/* Custom Swiper Pagination Dots */
+.swiper-pagination-bullet {
+  background-color: #f97316 !important; /* Orange-500 */
+  width: 10px;
+  height: 10px;
+  opacity: 1; /* Ensure visibility */
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #ea580c !important; /* Darker Orange-600 for active */
+}

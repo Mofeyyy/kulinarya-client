@@ -13,6 +13,7 @@ import AppLayout from "@/layouts/AppLayout";
 import ScreenLoader from "@/components/ScreenLoader";
 
 // Imported Pages With Lazy Loading
+const LandingPage = lazy(() => import("@/pages/LandingPage.jsx"));
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
 const LoginPage = lazy(() => import("@/pages/auth/Login.jsx"));
 const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
@@ -22,6 +23,24 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
 // Imported Hooks
 import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
 import useAuthStore from "./hooks/stores/useAuthStore";
+
+// Function to update the tab title dynamically
+const usePageTitle = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const titles = {
+      "/": "Kulinarya - Discover Filipino Gastronomy",
+      "/home": "Home | Kulinarya",
+      "/recipes": "Recipes | Kulinarya",
+      "/login": "Login | Kulinarya",
+      "/signup": "Sign Up | Kulinarya",
+      "/verify-email": "Verify Email | Kulinarya",
+    };
+
+    document.title = titles[location.pathname] || "Kulinarya - Page Not Found";
+  }, [location]);
+};
 
 // --------------------------------------------------------------------
 
@@ -61,7 +80,8 @@ function App() {
             <Route path="verify-email" element={<VerifyPage />} />
 
             <Route path="/" element={<AppLayout />}>
-              <Route index element={<HomePage />} />
+              <Route index element={<LandingPage />} />
+              <Route path="home" element={<HomePage />} />
 
               {/* <Route path="recipes" element={<RecipePage />} /> */}
               <Route path="*" element={<NotFoundPage />} />
