@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 
 // -------------------------------------------------------------------
+// TODO: Delete if did'nt use in the future
 
 function ModeToggle() {
   const { theme, toggleTheme } = useThemeStore();

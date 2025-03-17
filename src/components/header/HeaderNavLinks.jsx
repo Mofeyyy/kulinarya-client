@@ -13,14 +13,14 @@ const HeaderNavLinks = () => {
   ];
 
   return (
-    <nav className="flex items-center gap-10">
+    <nav className="flex flex-col sm:flex-row items-center gap-10">
       {links.map((link) => (
         <NavLink
           key={link.name}
           to={link.href}
           className={({ isActive }) =>
-            `hover:opacity-80 transition text-white text-md ${
-              isActive ? "font-semibold" : ""
+            `hover:opacity-80 transition text-background sm:text-white text-xl sm:text-base ${
+              isActive ? "font-bold" : "font-medium"
             }`
           }
         >
