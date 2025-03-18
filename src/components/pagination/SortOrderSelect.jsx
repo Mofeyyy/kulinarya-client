@@ -14,7 +14,7 @@ const SortOrderSelect = () => {
 
   return (
     <Select value={sortOrder} onValueChange={setSortOrder}>
-      <SelectTrigger className="w-40">
+      <SelectTrigger className="w-full sm:w-40">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>

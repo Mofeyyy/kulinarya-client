@@ -45,7 +45,7 @@ const Recipe = () => {
   }, [data]);
 
   return (
-    <section className="w-full p-5 min-[400px]:p-10 min-[500px]:p-16 sm:p-12 md:p-16 lg:px-24 lg:py-20 xl:px-40 xl:py-20 flex flex-col gap-8">
+    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-8">
       <CustomBreadCrumb />
 
       <RecipeFilters />
@@ -55,7 +55,17 @@ const Recipe = () => {
       ) : (
         <>
           <RecipesDisplay recipes={recipes} />
-          <CustomPagination />
+
+          {recipes?.length === 0 ? (
+            <div className="h-52 flex justify-center items-center">
+              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold">
+                No Recipes{" "}
+                <span className="text-primary animate-pulse">Found</span>
+              </p>
+            </div>
+          ) : (
+            <CustomPagination />
+          )}
         </>
       )}
     </section>

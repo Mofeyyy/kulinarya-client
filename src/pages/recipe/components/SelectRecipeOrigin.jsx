@@ -36,7 +36,7 @@ const SelectRecipeOrigin = () => {
       onValueChange={handleChange}
       disabled={isLoading || isError}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full md:w-[150px] lg:w-[180px] xl:w-[200px]">
         <SelectValue placeholder={isLoading ? "Loading..." : "Origin"} />
       </SelectTrigger>
       <SelectContent>

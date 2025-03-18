@@ -7,7 +7,7 @@ import SortOrderSelect from "@/components/pagination/SortOrderSelect";
 const CustomPagination = () => {
   return (
     <div className="w-full flex flex-col-reverse gap-5 sm:grid sm:grid-cols-2 items-center">
-      <div className="flex gap-3">
+      <div className="w-full flex flex-col sm:flex-row gap-3">
         <LimitSelect />
         <SortOrderSelect />
       </div>

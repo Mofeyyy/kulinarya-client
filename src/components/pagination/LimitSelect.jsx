@@ -17,7 +17,7 @@ const LimitSelect = () => {
       value={String(limit)}
       onValueChange={(value) => setLimit(Number(value))}
     >
-      <SelectTrigger className="w-24">
+      <SelectTrigger className="w-full sm:w-24">
         <SelectValue placeholder="Limit" />
       </SelectTrigger>
       <SelectContent>

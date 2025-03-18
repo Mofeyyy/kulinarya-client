@@ -17,7 +17,7 @@ const SearchInput = () => {
   }, 300);
 
   return (
-    <div className="relative flex items-center hover:opacity-80">
+    <div className="relative flex items-center hover:opacity-80 min-w-[16rem]">
       <Search className="absolute left-3 text-foreground" size={20} />
       <Input
         type="text"

@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ModeToggle from "../ModeToggle";
 import useThemeStore from "@/hooks/stores/useThemeStore";
 
 // -----------------------------------------------------------------
