@@ -11,10 +11,10 @@ const AppLayout = () => {
     <div className="w-screen h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="w-full flex-1 overflow-y-auto">
         <Outlet />
 
-        <Footer />
+        {/* <Footer /> */}
       </main>
     </div>
   );

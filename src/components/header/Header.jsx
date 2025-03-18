@@ -1,28 +1,16 @@
-import { NavLink } from "react-router-dom";
+import HeaderDrawer from "./HeaderDrawer";
+import HeaderContents from "./HeaderContents";
 
-// Imported Components
-import ModeToggle from "@/components/ModeToggle";
-import HeaderUserAvatar from "./HeaderUserAvatar";
-import HeaderNavLinks from "./HeaderNavLinks";
-
-// Imported Assets
-import Logo from "@/components/Logo";
 // -------------------------------------------------------------------
 
 const Header = () => {
   return (
-    <header className="w-full h-20 flex justify-between items-center gap-10 px-40 bg-primary">
-      <NavLink to="/">
-        <Logo />
-      </NavLink>
-
-      <div className="flex items-center gap-10">
-        <HeaderNavLinks />
-        <HeaderUserAvatar />
+    <header className="w-full h-20 flex justify-center sm:justify-between items-center bg-primary px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40">
+      <div className="w-full hidden sm:flex justify-between items-center gap-10">
+        <HeaderContents />
       </div>
 
-      {/* Uncomment this line to enable Dark Mode Toggle */}
-      <ModeToggle />
+      <HeaderDrawer />
     </header>
   );
 };
