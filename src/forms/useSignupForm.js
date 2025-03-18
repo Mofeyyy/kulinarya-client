@@ -2,10 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/schemas/authSchema";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
 import useSignupMutation from "@/hooks/mutations/useSignupMutation";
-
-// ----------------------------------------------------------------
 
 const useSignupForm = () => {
   const { mutate, isPending } = useSignupMutation();
@@ -23,27 +20,19 @@ const useSignupForm = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    setFocus,
-    formState: { isSubmitting },
-  } = signupForm;
+  const { control, handleSubmit, reset, setFocus, formState } = signupForm;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, onSuccessCallback) => {
     const { email, password, firstName, lastName } = data;
 
     mutate(
       { email, password, firstName, lastName },
       {
         onSuccess: () => {
-          toast.success("Signup Success!, Please verify your email.");
-          navigateTo("/");
           reset();
+          if (onSuccessCallback) onSuccessCallback(); // Call success handler
         },
-        onError: (error) => {
-          toast.error(error?.message || "Signup Failed! Please try again.");
+        onError: () => {
           setFocus("firstName");
           reset();
         },
@@ -55,9 +44,9 @@ const useSignupForm = () => {
     signupForm,
     control,
     handleSubmit,
-    isSubmitting,
     onSubmit,
     isPending,
+    isSubmitting: formState.isSubmitting,
   };
 };
 

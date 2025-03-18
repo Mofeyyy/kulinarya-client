@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import useThemeStore from "@/hooks/stores/useThemeStore";
 
+
 // Import Swiper.js
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -44,6 +45,12 @@ const LandingPage = () => {
 
     fetchTopSharers();
     fetchFeaturedRecipes();
+
+    // Set interval to refresh every 30 seconds
+  const intervalId = setInterval(fetchTopSharers, fetchFeaturedRecipes, 30000); 
+
+  // Cleanup function to clear interval when the component unmounts
+  return () => clearInterval(intervalId);
   }, []);
 
   // Images for the slideshow
