@@ -45,7 +45,7 @@ const Recipe = () => {
   }, [data]);
 
   return (
-    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-8">
+    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
       <CustomBreadCrumb />
 
       <RecipeFilters />

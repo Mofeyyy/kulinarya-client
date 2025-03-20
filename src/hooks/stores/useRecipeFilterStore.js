@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useRecipeFilterStore = create((set) => ({
+const useRecipeFilterStore = create((set) => ({
   origin: "",
   category: "",
   search: "",
