@@ -12,6 +12,7 @@ import sampleRecipePic from "@/assets/sampleRecipePic.jpg";
 const RecipeDisplayCard = ({ recipe }) => {
   const { title, byUser, totalComments, mainPictureUrl, totalReactions } =
     recipe;
+
   const { firstName, lastName } = byUser;
   const recipeOwner = `${firstName} ${lastName}`;
 

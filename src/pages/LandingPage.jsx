@@ -30,27 +30,28 @@ const LandingPage = () => {
         setFeaturedRecipes([]);
       }
     };
-    
-
+  
     const fetchTopSharers = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/users/top-sharers");
-        console.log("Top Sharers API Response:", response.data);
-        setTopSharers((response.data.topSharers || []).slice(0, 4)); // Limit to 4 sharers
+        setTopSharers((response.data.topSharers || []).slice(0, 4));
       } catch (error) {
         console.error("Error fetching top sharers:", error);
         setTopSharers([]);
       }
     };
-
-    fetchTopSharers();
+  
     fetchFeaturedRecipes();
-
-    // Set interval to refresh every 30 seconds
-  const intervalId = setInterval(fetchTopSharers, fetchFeaturedRecipes, 30000); 
-
-  // Cleanup function to clear interval when the component unmounts
-  return () => clearInterval(intervalId);
+    fetchTopSharers();
+  
+    // Fetch data every 10 seconds
+    const interval = setInterval(() => {
+      fetchFeaturedRecipes();
+      fetchTopSharers();
+    }, 10000); // 10000ms = 10 seconds
+  
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   // Images for the slideshow
@@ -129,7 +130,7 @@ const LandingPage = () => {
             featuredRecipes.map((recipe) => (
               <Link key={recipe._id} to={`/recipe/${recipe._id}`} className="group">
                 <div className={`p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <img src={recipe.picture} alt={recipe.title} className={`w-full h-40 object-cover rounded-lg ${isDarkMode ? 'text-gray-400' : 'text-black'}`} />
+                  <img src={recipe.mainPictureUrl || "https://i.ibb.co/kgByD1Z5/sample-Recipe-Pic.jpg"} alt={recipe.title} className={`w-full h-40 object-cover rounded-lg ${isDarkMode ? 'text-gray-400' : 'text-black'}`} />
                   <p className={`text-lg mt-2 font-semibold group-hover:text-orange-500 ${isDarkMode ? 'text-gray-400' : 'text-black'}`}>{recipe.title}</p>
                 </div>
               </Link>
@@ -149,7 +150,7 @@ const LandingPage = () => {
             topSharers.map((user) => (
               <div key={user._id} className={`p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                 <img 
-                  src={user.picture || "/images/default-avatar.png"}
+                  src={user.profilePictureUrl || "https://icons.veryicon.com/png/o/business/multi-color-financial-and-business-icons/user-139.png"}
                   alt={user.firstName}
                   className={`w-24 h-24 mx-auto object-cover rounded-full border-2 border-orange-500 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                 />

@@ -20,28 +20,13 @@ const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
 const VerifyPage = lazy(() => import("@/pages/auth/Verify.jsx"));
 const RecipePage = lazy(() => import("@/pages/recipe/Recipe.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard.jsx"));
+const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost.jsx"));
+const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes.jsx"));
 
 // Imported Hooks
 import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
 import useAuthStore from "./hooks/stores/useAuthStore";
-
-// Function to update the tab title dynamically
-const usePageTitle = () => {
-  const location = useLocation();
-  
-  useEffect(() => {
-    const titles = {
-      "/": "Kulinarya - Discover Filipino Gastronomy",
-      "/home": "Home | Kulinarya",
-      "/recipes": "Recipes | Kulinarya",
-      "/login": "Login | Kulinarya",
-      "/signup": "Sign Up | Kulinarya",
-      "/verify-email": "Verify Email | Kulinarya",
-    };
-
-    document.title = titles[location.pathname] || "Kulinarya - Page Not Found";
-  }, [location]);
-};
 
 // --------------------------------------------------------------------
 
@@ -83,7 +68,9 @@ function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<LandingPage />} />
               <Route path="home" element={<HomePage />} />
-
+              <Route path="admin/dashboard" element={<AdminDashboard />} />
+              <Route path="admin/pending-recipes" element={<PendingRecipePost />} />
+              <Route path="admin/feature-recipes" element={<FeatureRecipes />} />
               <Route path="recipes" element={<RecipePage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
