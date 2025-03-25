@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import useThemeStore from "@/hooks/stores/useThemeStore";
+import RecipesDisplay from "./recipe/components/RecipeDisplay";
+
 
 
 // Import Swiper.js
@@ -124,22 +126,14 @@ const LandingPage = () => {
 
       {/* Featured Recipes */}
       <section className="w-full max-w-6xl p-10">
-        <h2 className={`text-4xl md:text-3xl font-bold text-left ${isDarkMode ? 'text-gray-400' : 'text-black'}`}>Featured Recipes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6">
-          {featuredRecipes.length > 0 ? (
-            featuredRecipes.map((recipe) => (
-              <Link key={recipe._id} to={`/recipe/${recipe._id}`} className="group">
-                <div className={`p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <img src={recipe.mainPictureUrl || "https://i.ibb.co/kgByD1Z5/sample-Recipe-Pic.jpg"} alt={recipe.title} className={`w-full h-40 object-cover rounded-lg ${isDarkMode ? 'text-gray-400' : 'text-black'}`} />
-                  <p className={`text-lg mt-2 font-semibold group-hover:text-orange-500 ${isDarkMode ? 'text-gray-400' : 'text-black'}`}>{recipe.title}</p>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mt-4`}>No featured recipes available.</p>
-          )}
-        </div>
-      </section>
+  <h2 className={`text-4xl md:text-3xl font-bold text-left ${isDarkMode ? 'text-gray-400' : 'text-black'}`}>Featured Recipes</h2>
+  {featuredRecipes.length > 0 ? (
+    <RecipesDisplay recipes={featuredRecipes} />
+  ) : (
+    <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mt-4`}>No featured recipes available.</p>
+  )}
+</section>
+
 
       {/* Top Sharers */}
       <section className="w-full max-w-6xl p-10">

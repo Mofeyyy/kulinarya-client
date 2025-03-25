@@ -25,8 +25,8 @@ const AdminDashboard = () => {
  
   useEffect(() => {
     document.title = "Admin Dashboard | Kulinarya";
-    setPage({ href: "/recipes", name: "Admin" });
-    setSubPage({ href: "/recipes", name: "Admin Dashboard" });
+    setPage({ href: "/admin/dashboard", name: "Admin" });
+    setSubPage({ href: "/admin/dashboard", name: "Admin Dashboard" });
   }, []);
 
   useEffect(() => {

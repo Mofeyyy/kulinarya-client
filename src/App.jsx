@@ -12,6 +12,8 @@ import AppLayout from "@/layouts/AppLayout";
 // Imported Components
 import ScreenLoader from "@/components/ScreenLoader";
 
+
+
 // Imported Pages With Lazy Loading
 const LandingPage = lazy(() => import("@/pages/LandingPage.jsx"));
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
@@ -24,6 +26,7 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard.jsx"));
 const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost.jsx"));
 const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes.jsx"));
+const ProfilePageView = lazy(() => import("@/pages/ProfileView.jsx"));
 
 // Imported Hooks
 import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
@@ -74,6 +77,7 @@ function App() {
               <Route path="admin/dashboard" element={<AdminDashboard />} />
               <Route path="admin/pending-recipes" element={<PendingRecipePost />} />
               <Route path="admin/feature-recipes" element={<FeatureRecipes />} />
+              <Route path="/profile" element={<ProfilePageView />} />
               <Route index element={<HomePage />} />
 
               {/* Recipes Routes */}

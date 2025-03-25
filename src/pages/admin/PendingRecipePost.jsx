@@ -17,8 +17,8 @@ const PendingRecipes = () => {
 
   useEffect(() => {
     document.title = "Pending Recipes | Kulinarya";
-    setPage({ href: "/recipes", name: "Recipes" });
-    setSubPage({ href: "/recipes", name: "Pending Recipes" });
+    setPage({ href: "/admin/dashboard", name: "Admin" });
+    setSubPage({ href: "/admin/pending-recipes", name: "Pending Recipes" });
 
     const fetchPendingRecipes = async () => {
       try {

@@ -15,6 +15,7 @@ import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import SearchInput from "@/pages/recipe/components/SearchInput"; 
 import CustomPagination from "@/components/pagination/CustomPagination";
+import toast from "react-hot-toast";
 
 const AdminDashboardRecipes = ({ type }) => {
   const [recipes, setRecipes] = useState([]);
@@ -26,8 +27,8 @@ const AdminDashboardRecipes = ({ type }) => {
 
   useEffect(() => {
     document.title = "Featured Recipes | Kulinarya";
-    setPage({ href: "/recipes", name: "Recipes" });
-    setSubPage({ href: "/recipes", name: "Featured Recipes" });
+    setPage({ href: "/admin/dashboard", name: "Admin" });
+    setSubPage({ href: "/admin/feature-recipes", name: "Featured Recipes" });
   }, []);
 
   useEffect(() => {
@@ -72,6 +73,7 @@ const AdminDashboardRecipes = ({ type }) => {
           recipe._id === recipeId ? { ...recipe, isFeatured: !isFeatured } : recipe
         )
       );
+      toast.success(`Recipe ${isFeatured ? "unfeatured" : "featured"}!`);
     } catch (error) {
       console.error("Error toggling feature status:", error);
     } finally {
