@@ -47,8 +47,8 @@
 .dark {
   --background: #1b1a18; 
   --foreground: #f9f9f2;
-  --card: #ffffff; 
-  --card-foreground: #1b1a18; 
+  --card: #1b1a18; 
+  --card-foreground: #f9f9f2; 
   --popover: #1b1a18; 
   --popover-foreground: #f9f9f2; 
   --primary: #f7630c; 
@@ -139,26 +139,14 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Custom Scrollbar */
-* {
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: rgba(100, 100, 100, 0.5) transparent; /* For Firefox */
+/* Custom Swiper Pagination Dots */
+.swiper-pagination-bullet {
+  background-color: #f97316 !important; /* Orange-500 */
+  width: 10px;
+  height: 10px;
+  opacity: 1; /* Ensure visibility */
 }
 
-/* Webkit-based browsers (Chrome, Edge, Safari) */
-::-webkit-scrollbar {
-  width: 6px; /* Thin scrollbar */
-}
-
-::-webkit-scrollbar-track {
-  background: transparent; /* Remove background */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.5); /* Subtle scrollbar color */
-  border-radius: 10px; /* Rounded scrollbar */
-}
-
-::-webkit-scrollbar-button {
-  display: none; /* Remove scrollbar arrows */
+.swiper-pagination-bullet-active {
+  background-color: #ea580c !important; /* Darker Orange-600 for active */
 }
