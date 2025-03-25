@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const isFileOrUrl = z.union([z.string().url(), z.instanceof(File)]);
+
 const recipeSchema = z.object({
   title: z.string().min(2, "Title is required"),
 
@@ -13,7 +15,7 @@ const recipeSchema = z.object({
 
   description: z
     .string()
-    .max(1000, "Description must not exceed 1000 characters")
+    .max(2000, "Description must not exceed 2000 characters")
     .trim()
     .optional(),
 
@@ -49,49 +51,49 @@ const recipeSchema = z.object({
 
   // File --------------------------------------------------------------
 
-  mainPicture: z
-    .custom((file) => file instanceof File, "Main picture is required")
+  mainPicture: isFileOrUrl
+    .nullable() // Allow null values explicitly
+    .refine((file) => file !== null && file !== undefined, {
+      message: "Main Picture is Required",
+    })
     .refine(
-      (file) => !file || file.size <= 10 * 1024 * 1024,
+      (file) => !(file instanceof File) || file.size <= 10 * 1024 * 1024,
       "File size must be under 10MB"
     )
     .refine(
-      (file) => !file || ["image/jpeg", "image/png"].includes(file.type),
+      (file) =>
+        !(file instanceof File) ||
+        ["image/jpeg", "image/png"].includes(file.type),
       "Only JPEG or PNG allowed"
     ),
 
-  video: z
-    .custom(
-      (file) => file === null || file === undefined || file instanceof File,
-      "Invalid video file"
-    )
+  video: isFileOrUrl
+    .nullable()
+    .optional()
     .refine(
-      (file) => !file || file.size <= 50 * 1024 * 1024,
+      (file) => !(file instanceof File) || file.size <= 50 * 1024 * 1024,
       "Video size must be under 50MB"
     )
     .refine(
-      (file) => !file || ["video/mp4"].includes(file.type),
+      (file) => !(file instanceof File) || ["video/mp4"].includes(file.type),
       "Only MP4 format allowed"
-    )
-    .optional(),
+    ),
 
   additionalPictures: z
     .array(
-      z
-        .custom(
-          (file) => file === null || file === undefined || file instanceof File,
-          "Invalid file"
-        )
+      isFileOrUrl
         .refine(
-          (file) => !file || file.size <= 10 * 1024 * 1024,
+          (file) => !(file instanceof File) || file.size <= 10 * 1024 * 1024,
           "File size must be under 10MB"
         )
         .refine(
-          (file) => !file || ["image/jpeg", "image/png"].includes(file.type),
+          (file) =>
+            !(file instanceof File) ||
+            ["image/jpeg", "image/png"].includes(file.type),
           "Only JPEG or PNG allowed"
         )
     )
-    .max(5, "Maximum 5 additional pictures allowed")
+    .max(5, "5 additional pictures allowed")
     .optional(),
 
   // File --------------------------------------------------------------

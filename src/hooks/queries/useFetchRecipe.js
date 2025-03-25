@@ -6,7 +6,7 @@ import handleApiRequest from "@/utils/handleApiRequest";
 const fetchRecipeById = async (recipeId) =>
   await handleApiRequest(() => API.get(`/recipes/${recipeId}`));
 
-const useViewRecipe = (recipeId) => {
+const useFetchRecipe = (recipeId) => {
   return useQuery({
     queryKey: ["recipe", recipeId],
     queryFn: () => fetchRecipeById(recipeId),
@@ -16,4 +16,4 @@ const useViewRecipe = (recipeId) => {
   });
 };
 
-export default useViewRecipe;
+export default useFetchRecipe;

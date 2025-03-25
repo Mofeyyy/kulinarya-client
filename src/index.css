@@ -162,3 +162,7 @@
 ::-webkit-scrollbar-button {
   display: none; /* Remove scrollbar arrows */
 }
+
+select[aria-hidden="true"] {
+  display: none !important;
+}

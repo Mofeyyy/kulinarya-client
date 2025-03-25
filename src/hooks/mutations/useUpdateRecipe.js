@@ -3,13 +3,11 @@ import API from "@/config/axios";
 import handleApiRequest from "@/utils/handleApiRequest";
 import convertToFormData from "@/utils/convertToFormData";
 
-//  ------------------------------------------------------------------------
-
-const createRecipe = async (recipeData) => {
+const updateRecipe = async ({ recipeId, ...recipeData }) => {
   const formData = convertToFormData(recipeData);
 
   const response = await handleApiRequest(() =>
-    API.post("/recipes", formData, {
+    API.patch(`/recipes/${recipeId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -20,10 +18,10 @@ const createRecipe = async (recipeData) => {
   return response;
 };
 
-const useCreateRecipe = () => {
+const useUpdateRecipe = () => {
   return useMutation({
-    mutationFn: createRecipe,
+    mutationFn: updateRecipe,
   });
 };
 
-export default useCreateRecipe;
+export default useUpdateRecipe;
