@@ -5,10 +5,12 @@ import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
 import useCreateRecipe from "@/hooks/mutations/useCreateRecipe";
 import toast from "react-hot-toast";
 import useUpdateRecipe from "@/hooks/mutations/useUpdateRecipe";
+import { useNavigate } from "react-router-dom";
 
 // -------------------------- Recipe Form ------------------------------
 
 const useRecipeForm = (initialData = null) => {
+  const navigateTo = useNavigate();
   const isEditing = !!initialData; // If data exists, it's edit mode
 
   const recipeForm = useForm({
@@ -59,6 +61,7 @@ const useRecipeForm = (initialData = null) => {
             reset();
             resetAllMediaPreview();
             console.log("Recipe updated successfully!", response);
+            navigateTo(`/recipes/${initialData._id}`);
           },
           onError: (err) => {
             toast.error(`Failed to update recipe ${err}`);
@@ -69,13 +72,11 @@ const useRecipeForm = (initialData = null) => {
     } else {
       createRecipe(data, {
         onSuccess: (response) => {
-          toast.success("Recipe created successfully!");
-          toast.success(
-            "Recipe sent for moderation, Please wait for approval."
-          );
+          toast.success("Recipe created successfully! Wait for moderation.");
           reset();
           resetAllMediaPreview();
           console.log("Recipe created successfully!", response);
+          navigateTo(`/recipes`);
         },
         onError: (err) => {
           toast.error(`Failed to post recipe ${err}`);

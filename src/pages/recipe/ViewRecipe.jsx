@@ -48,6 +48,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ScreenLoader from "@/components/ScreenLoader";
 import useCommentMutations from "@/hooks/mutations/useCommentMutations";
 import useFetchComments from "@/hooks/queries/useFetchComments";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -740,13 +741,15 @@ const AddReactionButton = () => {
 };
 
 const RecipeTitleSection = () => {
+  const { userDetails, isLoggedIn } = useAuthStore();
   const { recipe } = useRecipeStore();
-  const { title, byUser } = recipe;
+  const { title, byUser, _id: recipeId } = recipe;
   const { firstName, lastName } = byUser;
   const ownerName = `${firstName} ${lastName}`;
+  const navigateTo = useNavigate();
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex justify-between gap-3">
       <div className="flex flex-col gap-1">
         <p className="text-2xl min-[400px]:text-3xl sm:text-5xl lg:max-xl:text-4xl font-bold text-primary">
           {title}
@@ -761,6 +764,33 @@ const RecipeTitleSection = () => {
           </span>
         </p>
       </div>
+
+      {isLoggedIn && byUser._id === userDetails?._id && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="hover:text-primary transition-colors cursor-pointer">
+              <MoreVertical className="size-10" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-28 p-0 overflow-hidden">
+            <Button
+              variant="ghost"
+              className="w-full justify-center rounded-none"
+              onClick={() => navigateTo(`/recipes/${recipeId}/edit`)}
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full justify-center text-destructive-foreground rounded-none"
+              onClick={() => alert("Coming Soon")}
+            >
+              Delete
+            </Button>
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 };
