@@ -1,6 +1,5 @@
 import { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 // Imported Context
@@ -56,16 +55,20 @@ function App() {
   const { isImageModalOpen } = useImageModalStore();
 
   // Initial Login and Test DB Connection
-  useEffect(async () => {
-    try {
-      const response = await handleApiRequest(() => API.get("/"));
-      if (response.status === 201) {
-        toast.success(response.data.message);
+  useEffect(() => {
+    const doInitialLogin = async () => {
+      try {
+        const response = API.get("/");
+        if (response.status === 201) {
+          toast.success(response.data.message);
+        }
+        console.log(response.data);
+      } catch (err) {
+        console.log(`Error: ${err}`);
       }
-      console.log(response.data);
-    } catch (err) {
-      console.log(`Error: ${err}`);
-    }
+    };
+
+    doInitialLogin();
   }, []);
 
   // Fetching the user details on page load
