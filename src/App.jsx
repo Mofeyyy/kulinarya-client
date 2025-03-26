@@ -13,7 +13,10 @@ import AppLayout from "@/layouts/AppLayout";
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
+
 // Imported Pages With Lazy Loading
+const LandingPage = lazy(() => import("@/pages/LandingPage.jsx"));
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
 const LoginPage = lazy(() => import("@/pages/auth/Login.jsx"));
 const SignupPage = lazy(() => import("@/pages/auth/Signup.jsx"));
@@ -23,6 +26,13 @@ const CreateRecipePage = lazy(() => import("@/pages/recipe/CreateRecipe.jsx"));
 const ViewRecipePage = lazy(() => import("@/pages/recipe/ViewRecipe.jsx"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard.jsx"));
+const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost.jsx"));
+const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes.jsx"));
+const ProfilePageView = lazy(() => import("@/pages/ProfileView.jsx"));
+const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView.jsx"));
+const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm.jsx"));
+const AnnouncementView = lazy(() => import("@/pages/AnnouncementView.jsx"));
 
 // Imported Hooks
 import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
@@ -83,6 +93,15 @@ function App() {
 
             {/* Protected Routes Inside App Layout */}
             <Route path="/" element={<AppLayout />}>
+              <Route index element={<LandingPage />} />
+              <Route path="home" element={<HomePage />} />
+              <Route path="admin/dashboard" element={<AdminDashboard />} />
+              <Route path="admin/pending-recipes" element={<PendingRecipePost />} />
+              <Route path="admin/feature-recipes" element={<FeatureRecipes />} />
+              <Route path="/profile" element={<ProfilePageView />} />
+              <Route path="/profile/:userId" element={<SpecificUserProfileView />} />
+              <Route path="/announcements/create" element={<AnnouncementForm />} />
+              <Route path="/announcements/:announcementId" element={<AnnouncementView />} />
               <Route index element={<HomePage />} />
 
               <Route element={<ProtectedRoute />}>

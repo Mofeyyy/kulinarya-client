@@ -12,7 +12,8 @@ import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 const PaginationControl = () => {
   const { page, setPage, limit, totalRecipeCount } = useRecipeFilterStore();
 
-  const totalPages = Math.ceil(totalRecipeCount / limit);
+  // Ensure totalPages is at least 1
+  const totalPages = Math.max(1, Math.ceil(totalRecipeCount / limit));
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {

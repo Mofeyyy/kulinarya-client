@@ -14,6 +14,7 @@ const RecipeDisplayCard = ({ recipe }) => {
   const navigateTo = useNavigate();
   const { title, byUser, totalComments, mainPictureUrl, totalReactions } =
     recipe;
+
   const [imageSrc, setImageSrc] = useState(
     mainPictureUrl || defaultFallbackImage
   );

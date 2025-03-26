@@ -12,9 +12,17 @@ const useAuthStore = create(
 
       login: (user) => set({ userDetails: user, isLoggedIn: true }),
       logout: () => set({ userDetails: null, isLoggedIn: false }),
+
+      updateProfilePicture: (profilePictureUrl) =>
+        set((state) => ({
+          userDetails: {
+            ...state.userDetails,
+            profilePictureUrl, // Update only the profile picture
+          },
+        })),
     }),
 
-    // Local Storage
+    // Persist to Local Storage
     {
       name: "kulinarya-auth-storage",
       partialize: (state) => ({
