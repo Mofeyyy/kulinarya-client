@@ -48,22 +48,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import API from "./config/axios";
+import handleApiRequest from "./utils/handleApiRequest";
 // --------------------------------------------------------------------
 
 function App() {
   const { isImageModalOpen } = useImageModalStore();
 
   // Initial Login and Test DB Connection
-  useEffect(() => {
-    axios
-      .get("http://localhost:4000/")
-      .then((response) => {
-        if (response.status === 201) {
-          toast.success(response.data.message);
-        }
-        console.log(response.data);
-      })
-      .catch((error) => console.log(`Error: ${error}`));
+  useEffect(async () => {
+    try {
+      const response = await handleApiRequest(() => API.get("/"));
+      if (response.status === 201) {
+        toast.success(response.data.message);
+      }
+      console.log(response.data);
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
   }, []);
 
   // Fetching the user details on page load
