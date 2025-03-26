@@ -13,8 +13,6 @@ import AppLayout from "@/layouts/AppLayout";
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
-
 // Imported Pages With Lazy Loading
 const LandingPage = lazy(() => import("@/pages/LandingPage.jsx"));
 const HomePage = lazy(() => import("@/pages/home/Home.jsx"));
@@ -106,10 +104,7 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route path="recipes/create" element={<CreateRecipePage />} />
-                <Route
-                  path="recipes/:recipeId/edit"
-                  element={<EditRecipePage />}
-                />
+                <Route path="recipes/:recipeId/edit" element={<EditRecipePage />} />
               </Route>
 
               <Route path="recipes" element={<RecipePage />} />
