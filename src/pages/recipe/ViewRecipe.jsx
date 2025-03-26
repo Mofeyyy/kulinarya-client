@@ -8,12 +8,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useParams } from "react-router-dom";
+import { trackPostView } from "@/config/postViewApi";
 import { useEffect, useState, useRef, useCallback } from "react";
 import usePageStore from "@/hooks/stores/usePageStore";
 import useFetchReactions from "@/hooks/queries/useFetchReactions";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import useViewRecipe from "@/hooks/queries/useViewRecipe";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -99,6 +101,13 @@ const ViewRecipe = () => {
   }, [recipeId, recipe, fetchedData]);
 
   useEffect(() => {
+    if (recipeId) {
+      trackPostView(recipeId); // ✅ Track view when the page loads
+    }
+  }, [recipeId]);
+
+
+  useEffect(() => {
     console.log("Updated Recipe State:", recipe);
   }, [recipe]);
 
@@ -107,6 +116,7 @@ const ViewRecipe = () => {
 
   const { videoUrl } = recipe;
 
+  
   return (
     <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
       <CustomBreadCrumb />
@@ -577,6 +587,7 @@ const RecipeTabs = () => {
   const [activeTab, setActiveTab] = useState("ingredients");
   const { recipe } = useRecipeStore();
   const { ingredients, procedure } = recipe;
+  
 
   return (
     <Card className="w-full p-0 pt-2 overflow-hidden rounded-b-lg rounded-t-none bg-background border-0 text-foreground">
@@ -885,6 +896,8 @@ const OwnerProfileCard = () => {
 
   const truncatedBio =
     bio.length > MAX_BIO_LENGTH ? bio.slice(0, MAX_BIO_LENGTH) + "..." : bio;
+    const navigate = useNavigate();
+    
 
   return (
     <div className="max-w-xl pb-10 px-10 rounded-lg bg-background text-foreground flex flex-col items-center border shadow-lg">
@@ -900,9 +913,9 @@ const OwnerProfileCard = () => {
         </p>
         <p className="text-sm leading-loose text-center">{truncatedBio}</p>
 
-        <Button className="w-full" onClick={() => alert("Coming Soon")}>
-          View Profile
-        </Button>
+        <Button className="w-full" onClick={() => navigate(`/profile/${recipe?.byUser?._id}`)}>
+      View Profile
+    </Button>
       </div>
     </div>
   );

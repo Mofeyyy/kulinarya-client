@@ -28,6 +28,9 @@ const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard.jsx"));
 const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost.jsx"));
 const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes.jsx"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView.jsx"));
+const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView.jsx"));
+const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm.jsx"));
+const AnnouncementView = lazy(() => import("@/pages/AnnouncementView.jsx"));
 
 // Imported Hooks
 import useFetchUserDetails from "./hooks/queries/useFetchUserDetails";
@@ -94,6 +97,9 @@ function App() {
               <Route path="admin/pending-recipes" element={<PendingRecipePost />} />
               <Route path="admin/feature-recipes" element={<FeatureRecipes />} />
               <Route path="/profile" element={<ProfilePageView />} />
+              <Route path="/profile/:userId" element={<SpecificUserProfileView />} />
+              <Route path="/announcements/create" element={<AnnouncementForm />} />
+              <Route path="/announcements/:announcementId" element={<AnnouncementView />} />
               <Route index element={<HomePage />} />
 
               {/* Recipes Routes */}

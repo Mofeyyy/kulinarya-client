@@ -35,8 +35,12 @@ const ProfilePage = () => {
   useEffect(() => {
     document.title = "Profile | Kulinarya";
     setNavPage({ href: "/profile", name: "Profile" });
-    setSubPage({ href: "/profile", name: "Profile" });
-  }, [setNavPage, setSubPage]);
+  
+    if (userDetails) {
+      setSubPage({ href: "/profile", name: `${userDetails.firstName} ${userDetails.lastName}` });
+    }
+  }, [userDetails, setNavPage, setSubPage]);
+  
 
   useEffect(() => {
     if (!userDetails?._id) return;

@@ -107,17 +107,24 @@ const NotificationDropdown = () => {
           ) : notifications.length > 0 ? (
             notifications.map((notif) => (
               <DropdownMenuItem
-                key={notif._id}
-                className={`flex flex-col p-3 rounded-lg transition duration-200 shadow-sm ${
-                  notif.isRead ? "bg-gray-100" : "bg-orange-50"
-                } hover:bg-orange-100`}
-                onClick={() => {
-                  if (!notif.isRead) handleReadNotification(notif._id); // Auto-mark as read
-                  if (notif.fromPost) {
-                    navigate(`/recipe/${notif.fromPost}`);
-                  }
-                }}
-              >
+  key={notif._id}
+  className={`flex flex-col p-3 rounded-lg transition duration-200 shadow-sm ${
+    notif.isRead ? "bg-gray-100" : "bg-orange-50"
+  } hover:bg-orange-100`}
+  onClick={async () => {
+    if (!notif.isRead) {
+      await handleReadNotification(notif._id); // Mark as read before navigating
+    }
+
+    // Navigate based on notification type
+    if (notif.type === "announcement") {
+      navigate(`/announcements/${notif.fromPost}`);
+    } else if (notif.type === "recipe") {
+      navigate(`/recipes/${notif.fromPost}`);
+    }
+  }}
+>
+
                 <div className="flex items-center gap-3">
                   {notif.byUser?.profilePictureUrl ? (
                     <img
@@ -166,10 +173,29 @@ const NotificationDropdown = () => {
                 <p className="text-sm text-gray-700 mt-1">{notif.content}</p>
 
                 {notif.fromPost && (
-                  <span className="text-xs text-orange-600 hover:underline font-medium mt-1 inline-block">
-                    View Post
-                  </span>
-                )}
+  <button
+    onClick={async (e) => {
+      e.stopPropagation(); // Prevent dropdown from closing immediately
+
+      if (!notif.isRead) {
+        await handleReadNotification(notif._id); // Mark as read before navigating
+      }
+
+      // Check notification type
+      if (notif.type === "announcement") {
+        navigate(`/announcements/${notif.fromPost}`); // Redirect to announcement
+      } else {
+        navigate(`/recipes/${notif.fromPost}`); // Redirect to recipe
+      }
+    }}
+    className="text-xs text-orange-600 hover:underline font-medium mt-1 inline-block"
+  >
+    View Post
+  </button>
+)}
+
+
+
               </DropdownMenuItem>
             ))
           ) : (

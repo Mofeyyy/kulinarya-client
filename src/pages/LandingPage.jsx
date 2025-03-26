@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import API from "@/config/axios";
 import useThemeStore from "@/hooks/stores/useThemeStore";
 import RecipesDisplay from "./recipe/components/RecipeDisplay";
 
@@ -25,7 +25,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchFeaturedRecipes = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/recipes/featured");
+        const response = await API.get("/recipes/featured");
         setFeaturedRecipes((response.data.featuredRecipesData || []).slice(0, 8));
       } catch (error) {
         console.error("Error fetching featured recipes:", error);
@@ -35,7 +35,7 @@ const LandingPage = () => {
   
     const fetchTopSharers = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/users/top-sharers");
+        const response = await API.get("/users/top-sharers");
         setTopSharers((response.data.topSharers || []).slice(0, 4));
       } catch (error) {
         console.error("Error fetching top sharers:", error);

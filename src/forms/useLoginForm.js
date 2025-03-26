@@ -38,7 +38,7 @@ const useLoginForm = () => {
         login(data.user); // Set isLoggedIn and userDetails State
         queryClient.setQueryData(["userDetails"], data.user); // Update React Query Cache
         toast.success("Login Success!");
-        navigateTo("/");
+        navigateTo("/home");
         reset();
       },
       onError: (error) => {
