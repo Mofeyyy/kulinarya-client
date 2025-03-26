@@ -49,6 +49,8 @@ import {
 
 import API from "./config/axios";
 import handleApiRequest from "./utils/handleApiRequest";
+import { BASE_URL } from "./config/axios";
+import axios from "axios";
 // --------------------------------------------------------------------
 
 function App() {
@@ -58,7 +60,7 @@ function App() {
   useEffect(() => {
     const doInitialLogin = async () => {
       try {
-        const response = API.get("/");
+        const response = await axios.get(BASE_URL);
         if (response.status === 201) {
           toast.success(response.data.message);
         }
