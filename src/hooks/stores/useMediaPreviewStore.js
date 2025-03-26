@@ -14,9 +14,13 @@ const useMediaPreviewStore = create((set) => ({
 
   setMediaPreview: (updateFn) =>
     set((state) => ({
-      mediaPreview: { ...state.mediaPreview, ...updateFn(state.mediaPreview) },
+      mediaPreview: {
+        ...state.mediaPreview,
+        ...(typeof updateFn === "function"
+          ? updateFn(state.mediaPreview)
+          : updateFn),
+      },
     })),
-
   setFileNames: (updateFn) =>
     set((state) => ({
       fileNames: { ...state.fileNames, ...updateFn(state.fileNames) },

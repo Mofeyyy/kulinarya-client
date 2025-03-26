@@ -11,6 +11,7 @@ import AppLayout from "@/layouts/AppLayout";
 
 // Imported Components
 import ScreenLoader from "@/components/ScreenLoader";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 
@@ -23,6 +24,7 @@ const VerifyPage = lazy(() => import("@/pages/auth/Verify.jsx"));
 const RecipePage = lazy(() => import("@/pages/recipe/Recipe.jsx"));
 const CreateRecipePage = lazy(() => import("@/pages/recipe/CreateRecipe.jsx"));
 const ViewRecipePage = lazy(() => import("@/pages/recipe/ViewRecipe.jsx"));
+const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe.jsx"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage.jsx"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard.jsx"));
 const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost.jsx"));
@@ -84,12 +86,12 @@ function App() {
       <Router>
         <Suspense fallback={<ScreenLoader />}>
           <Routes>
-            {/* Routes With No Layout */}
+            {/* Public Routes */}
             <Route path="login" element={<LoginPage />} />
             <Route path="signup" element={<SignupPage />} />
             <Route path="verify-email" element={<VerifyPage />} />
 
-            {/* Routes With App Layout  */}
+            {/* Protected Routes Inside App Layout */}
             <Route path="/" element={<AppLayout />}>
               <Route index element={<LandingPage />} />
               <Route path="home" element={<HomePage />} />
@@ -102,9 +104,15 @@ function App() {
               <Route path="/announcements/:announcementId" element={<AnnouncementView />} />
               <Route index element={<HomePage />} />
 
-              {/* Recipes Routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="recipes/create" element={<CreateRecipePage />} />
+                <Route
+                  path="recipes/:recipeId/edit"
+                  element={<EditRecipePage />}
+                />
+              </Route>
+
               <Route path="recipes" element={<RecipePage />} />
-              <Route path="recipes/create" element={<CreateRecipePage />} />
               <Route path="recipes/:recipeId" element={<ViewRecipePage />} />
 
               {/* Not Found Page */}

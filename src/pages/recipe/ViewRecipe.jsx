@@ -13,20 +13,11 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import usePageStore from "@/hooks/stores/usePageStore";
 import useFetchReactions from "@/hooks/queries/useFetchReactions";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
-import useViewRecipe from "@/hooks/queries/useViewRecipe";
+import useFetchRecipe from "@/hooks/queries/useFetchRecipe";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+
+
+import useConfirmDialog from "@/components/useConfirmDialog";
 import {
   MessageCircleMore,
   Smile,
@@ -59,6 +50,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ScreenLoader from "@/components/ScreenLoader";
 import useCommentMutations from "@/hooks/mutations/useCommentMutations";
 import useFetchComments from "@/hooks/queries/useFetchComments";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -78,7 +70,7 @@ const ViewRecipe = () => {
   const { recipeId } = useParams();
   const { setPage, setSubPage } = usePageStore();
   const { recipe, setRecipe, clearRecipe } = useRecipeStore();
-  const { data: fetchedData, isLoading, error } = useViewRecipe(recipeId);
+  const { data: fetchedData, isLoading, error } = useFetchRecipe(recipeId);
 
   useEffect(() => {
     document.title = "View | Kulinarya";
@@ -93,12 +85,10 @@ const ViewRecipe = () => {
     }
 
     return () => {
-      if (!recipeId) {
-        console.log("Clearing recipe...");
-        clearRecipe();
-      }
+      console.log("Clearing recipe...");
+      clearRecipe();
     };
-  }, [recipeId, recipe, fetchedData]);
+  }, [recipeId, fetchedData?.recipe]);
 
   useEffect(() => {
     if (recipeId) {
@@ -112,6 +102,7 @@ const ViewRecipe = () => {
   }, [recipe]);
 
   if (isLoading || !recipe) return <ScreenLoader />;
+  // TODO: Create a custom error component for this things
   if (error) return <p>Error loading recipe</p>;
 
   const { videoUrl } = recipe;
@@ -269,53 +260,8 @@ const ReactionItem = ({ reaction }) => {
   );
 };
 
-const useConfirmDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [content, setContent] = useState({ title: "", description: "" });
-  const [resolveCallback, setResolveCallback] = useState(null);
-
-  const openDialog = (title, description) => {
-    return new Promise((resolve) => {
-      setContent({ title, description });
-      setResolveCallback(() => resolve);
-      setIsOpen(true);
-    });
-  };
-
-  const handleClose = (result) => {
-    setIsOpen(false);
-    if (resolveCallback) resolveCallback(result);
-  };
-
-  return {
-    openDialog,
-    ConfirmDialog: (
-      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{content.title}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {content.description}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              className="text-destructive-foreground"
-              onClick={() => handleClose(false)}
-            >
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleClose(true)}>
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    ),
-  };
-};
-
 const CommentsPreviewSection = () => {
+  const { isLoggedIn } = useAuthStore();
   const { recipe } = useRecipeStore();
   const { commentsPreview } = recipe;
 
@@ -323,7 +269,8 @@ const CommentsPreviewSection = () => {
     <>
       <div className="flex flex-col gap-2">
         <CommentsAndReactionButtons />
-        <CommentTextArea />
+
+        {isLoggedIn && <CommentTextArea />}
       </div>
 
       <Comments comments={commentsPreview} />
@@ -418,7 +365,7 @@ const CommentItem = ({ comment }) => {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.content);
-  const { userDetails } = useAuthStore();
+  const { userDetails, isLoggedIn } = useAuthStore();
   const { updateCommentMutation, deleteCommentMutation } = useCommentMutations(
     comment.fromPost
   );
@@ -490,7 +437,7 @@ const CommentItem = ({ comment }) => {
       </div>
 
       {/* Options Menu (Only for comment owner) */}
-      {comment.byUser._id === userDetails._id && (
+      {isLoggedIn && comment.byUser._id === userDetails?._id && (
         <Popover open={isOptionOpen} onOpenChange={setIsOptionOpen}>
           <PopoverTrigger asChild>
             <button className="hover:text-primary transition-colors cursor-pointer">
@@ -572,7 +519,7 @@ const CommentTextArea = ({
           <SendHorizontal className="size-5 text-muted-foreground" />
         </Button>
       ) : (
-        <div className="flex justify-end gap-2 mt-2 text-destructive-foreground">
+        <div className="flex justify-end gap-2 mt-2">
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
@@ -716,6 +663,7 @@ const RecipeImages = () => {
 };
 
 const CommentsAndReactionButtons = () => {
+  const { isLoggedIn } = useAuthStore();
   const { recipe } = useRecipeStore();
   const { totalComments, totalReactions } = recipe;
 
@@ -726,7 +674,7 @@ const CommentsAndReactionButtons = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-2 justify-center max-w-fit">
       <div className="flex items-center border rounded-lg max-w-fit overflow-hidden">
-        <AddReactionButton onReact={handleReaction} />
+        {isLoggedIn && <AddReactionButton onReact={handleReaction} />}
         <CommentsDialog />
         <ReactionsDialog />
       </div>
@@ -804,13 +752,15 @@ const AddReactionButton = () => {
 };
 
 const RecipeTitleSection = () => {
+  const { userDetails, isLoggedIn } = useAuthStore();
   const { recipe } = useRecipeStore();
-  const { title, byUser } = recipe;
+  const { title, byUser, _id: recipeId } = recipe;
   const { firstName, lastName } = byUser;
   const ownerName = `${firstName} ${lastName}`;
+  const navigateTo = useNavigate();
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex justify-between gap-3">
       <div className="flex flex-col gap-1">
         <p className="text-2xl min-[400px]:text-3xl sm:text-5xl lg:max-xl:text-4xl font-bold text-primary">
           {title}
@@ -825,6 +775,33 @@ const RecipeTitleSection = () => {
           </span>
         </p>
       </div>
+
+      {isLoggedIn && byUser._id === userDetails?._id && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="hover:text-primary transition-colors cursor-pointer">
+              <MoreVertical className="size-10" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-28 p-0 overflow-hidden">
+            <Button
+              variant="ghost"
+              className="w-full justify-center rounded-none"
+              onClick={() => navigateTo(`/recipes/${recipeId}/edit`)}
+            >
+              Edit
+            </Button>
+
+            <Button
+              variant="ghost"
+              className="w-full justify-center text-destructive-foreground rounded-none"
+              onClick={() => alert("Coming Soon")}
+            >
+              Delete
+            </Button>
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 };

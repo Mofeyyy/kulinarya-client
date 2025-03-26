@@ -36,10 +36,14 @@ import toast from "react-hot-toast";
 import { groupByIsland } from "@/utils/recipeUtils";
 import { recipeCategories } from "@/constants/recipeConstants";
 import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
+import useRecipeStore from "@/hooks/stores/useRecipeStore";
+import useConfirmDialog from "@/components/useConfirmDialog";
 
 // -------------------------------------------------------------
 
-const CreateRecipeForm = () => {
+const RecipeForm = () => {
+  const { recipe } = useRecipeStore();
+  const { openDialog, ConfirmDialog } = useConfirmDialog();
   const {
     recipeForm,
     control,
@@ -51,7 +55,7 @@ const CreateRecipeForm = () => {
     // For setting values manually
     setValue,
     getValues,
-  } = useRecipeForm();
+  } = useRecipeForm(recipe);
 
   const {
     fields: ingredientFields,
@@ -65,6 +69,16 @@ const CreateRecipeForm = () => {
   const { mediaPreview, fileNames, setMediaPreview, setFileNames } =
     useMediaPreviewStore();
 
+  useEffect(() => {
+    if (recipe) {
+      setMediaPreview({
+        mainPictureUrl: recipe.mainPictureUrl || null,
+        videoUrl: recipe.videoUrl || null,
+        additionalPicturesUrls: recipe.additionalPicturesUrls || [],
+      });
+    }
+  }, [recipe, setMediaPreview]);
+
   const { procedureFields, addProcedure, removeProcedure } =
     useProcedureFieldArray(control, setValue, getValues);
 
@@ -73,10 +87,15 @@ const CreateRecipeForm = () => {
     if (!files?.length) return;
 
     if (type === "additionalPicturesUrls") {
+      if (mediaPreview.additionalPicturesUrls.length >= 5) {
+        toast.error("Max additional pictures reached!");
+        return;
+      } // Prevent upload if already at the limit
+
       const newFiles = Array.from(files).slice(
         0,
         5 - mediaPreview.additionalPicturesUrls.length
-      );
+      ); // Limit to 5
 
       setMediaPreview((prev) => ({
         ...prev,
@@ -109,7 +128,7 @@ const CreateRecipeForm = () => {
         [type.replace("Url", "")]: file.name,
       }));
 
-      console.log(file);
+      console.log("Uploaded File:", file);
 
       // Set the file in react-hook-form
       setValue(fieldType, file);
@@ -119,58 +138,85 @@ const CreateRecipeForm = () => {
     event.target.value = "";
   };
 
-  const handleRemoveMainPicture = () => {
-    setMediaPreview((prev) => ({
-      ...prev,
-      mainPictureUrl: null,
-    }));
+  const handleRemoveMainPicture = async () => {
+    if (mediaPreview.mainPictureUrl === recipe?.mainPictureUrl && !!recipe) {
+      toast.error("You cannot remove the old main picture. Change it!");
+      return;
+    }
 
-    setFileNames((prev) => ({
-      ...prev,
-      mainPicture: null,
-    }));
-
-    setValue("mainPicture", null);
-  };
-
-  const handleRemoveVideo = () => {
-    setMediaPreview((prev) => ({
-      ...prev,
-      videoUrl: null,
-    }));
-
-    setFileNames((prev) => ({
-      ...prev,
-      video: null,
-    }));
-
-    setValue("video", null);
-  };
-
-  const removeAdditionalPicture = (index) => {
-    setMediaPreview((prev) => ({
-      ...prev,
-      additionalPicturesUrls: prev.additionalPicturesUrls.filter(
-        (_, i) => i !== index
-      ),
-    }));
-
-    setFileNames((prev) => ({
-      ...prev,
-      additionalPictures: prev.additionalPictures.filter((_, i) => i !== index),
-    }));
-
-    // Remove the file from react-hook-form state
-    setValue(
-      "additionalPictures",
-      (getValues("additionalPictures") || []).filter((_, i) => i !== index)
+    const isConfirmed = await openDialog(
+      `Are you sure you want to ${
+        !!recipe ? "restore to the old picture" : "remove this main picture"
+      }?`
     );
+
+    if (isConfirmed) {
+      setMediaPreview((prev) => ({
+        ...prev,
+        mainPictureUrl: recipe?.mainPictureUrl || null, // Restore original if it exists
+      }));
+
+      setFileNames((prev) => ({
+        ...prev,
+        mainPicture: null,
+      }));
+
+      setValue("mainPicture", recipe?.mainPictureUrl || null);
+    }
+  };
+
+  const handleRemoveVideo = async () => {
+    const isConfirmed = await openDialog(
+      "Are you sure you want to remove this video?"
+    );
+
+    if (isConfirmed) {
+      setMediaPreview((prev) => ({
+        ...prev,
+        videoUrl: null,
+      }));
+
+      setFileNames((prev) => ({
+        ...prev,
+        video: null,
+      }));
+
+      setValue("video", null);
+    }
+  };
+
+  const removeAdditionalPicture = async (index) => {
+    const isConfirmed = await openDialog(
+      "Are you sure you want to remove this additional picture?"
+    );
+
+    if (isConfirmed) {
+      setMediaPreview((prev) => ({
+        ...prev,
+        additionalPicturesUrls: prev.additionalPicturesUrls.filter(
+          (_, i) => i !== index
+        ),
+      }));
+
+      setFileNames((prev) => ({
+        ...prev,
+        additionalPictures: prev.additionalPictures.filter(
+          (_, i) => i !== index
+        ),
+      }));
+
+      setValue(
+        "additionalPictures",
+        (getValues("additionalPictures") || []).filter((_, i) => i !== index)
+      );
+    }
   };
 
   // FOR DEBUGGING - useForm Errors
   useEffect(() => {
-    console.log("Form Errors:", recipeForm.formState.errors);
-  }, [recipeForm.formState.errors]);
+    console.log("Form State:", recipeForm.formState);
+    console.log("Form Errors", recipeForm.formState.errors);
+  }, [recipeForm.formState]);
 
   return (
     <Form {...recipeForm}>
@@ -274,10 +320,11 @@ const CreateRecipeForm = () => {
             {isSubmitting || isPending ? (
               <LoaderCircle className="animate-spin" />
             ) : (
-              "Submit"
+              <p>{!!recipe ? "Update" : "Submit"}</p>
             )}
           </Button>
         </div>
+        {ConfirmDialog}
       </form>
     </Form>
   );
@@ -667,6 +714,7 @@ const IngredientsFieldArray = ({
                 type="number"
                 hasErrorMessage={false}
               />
+
               {/* Unit */}
               <CustomSelectField
                 control={control}
@@ -868,7 +916,7 @@ const FormSelectUnit = ({ field, error, className }) => {
   return (
     <Select onValueChange={field.onChange} defaultValue={field.value}>
       <SelectTrigger
-        className={cn("w-28", error && "border-destructive", className)}
+        className={cn("w-28 m-0", error && "border-destructive", className)}
       >
         <SelectValue placeholder="Unit" />
       </SelectTrigger>
@@ -883,4 +931,4 @@ const FormSelectUnit = ({ field, error, className }) => {
   );
 };
 
-export default CreateRecipeForm;
+export default RecipeForm;
