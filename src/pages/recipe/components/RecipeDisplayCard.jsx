@@ -12,17 +12,11 @@ import defaultFallbackImage from "@/assets/default-fallback-image.png";
 
 const RecipeDisplayCard = ({ recipe }) => {
   const navigateTo = useNavigate();
-  const { title, byUser, totalComments, mainPictureUrl, totalReactions } =
-    recipe;
+  const { title, byUser, totalComments, mainPictureUrl, totalReactions } = recipe;
 
-  const [imageSrc, setImageSrc] = useState(
-    mainPictureUrl || defaultFallbackImage
-  );
+  const [imageSrc, setImageSrc] = useState(mainPictureUrl || defaultFallbackImage);
   const { firstName, lastName } = byUser;
   const recipeOwner = `${firstName} ${lastName}`;
-
-  // Sample Data
-  const numberOfReactions = 10;
 
   return (
     <div

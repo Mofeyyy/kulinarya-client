@@ -1,16 +1,27 @@
+import { NavLink } from "react-router-dom";
+import HeaderUserAvatar from "./HeaderUserAvatar";
+import HeaderNavLinks from "./HeaderNavLinks";
+import Logo from "../Logo";
+import NotificationDropdown from "./NotificationWithDropdown";
 import HeaderDrawer from "./HeaderDrawer";
-import HeaderContents from "./HeaderContents";
+import HeaderNav from "./HeaderNav";
 
 // -------------------------------------------------------------------
 
 const Header = () => {
   return (
-    <header className="w-full h-20 flex justify-center sm:justify-between items-center bg-primary px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40">
-      <div className="w-full hidden sm:flex justify-between items-center gap-10">
-        <HeaderContents />
-      </div>
+    <header className="w-full h-20 flex justify-center items-center bg-primary">
+      <div className="w-full flex justify-between items-center gap-10 max-w-[90vw]">
+        <NavLink to="/">
+          <Logo />
+        </NavLink>
 
-      <HeaderDrawer />
+        <div className="hidden sm:flex">
+          <HeaderNav />
+        </div>
+
+        <HeaderDrawer />
+      </div>
     </header>
   );
 };
