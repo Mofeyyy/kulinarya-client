@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Smile, MessageCircleMore } from "lucide-react";
+import { Smile, MessageCircleMore, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import defaultFallbackImage from "@/assets/default-fallback-image.png";
 
@@ -12,7 +12,14 @@ import defaultFallbackImage from "@/assets/default-fallback-image.png";
 
 const RecipeDisplayCard = ({ recipe }) => {
   const navigateTo = useNavigate();
-  const { title, byUser, totalComments, mainPictureUrl, totalReactions } = recipe;
+  const {
+    title,
+    byUser,
+    totalComments,
+    mainPictureUrl = 0,
+    totalReactions = 0,
+    totalViews = 0,
+  } = recipe;
 
   const [imageSrc, setImageSrc] = useState(mainPictureUrl || defaultFallbackImage);
   const { firstName, lastName } = byUser;
@@ -48,6 +55,11 @@ const RecipeDisplayCard = ({ recipe }) => {
           <div className="flex items-center gap-1">
             <MessageCircleMore className="size-5" />
             {totalComments}
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Eye className="size-5" />
+            {totalViews}
           </div>
         </div>
       </div>

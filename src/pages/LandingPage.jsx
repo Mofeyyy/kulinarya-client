@@ -1,18 +1,20 @@
 import RecipeDisplayCard from "./recipe/components/RecipeDisplayCard";
 import useFeaturedRecipes from "@/hooks/queries/useFeaturedRecipes";
 import useTopSharers from "@/hooks/queries/useTopSharers";
-
 import UserCard from "./home/components/UserCard";
 import HeroSection from "./home/components/HeroSection";
 import FirstSection from "./home/components/FirstSection";
 import CarouselSection from "./home/components/CarouselSection";
 import ThirdSection from "./home/components/ThirdSection";
 import FourthSection from "./home/components/FourthSection";
+import useTopEngagedRecipes from "@/hooks/queries/useTopEngagedRecipes";
 
 const LandingPage = () => {
   const { data: featuredRecipesData = [] } = useFeaturedRecipes();
   const featuredRecipes = featuredRecipesData.slice(0, 10); // Limit to 10
-  const { data: topSharers = [] } = useTopSharers();
+
+  const { data: topRecipeSharers = [] } = useTopSharers();
+  const { data: topEngagedRecipes = [] } = useTopEngagedRecipes();
 
   return (
     <section className="mb-20 flex w-full flex-col items-center justify-center gap-5 overflow-x-hidden sm:gap-10 lg:gap-16">
@@ -25,10 +27,16 @@ const LandingPage = () => {
         <hr />
 
         <CarouselSection
+          title="Top Engaged Recipes"
+          items={topEngagedRecipes}
+          renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
+        />
+
+        {/* <CarouselSection
           title="Featured Recipes"
           items={featuredRecipes}
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
-        />
+        /> */}
 
         <hr />
 
@@ -39,7 +47,7 @@ const LandingPage = () => {
         <CarouselSection
           title="Top Recipe Sharers"
           description="Meet our top recipe sharers"
-          items={topSharers}
+          items={topRecipeSharers}
           renderItem={(user) => <UserCard user={user} />}
         />
 
