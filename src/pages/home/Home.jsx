@@ -19,6 +19,18 @@ const HomePage = () => {
   const [mostViewedRecipes, setMostViewedRecipes] = useState([]);
   const [mostReactedRecipes, setMostReactedRecipes] = useState([]);
 
+
+useEffect(() => {
+  if (!userDetails) {
+    // Redirect the user to the login page if they are not logged in
+    window.location.href = "/login"; // or use `history.push('/login')` if using react-router
+  }
+}, [userDetails]); // Runs when `userDetails` changes
+
+useEffect(() => {
+  document.title = "Home | Kulinarya";  // Set the document title to "Kulinarya"
+}, []);
+  
   useEffect(() => {
     const fetchFeaturedRecipes = async () => {
       try {

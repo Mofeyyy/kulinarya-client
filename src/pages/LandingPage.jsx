@@ -23,6 +23,10 @@ const LandingPage = () => {
   const [topSharers, setTopSharers] = useState([]);
 
   useEffect(() => {
+    document.title = "Kulinarya";  // Set the document title to "Kulinarya"
+  }, []);
+
+  useEffect(() => {
     const fetchFeaturedRecipes = async () => {
       try {
         const response = await API.get("/recipes/featured");
