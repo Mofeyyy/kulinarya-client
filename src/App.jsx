@@ -1,6 +1,5 @@
 import { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 // Imported Context
@@ -12,8 +11,6 @@ import AppLayout from "@/layouts/AppLayout";
 // Imported Components
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-
 
 // Imported Pages With Lazy Loading
 const LandingPage = lazy(() => import("@/pages/LandingPage.jsx"));
@@ -50,6 +47,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import API from "./config/axios";
+import handleApiRequest from "./utils/handleApiRequest";
+import { BASE_URL } from "./config/axios";
+import axios from "axios";
 // --------------------------------------------------------------------
 
 function App() {
@@ -57,15 +58,19 @@ function App() {
 
   // Initial Login and Test DB Connection
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/")
-      .then((response) => {
+    const doInitialLogin = async () => {
+      try {
+        const response = await axios.get(BASE_URL);
         if (response.status === 201) {
           toast.success(response.data.message);
         }
         console.log(response.data);
-      })
-      .catch((error) => console.log(`Error: ${error}`));
+      } catch (err) {
+        console.log(`Error: ${err}`);
+      }
+    };
+
+    doInitialLogin();
   }, []);
 
   // Fetching the user details on page load
@@ -106,10 +111,7 @@ function App() {
 
               <Route element={<ProtectedRoute />}>
                 <Route path="recipes/create" element={<CreateRecipePage />} />
-                <Route
-                  path="recipes/:recipeId/edit"
-                  element={<EditRecipePage />}
-                />
+                <Route path="recipes/:recipeId/edit" element={<EditRecipePage />} />
               </Route>
 
               <Route path="recipes" element={<RecipePage />} />

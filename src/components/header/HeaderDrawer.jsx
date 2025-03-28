@@ -7,7 +7,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Menu } from "lucide-react";
-import HeaderContents from "./HeaderContents";
+import HeaderNav from "./HeaderNav";
 
 // --------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ const HeaderDrawer = () => {
         </DrawerHeader>
 
         <div className="flex flex-col justify-between items-center gap-5">
-          <HeaderContents />
+          <HeaderNav />
         </div>
       </DrawerContent>
     </Drawer>

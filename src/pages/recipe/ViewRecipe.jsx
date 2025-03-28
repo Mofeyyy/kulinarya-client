@@ -15,8 +15,6 @@ import useFetchReactions from "@/hooks/queries/useFetchReactions";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import useFetchRecipe from "@/hooks/queries/useFetchRecipe";
 import { Button } from "@/components/ui/button";
-
-
 import useConfirmDialog from "@/components/useConfirmDialog";
 import {
   MessageCircleMore,
@@ -39,11 +37,7 @@ import {
 } from "@/components/ui/card";
 import useRecipeStore from "@/hooks/stores/useRecipeStore";
 import useAuthStore from "@/hooks/stores/useAuthStore";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { splitParagraphs } from "@/utils/textUtils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -96,7 +90,6 @@ const ViewRecipe = () => {
     }
   }, [recipeId]);
 
-
   useEffect(() => {
     console.log("Updated Recipe State:", recipe);
   }, [recipe]);
@@ -107,7 +100,6 @@ const ViewRecipe = () => {
 
   const { videoUrl } = recipe;
 
-  
   return (
     <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
       <CustomBreadCrumb />
@@ -144,14 +136,8 @@ const ReactionsDialog = () => {
   const [open, setOpen] = useState(false);
   const { _id: recipeId } = recipe;
 
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useFetchReactions(recipeId, open);
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFetchReactions(recipeId, open);
 
   const observer = useRef();
 
@@ -181,36 +167,25 @@ const ReactionsDialog = () => {
       </DialogTrigger>
       <DialogContent className="max-w-lg px-2 sm:px-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-primary">
-            Reactions
-          </DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-primary">Reactions</DialogTitle>
           <DialogDescription className="hidden" />
         </DialogHeader>
         <div className="max-h-96 overflow-y-auto p-2">
           {isLoading && <p>Loading reactions...</p>}
-          {error && (
-            <p className="text-destructive-foreground">
-              Failed to load reactions.
-            </p>
-          )}
+          {error && <p className="text-destructive-foreground">Failed to load reactions.</p>}
 
           {data?.pages?.length > 0 ? (
             data.pages.map((page, pageIndex) => (
               <div key={pageIndex} className="flex flex-col gap-4 mb-4">
                 {page.reactions.map((reaction, index) => {
-                  if (
-                    pageIndex === data.pages.length - 1 &&
-                    index === page.reactions.length - 1
-                  ) {
+                  if (pageIndex === data.pages.length - 1 && index === page.reactions.length - 1) {
                     return (
                       <div ref={lastReactorRef} key={reaction._id}>
                         <ReactionItem reaction={reaction} />
                       </div>
                     );
                   }
-                  return (
-                    <ReactionItem key={reaction._id} reaction={reaction} />
-                  );
+                  return <ReactionItem key={reaction._id} reaction={reaction} />;
                 })}
               </div>
             ))
@@ -283,14 +258,8 @@ const CommentsDialog = () => {
   const [open, setOpen] = useState(false);
   const { _id: recipeId } = recipe;
 
-  const {
-    data,
-    isLoading,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useFetchComments(recipeId, open);
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFetchComments(recipeId, open);
 
   const observer = useRef();
 
@@ -320,27 +289,18 @@ const CommentsDialog = () => {
       </DialogTrigger>
       <DialogContent className="max-w-lg px-2 sm:px-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-primary">
-            Comments
-          </DialogTitle>
+          <DialogTitle className="text-xl font-semibold text-primary">Comments</DialogTitle>
           <DialogDescription className="hidden" />
         </DialogHeader>
         <div className="max-h-96 overflow-y-auto p-2">
           {isLoading && <p>Loading comments...</p>}
-          {error && (
-            <p className="text-destructive-foreground">
-              Failed to load comments.
-            </p>
-          )}
+          {error && <p className="text-destructive-foreground">Failed to load comments.</p>}
 
           {data?.pages?.length > 0 ? (
             data.pages.map((page, pageIndex) => (
               <div key={pageIndex} className="flex flex-col gap-6 mb-6">
                 {page.comments.map((comment, index) => {
-                  if (
-                    pageIndex === data.pages.length - 1 &&
-                    index === page.comments.length - 1
-                  ) {
+                  if (pageIndex === data.pages.length - 1 && index === page.comments.length - 1) {
                     return (
                       <div ref={lastCommentRef} key={comment._id}>
                         <Comments comments={[comment]} />
@@ -366,9 +326,7 @@ const CommentItem = ({ comment }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.content);
   const { userDetails, isLoggedIn } = useAuthStore();
-  const { updateCommentMutation, deleteCommentMutation } = useCommentMutations(
-    comment.fromPost
-  );
+  const { updateCommentMutation, deleteCommentMutation } = useCommentMutations(comment.fromPost);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
 
   const handleEdit = () => {
@@ -387,9 +345,7 @@ const CommentItem = ({ comment }) => {
   };
 
   const handleDelete = async () => {
-    const isConfirmed = await openDialog(
-      "Are you sure you want to delete this comment?"
-    );
+    const isConfirmed = await openDialog("Are you sure you want to delete this comment?");
     if (isConfirmed) {
       deleteCommentMutation.mutate(comment._id);
     }
@@ -477,13 +433,7 @@ const Comments = ({ comments }) => {
   );
 };
 
-const CommentTextArea = ({
-  type = "add",
-  value = "",
-  onChange,
-  onSave,
-  onCancel,
-}) => {
+const CommentTextArea = ({ type = "add", value = "", onChange, onSave, onCancel }) => {
   const [comment, setComment] = useState(value);
   const { recipe } = useRecipeStore();
   const { _id: recipeId } = recipe;
@@ -534,7 +484,6 @@ const RecipeTabs = () => {
   const [activeTab, setActiveTab] = useState("ingredients");
   const { recipe } = useRecipeStore();
   const { ingredients, procedure } = recipe;
-  
 
   return (
     <Card className="w-full p-0 pt-2 overflow-hidden rounded-b-lg rounded-t-none bg-background border-0 text-foreground">
@@ -681,9 +630,7 @@ const CommentsAndReactionButtons = () => {
 
       <div className="flex gap-3 justify-center">
         <p className="text-muted-foreground text-xs flex gap-1 items-center">
-          {`${totalReactions} ${
-            totalReactions === 1 ? "Reaction" : "Reactions"
-          }`}
+          {`${totalReactions} ${totalReactions === 1 ? "Reaction" : "Reactions"}`}
         </p>
 
         <p className="text-muted-foreground text-xs flex gap-1 items-center">
@@ -698,17 +645,13 @@ const AddReactionButton = () => {
   const { recipe } = useRecipeStore();
   const { _id: recipeId, userReaction } = recipe;
   const existingReaction = userReaction?.reaction;
-  const [selectedReaction, setSelectedReaction] = useState(
-    existingReaction || null
-  );
+  const [selectedReaction, setSelectedReaction] = useState(existingReaction || null);
   const [isOpen, setIsOpen] = useState(false);
 
   const { mutate: toggleReaction } = useToggleReaction(recipeId);
 
   const handleReactionClick = (reactionValue) => {
-    setSelectedReaction((prev) =>
-      prev === reactionValue ? null : reactionValue
-    );
+    setSelectedReaction((prev) => (prev === reactionValue ? null : reactionValue));
     toggleReaction(reactionValue);
     setIsOpen(false);
   };
@@ -840,13 +783,8 @@ const RecipeDescription = () => {
 
   return (
     <div className="text-sm leading-loose text-justify text-muted-foreground flex flex-col ">
-      <ParagraphList
-        paragraphs={isExpanded ? formattedDescription : truncatedText}
-      />
-      <Button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="mt-8 self-start"
-      >
+      <ParagraphList paragraphs={isExpanded ? formattedDescription : truncatedText} />
+      <Button onClick={() => setIsExpanded(!isExpanded)} className="mt-8 self-start">
         {isExpanded ? "Show Less" : "Show More"}
       </Button>
     </div>
@@ -855,10 +793,7 @@ const RecipeDescription = () => {
 
 const ParagraphList = ({ paragraphs, className }) => {
   return paragraphs.map((paragraph, index, arr) => (
-    <p
-      key={index}
-      className={cn(index === arr.length - 1 ? "" : "mb-5", className)}
-    >
+    <p key={index} className={cn(index === arr.length - 1 ? "" : "mb-5", className)}>
       {paragraph}
     </p>
   ));
@@ -871,10 +806,8 @@ const OwnerProfileCard = () => {
   const ownerName = `${firstName} ${lastName}`;
   const MAX_BIO_LENGTH = 200;
 
-  const truncatedBio =
-    bio.length > MAX_BIO_LENGTH ? bio.slice(0, MAX_BIO_LENGTH) + "..." : bio;
-    const navigate = useNavigate();
-    
+  const truncatedBio = bio.length > MAX_BIO_LENGTH ? bio.slice(0, MAX_BIO_LENGTH) + "..." : bio;
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-xl pb-10 px-10 rounded-lg bg-background text-foreground flex flex-col items-center border shadow-lg">
@@ -891,8 +824,8 @@ const OwnerProfileCard = () => {
         <p className="text-sm leading-loose text-center">{truncatedBio}</p>
 
         <Button className="w-full" onClick={() => navigate(`/profile/${recipe?.byUser?._id}`)}>
-      View Profile
-    </Button>
+          View Profile
+        </Button>
       </div>
     </div>
   );

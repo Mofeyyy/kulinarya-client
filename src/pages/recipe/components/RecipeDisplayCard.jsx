@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Smile, MessageCircleMore } from "lucide-react";
+import { Smile, MessageCircleMore, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import defaultFallbackImage from "@/assets/default-fallback-image.png";
 
@@ -12,39 +12,41 @@ import defaultFallbackImage from "@/assets/default-fallback-image.png";
 
 const RecipeDisplayCard = ({ recipe }) => {
   const navigateTo = useNavigate();
-  const { title, byUser, totalComments, mainPictureUrl, totalReactions } =
-    recipe;
+  const {
+    title,
+    byUser,
+    totalComments,
+    mainPictureUrl = 0,
+    totalReactions = 0,
+    totalViews = 0,
+  } = recipe;
 
-  const [imageSrc, setImageSrc] = useState(
-    mainPictureUrl || defaultFallbackImage
-  );
+  const [imageSrc, setImageSrc] = useState(mainPictureUrl || defaultFallbackImage);
   const { firstName, lastName } = byUser;
   const recipeOwner = `${firstName} ${lastName}`;
-
-  // Sample Data
-  const numberOfReactions = 10;
 
   return (
     <div
       onClick={() => navigateTo(`/recipes/${recipe._id}`)}
-      className="w-full p-3 rounded-lg border shadow-sm flex flex-col gap-2 cursor-pointer hover:opacity-80 transition"
+      className="flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-3 shadow-sm transition hover:opacity-80"
     >
       {/* Picture */}
       <img
         src={imageSrc}
         alt="recipePicture"
-        className="h-52 w-full object-cover rounded-sm bg-muted"
+        className="bg-muted h-52 w-full rounded-sm object-cover"
         onError={() => setImageSrc(defaultFallbackImage)}
+        loading="lazy"
       />
 
       {/* Other Details  */}
       <div className="flex flex-col gap-5">
         <div>
-          <p className="font-bold text-xl text-foreground">{title}</p>
+          <p className="text-foreground text-xl font-bold">{title}</p>
           <p className="text-muted-foreground text-sm">{`By ${recipeOwner}`}</p>
         </div>
 
-        <div className="text-muted-foreground text-sm flex gap-5 items-center">
+        <div className="text-muted-foreground flex items-center gap-5 text-sm">
           <div className="flex items-center gap-1">
             <Smile className="size-5" />
             {totalReactions}
@@ -53,6 +55,11 @@ const RecipeDisplayCard = ({ recipe }) => {
           <div className="flex items-center gap-1">
             <MessageCircleMore className="size-5" />
             {totalComments}
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Eye className="size-5" />
+            {totalViews}
           </div>
         </div>
       </div>
