@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import usePageStore from "@/hooks/stores/usePageStore";
-import RecipeForm from "./components/RecipeForm";
+import RecipeForm from "./form/RecipeForm";
+import SampleForm from "./form/SampleForm";
 
 // ----------------------------------------------------------------
 
@@ -15,12 +16,15 @@ const CreateRecipe = () => {
   }, []);
 
   return (
-    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
-      <CustomBreadCrumb />
+    <section className="flex h-full w-full items-center justify-center py-20">
+      <div className="flex h-full w-full max-w-[90vw] flex-col gap-10">
+        <CustomBreadCrumb />
 
-      <p className="text-4xl font-bold">Create New Recipe</p>
+        <p className="text-2xl font-bold">Create New Recipe</p>
 
-      <RecipeForm />
+        {/* <RecipeForm /> */}
+        <SampleForm />
+      </div>
     </section>
   );
 };

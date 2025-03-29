@@ -52,38 +52,38 @@ const useRecipeForm = (initialData = null) => {
   const onSubmit = async (data) => {
     console.log("Form Submitted!", data);
 
-    if (isEditing) {
-      updateRecipe(
-        { recipeId: initialData._id, ...data },
-        {
-          onSuccess: (response) => {
-            toast.success("Recipe updated successfully!");
-            reset();
-            resetAllMediaPreview();
-            console.log("Recipe updated successfully!", response);
-            navigateTo(`/recipes/${initialData._id}`);
-          },
-          onError: (err) => {
-            toast.error(`Failed to update recipe ${err}`);
-            console.error("Failed to update recipe", err);
-          },
-        }
-      );
-    } else {
-      createRecipe(data, {
-        onSuccess: (response) => {
-          toast.success("Recipe created successfully! Wait for moderation.");
-          reset();
-          resetAllMediaPreview();
-          console.log("Recipe created successfully!", response);
-          navigateTo(`/recipes`);
-        },
-        onError: (err) => {
-          toast.error(`Failed to post recipe ${err}`);
-          console.error("Failed to post recipe", err);
-        },
-      });
-    }
+    // if (isEditing) {
+    //   updateRecipe(
+    //     { recipeId: initialData._id, ...data },
+    //     {
+    //       onSuccess: (response) => {
+    //         toast.success("Recipe updated successfully!");
+    //         reset();
+    //         resetAllMediaPreview();
+    //         console.log("Recipe updated successfully!", response);
+    //         navigateTo(`/recipes/${initialData._id}`);
+    //       },
+    //       onError: (err) => {
+    //         toast.error(`Failed to update recipe ${err}`);
+    //         console.error("Failed to update recipe", err);
+    //       },
+    //     }
+    //   );
+    // } else {
+    //   createRecipe(data, {
+    //     onSuccess: (response) => {
+    //       toast.success("Recipe created successfully! Wait for moderation.");
+    //       reset();
+    //       resetAllMediaPreview();
+    //       console.log("Recipe created successfully!", response);
+    //       navigateTo(`/recipes`);
+    //     },
+    //     onError: (err) => {
+    //       toast.error(`Failed to post recipe ${err}`);
+    //       console.error("Failed to post recipe", err);
+    //     },
+    //   });
+    // }
   };
 
   return {

@@ -12,21 +12,17 @@ import useAuthStore from "@/hooks/stores/useAuthStore";
 
 const RecipeFilters = () => {
   const { isLoggedIn } = useAuthStore();
-  const { setSearch, resetFilters, origin, category, search } =
-    useRecipeFilterStore();
+  const { setSearch, resetFilters, origin, category, search } = useRecipeFilterStore();
 
   const hasFilters = origin || category || search;
 
   const navigateTo = useNavigate();
 
   return (
-    <div className="w-full flex flex-col sm:max-md:grid sm:max-md:grid-cols-2 md:flex-row gap-3 items-center justify-between">
-      <div className="flex flex-col md:flex-row gap-3 w-full">
+    <div className="flex w-full flex-col items-center justify-between gap-3 sm:max-md:grid sm:max-md:grid-cols-2 md:flex-row">
+      <div className="flex w-full flex-col gap-3 md:flex-row">
         {isLoggedIn && (
-          <Button
-            className="!pl-4 !pr-5 text-base"
-            onClick={() => navigateTo("/recipes/create")}
-          >
+          <Button className="!pr-5 !pl-4 text-base" onClick={() => navigateTo("/recipes/create")}>
             <Plus className="size-6" />
             Create
           </Button>
@@ -36,7 +32,7 @@ const RecipeFilters = () => {
         <SelectRecipeCategory />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-3 w-full sm:w-auto">
+      <div className="flex w-full flex-col gap-3 sm:w-auto md:flex-row">
         <SearchInput setSearch={setSearch} />
         {hasFilters && (
           <Button onClick={resetFilters}>

@@ -14,7 +14,7 @@ const AppLayout = () => {
       <main className="w-full flex-1 overflow-y-auto">
         <Outlet />
 
-        <Footer />
+        {/* <Footer /> */}
       </main>
     </div>
   );

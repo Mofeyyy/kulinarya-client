@@ -1,29 +1,33 @@
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui/select";
 import { groupByIsland } from "@/utils/recipeUtils";
-import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 import provinces from "@/data/provinces.json";
 
-// ------------------------------------------------------------
+// -------------------------------------------------------------
 
-const SelectRecipeOrigin = () => {
+const FormSelectRecipeOrigin = ({ field, error, className, isDisabled }) => {
   const groupedProvinces = groupByIsland(provinces);
 
-  const { origin, setOrigin } = useRecipeFilterStore();
-  const handleChange = (value) => {
-    setOrigin(value);
-  };
-
   return (
-    <Select value={origin} onValueChange={handleChange}>
-      <SelectTrigger className="w-full md:w-[150px] lg:w-[180px] xl:w-[200px]">
+    <Select
+      value={field.value}
+      defaultValue={field.value}
+      onValueChange={field.onChange}
+      disabled={isDisabled}
+    >
+      <SelectTrigger
+        id={field.name}
+        data-error={!!error}
+        className={cn("w-full", error && "border-destructive", className)}
+      >
         <SelectValue placeholder="Origin" />
       </SelectTrigger>
       <SelectContent>
@@ -31,9 +35,8 @@ const SelectRecipeOrigin = () => {
           Object.entries(groupedProvinces).map(([island, provinces]) => (
             <SelectGroup key={island}>
               <SelectLabel className="text-primary text-base capitalize">{island}</SelectLabel>
-
               {provinces.map((province) => (
-                <SelectItem key={province.code} value={province.name}>
+                <SelectItem key={province.code} value={province.name} className="cursor-pointer">
                   {province.name}
                 </SelectItem>
               ))}
@@ -44,4 +47,4 @@ const SelectRecipeOrigin = () => {
   );
 };
 
-export default SelectRecipeOrigin;
+export default FormSelectRecipeOrigin;
