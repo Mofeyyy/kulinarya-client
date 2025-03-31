@@ -28,7 +28,7 @@ const RecipeDisplayCard = ({ recipe }) => {
   return (
     <div
       onClick={() => navigateTo(`/recipes/${recipe._id}`)}
-      className="flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-3 shadow-sm transition hover:opacity-80"
+      className="flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-3 shadow-lg transition hover:opacity-80"
     >
       {/* Picture */}
       <img
@@ -42,8 +42,8 @@ const RecipeDisplayCard = ({ recipe }) => {
       {/* Other Details  */}
       <div className="flex flex-col gap-5">
         <div>
-          <p className="text-foreground text-xl font-bold">{title}</p>
-          <p className="text-muted-foreground text-sm">{`By ${recipeOwner}`}</p>
+          <p className="text-foreground truncate text-xl font-bold">{title}</p>
+          <p className="text-muted-foreground truncate text-sm">{`By ${recipeOwner}`}</p>
         </div>
 
         <div className="text-muted-foreground flex items-center gap-5 text-sm">

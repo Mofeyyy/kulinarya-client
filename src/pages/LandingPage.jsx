@@ -21,7 +21,7 @@ const LandingPage = () => {
       <HeroSection />
 
       {/* Parts that has padding */}
-      <div className="mb-10 flex w-full max-w-[90vw] flex-col gap-5 sm:gap-10 lg:gap-16">
+      <div className="mb-10 flex w-full max-w-[80vw] flex-col gap-5 sm:gap-10 lg:gap-16 xl:max-w-[65vw]">
         <FirstSection />
 
         <hr />
@@ -32,13 +32,14 @@ const LandingPage = () => {
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
         />
 
+        {/* //? Ask if this is necessary */}
         {/* <CarouselSection
           title="Featured Recipes"
           items={featuredRecipes}
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
         /> */}
 
-        <hr />
+        <hr className="-mt-5" />
 
         <ThirdSection />
 
@@ -51,7 +52,7 @@ const LandingPage = () => {
           renderItem={(user) => <UserCard user={user} />}
         />
 
-        <hr />
+        <hr className="-mt-5" />
 
         <FourthSection />
       </div>
