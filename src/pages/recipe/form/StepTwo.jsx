@@ -6,7 +6,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 // Imported Items For Forms
 import { secondStepSchema } from "@/schemas/recipeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useRecipeFormStore from "@/hooks/stores/useRecipeFormStore";
+import useCreateRecipeStore from "@/hooks/stores/useCreateRecipeStore";
 
 // Imported Components
 import { Form } from "@/components/ui/form";
@@ -20,7 +20,7 @@ import useProcedureFieldArray from "@/forms/field/useProcedureFieldArray";
 // -----------------------------------------------------------
 
 const StepTwo = ({ onFormValidated, onBack }) => {
-  const getSecondStepValues = useRecipeFormStore((state) => state.getSecondStepValues);
+  const getSecondStepValues = useCreateRecipeStore((state) => state.getSecondStepValues);
 
   const form = useForm({
     defaultValues: getSecondStepValues(),

@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 // Imported Hooks
 import useCreateRecipe from "@/hooks/mutations/useCreateRecipe";
-import useUpdateRecipe from "@/hooks/mutations/useUpdateRecipe";
 import useConfirmDialog from "@/components/useConfirmDialog";
+import useUnsavedChangesStore from "@/hooks/stores/useUnsavedChangesStore";
 
 // Imported Items For Forms
-import useRecipeFormStore from "@/hooks/stores/useRecipeFormStore";
-import { recipeDefaultValues } from "@/hooks/stores/useRecipeFormStore";
+import useCreateRecipeStore from "@/hooks/stores/useCreateRecipeStore";
+import { recipeDefaultValues } from "@/hooks/stores/useCreateRecipeStore";
 import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
 
 // Imported Components
@@ -34,16 +34,17 @@ const steps = [
 
 // -----------------------------------------------------------
 
-const SampleForm = () => {
+const CreateRecipeForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
-  const firstStepValues = useRecipeFormStore((state) => state.firstStepValues);
-  const secondStepValues = useRecipeFormStore((state) => state.secondStepValues);
-  const thirdStepValues = useRecipeFormStore((state) => state.thirdStepValues);
-  const setFirstStepValues = useRecipeFormStore((state) => state.setFirstStepValues);
-  const setSecondStepValues = useRecipeFormStore((state) => state.setSecondStepValues);
-  const setThirdStepValues = useRecipeFormStore((state) => state.setThirdStepValues);
-  const clearStepsValues = useRecipeFormStore((state) => state.clearStepsValues);
+  const firstStepValues = useCreateRecipeStore((state) => state.firstStepValues);
+  const secondStepValues = useCreateRecipeStore((state) => state.secondStepValues);
+  const thirdStepValues = useCreateRecipeStore((state) => state.thirdStepValues);
+  const setFirstStepValues = useCreateRecipeStore((state) => state.setFirstStepValues);
+  const setSecondStepValues = useCreateRecipeStore((state) => state.setSecondStepValues);
+  const setThirdStepValues = useCreateRecipeStore((state) => state.setThirdStepValues);
+  const clearStepsValues = useCreateRecipeStore((state) => state.clearStepsValues);
   const resetAllMediaPreview = useMediaPreviewStore((state) => state.resetAllMediaPreview);
   const navigateTo = useNavigate();
 
@@ -94,50 +95,49 @@ const SampleForm = () => {
           );
 
           if (confirm) {
-            await toast.promise(createRecipe(recipeData), {
-              loading: "Creating recipe...",
-              success: "Recipe created successfully! Wait for moderation.",
-              error: "Failed to create recipe. Please try again.",
-            });
+            await toast.promise(
+              createRecipe(recipeData),
+              {
+                loading: "Creating recipe...",
+                success: "Recipe created successfully! Wait for moderation.",
+              },
+              {
+                duration: 5000,
+              },
+            );
             clearStepsValues();
             resetAllMediaPreview();
             setCurrentStep(0);
+            setHasUnsavedChanges(false);
             navigateTo("/recipes");
           }
         } catch (error) {
           console.error("Error creating recipe:", error);
+          toast.error(`Failed create recipe: ${error}`);
         }
       }}
       onBack={() => setCurrentStep(2)}
+      isCreating={isCreating}
     />,
   ];
+
+  const hasUnsavedChanges = useMemo(() => {
+    return (
+      isFormStepChanged(firstStepValues, recipeDefaultValues.firstStepValues) ||
+      isFormStepChanged(secondStepValues, recipeDefaultValues.secondStepValues) ||
+      isFormStepChanged(thirdStepValues, recipeDefaultValues.thirdStepValues)
+    );
+  }, [firstStepValues, secondStepValues, thirdStepValues, recipeDefaultValues]);
+
+  useEffect(() => {
+    setHasUnsavedChanges(hasUnsavedChanges);
+  }, [firstStepValues, secondStepValues, thirdStepValues]);
 
   // Log the form data
   useEffect(() => {
     console.log("First Step Values:", firstStepValues);
     console.log("Second Step Values:", secondStepValues);
     console.log("Third Step Values:", thirdStepValues);
-  }, [firstStepValues, secondStepValues, thirdStepValues]);
-
-  // Prompt the user before leaving the page if there is any unsaved changes
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      const hasUnsavedChanges =
-        isFormStepChanged(firstStepValues, recipeDefaultValues.firstStepValues) ||
-        isFormStepChanged(secondStepValues, recipeDefaultValues.secondStepValues) ||
-        isFormStepChanged(thirdStepValues, recipeDefaultValues.thirdStepValues);
-
-      if (hasUnsavedChanges) {
-        event.preventDefault();
-        event.returnValue = "You have unsaved changes. Are you sure you want to leave?";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
   }, [firstStepValues, secondStepValues, thirdStepValues]);
 
   // Remove all data from the store when the component unmounts
@@ -164,6 +164,4 @@ const SampleForm = () => {
   );
 };
 
-// ! ----------------------------------------------------------
-
-export default SampleForm;
+export default CreateRecipeForm;

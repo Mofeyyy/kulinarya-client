@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Helpers
-const isFileOrUrl = z.union([z.string().url(), z.instanceof(File)]);
+const isFileOrUrl = z.union([z.string().url(), z.instanceof(File), z.literal("")]).nullable();
 
 // ----------------------------------------------------------------------
 
@@ -55,16 +55,20 @@ const recipeShema = z.object({
   // File --------------------------------------------------------------
 
   // Main Picture (Required)
-  mainPicture: isFileOrUrl.nullable().refine((file) => file !== null, {
-    message: "Main Picture is Required",
-  }),
+  mainPicture: isFileOrUrl.refine(
+    (value) => {
+      if (!value) return false;
+      return true;
+    },
+    { message: "Main Picture is Required" },
+  ),
 
   // Video (Optional)
-  video: isFileOrUrl.nullable().optional(),
+  video: isFileOrUrl.optional(),
 
   // Additional Pictures (Optional, Max 5)
   additionalPictures: z
-    .array(isFileOrUrl.nullable())
+    .array(isFileOrUrl)
     .max(5, "Only up to 5 additional pictures allowed")
     .optional(),
 

@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import usePageStore from "@/hooks/stores/usePageStore";
-import RecipeForm from "./form/RecipeForm";
-import SampleForm from "./form/SampleForm";
+import CreateRecipeForm from "./form/CreateRecipeForm";
 
 // ----------------------------------------------------------------
 
@@ -22,8 +21,7 @@ const CreateRecipe = () => {
 
         <p className="text-2xl font-bold">Create New Recipe</p>
 
-        {/* <RecipeForm /> */}
-        <SampleForm />
+        <CreateRecipeForm />
       </div>
     </section>
   );

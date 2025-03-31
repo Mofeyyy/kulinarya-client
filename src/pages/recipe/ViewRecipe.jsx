@@ -64,7 +64,7 @@ const ViewRecipe = () => {
   const { recipeId } = useParams();
   const { setPage, setSubPage } = usePageStore();
   const { recipe, setRecipe, clearRecipe } = useRecipeStore();
-  const { data: fetchedData, isLoading, error } = useFetchRecipe(recipeId);
+  const { data: recipeData, isLoading, error } = useFetchRecipe(recipeId);
 
   useEffect(() => {
     document.title = "View | Kulinarya";
@@ -74,15 +74,15 @@ const ViewRecipe = () => {
       name: recipe?.title || "Recipe View",
     });
 
-    if (fetchedData?.recipe) {
-      setRecipe(fetchedData.recipe);
+    if (recipeData) {
+      setRecipe(recipeData);
     }
 
     return () => {
       console.log("Clearing recipe...");
       clearRecipe();
     };
-  }, [recipeId, fetchedData?.recipe]);
+  }, [recipeId, recipeData]);
 
   useEffect(() => {
     if (recipeId) {
@@ -101,13 +101,13 @@ const ViewRecipe = () => {
   const { videoUrl } = recipe;
 
   return (
-    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
+    <section className="flex w-full flex-col gap-10 px-5 py-20 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40">
       <CustomBreadCrumb />
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-10 ">
+      <div className="flex flex-col gap-10 lg:flex-row">
         {/* Left Side */}
-        <div className="lg:flex-1 flex flex-col gap-8">
+        <div className="flex flex-col gap-8 lg:flex-1">
           <RecipeImages />
           <RecipeTitleSection />
           <RecipeDescription />
@@ -116,8 +116,8 @@ const ViewRecipe = () => {
         </div>
 
         {/* Right Side */}
-        <div className="lg:w-[35%] 2xl:w-[30%] flex flex-col items-center gap-32">
-          <div className="w-full flex flex-col border rounded-lg gap-3 shadow-lg overflow-hidden">
+        <div className="flex flex-col items-center gap-32 lg:w-[35%] 2xl:w-[30%]">
+          <div className="flex w-full flex-col gap-3 overflow-hidden rounded-lg border shadow-lg">
             {videoUrl && <VideoPlayer src={videoUrl} />}
             <RecipeTabs />
           </div>
@@ -152,13 +152,13 @@ const ReactionsDialog = () => {
       });
       if (node) observer.current.observe(node);
     },
-    [isFetchingNextPage, hasNextPage, fetchNextPage]
+    [isFetchingNextPage, hasNextPage, fetchNextPage],
   );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:text-primary transition-colors border-l text-sm">
+        <button className="hover:text-primary flex cursor-pointer items-center gap-2 border-l px-4 py-2 text-sm transition-colors">
           <Smile className="size-5" />
           <p>
             View <span className="hidden sm:inline">Reactions</span>
@@ -167,7 +167,7 @@ const ReactionsDialog = () => {
       </DialogTrigger>
       <DialogContent className="max-w-lg px-2 sm:px-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-primary">Reactions</DialogTitle>
+          <DialogTitle className="text-primary text-xl font-semibold">Reactions</DialogTitle>
           <DialogDescription className="hidden" />
         </DialogHeader>
         <div className="max-h-96 overflow-y-auto p-2">
@@ -176,7 +176,7 @@ const ReactionsDialog = () => {
 
           {data?.pages?.length > 0 ? (
             data.pages.map((page, pageIndex) => (
-              <div key={pageIndex} className="flex flex-col gap-4 mb-4">
+              <div key={pageIndex} className="mb-4 flex flex-col gap-4">
                 {page.reactions.map((reaction, index) => {
                   if (pageIndex === data.pages.length - 1 && index === page.reactions.length - 1) {
                     return (
@@ -201,11 +201,11 @@ const ReactionsDialog = () => {
 
 const ReactionItem = ({ reaction }) => {
   return (
-    <div className="flex items-center gap-3 p-2 border rounded-lg">
+    <div className="flex items-center gap-3 rounded-lg border p-2">
       {/* Profile Picture */}
       <Avatar
         onClick={() => alert("Coming Soon")}
-        className="cursor-pointer hover:scale-125 transition-transform"
+        className="cursor-pointer transition-transform hover:scale-125"
       >
         <AvatarImage src={reaction.byUser.profilePictureUrl} />
         <AvatarFallback>
@@ -218,11 +218,11 @@ const ReactionItem = ({ reaction }) => {
         <div className="flex items-center gap-2">
           <span
             onClick={() => alert("Coming Soon")}
-            className="font-semibold cursor-pointer hover:text-primary transition-colors"
+            className="hover:text-primary cursor-pointer font-semibold transition-colors"
           >
             {reaction.byUser.firstName} {reaction.byUser.lastName}
           </span>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             • {dayjs(reaction.createdAt).fromNow()}
           </span>
         </div>
@@ -274,13 +274,13 @@ const CommentsDialog = () => {
       });
       if (node) observer.current.observe(node);
     },
-    [isFetchingNextPage, hasNextPage, fetchNextPage]
+    [isFetchingNextPage, hasNextPage, fetchNextPage],
   );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2 py-2 px-4 cursor-pointer hover:text-primary transition-colors border-l text-sm">
+        <button className="hover:text-primary flex cursor-pointer items-center gap-2 border-l px-4 py-2 text-sm transition-colors">
           <MessageCircleMore className="size-5" />
           <p>
             View <span className="hidden sm:inline">Comments</span>
@@ -289,7 +289,7 @@ const CommentsDialog = () => {
       </DialogTrigger>
       <DialogContent className="max-w-lg px-2 sm:px-6">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-primary">Comments</DialogTitle>
+          <DialogTitle className="text-primary text-xl font-semibold">Comments</DialogTitle>
           <DialogDescription className="hidden" />
         </DialogHeader>
         <div className="max-h-96 overflow-y-auto p-2">
@@ -298,7 +298,7 @@ const CommentsDialog = () => {
 
           {data?.pages?.length > 0 ? (
             data.pages.map((page, pageIndex) => (
-              <div key={pageIndex} className="flex flex-col gap-6 mb-6">
+              <div key={pageIndex} className="mb-6 flex flex-col gap-6">
                 {page.comments.map((comment, index) => {
                   if (pageIndex === data.pages.length - 1 && index === page.comments.length - 1) {
                     return (
@@ -352,11 +352,11 @@ const CommentItem = ({ comment }) => {
   };
 
   return (
-    <div className="flex gap-3 items-start max-w-xl">
+    <div className="flex max-w-xl items-start gap-3">
       {/* Profile Picture */}
       <Avatar
         onClick={() => alert("Coming Soon")}
-        className="cursor-pointer hover:scale-125 transition-transform"
+        className="cursor-pointer transition-transform hover:scale-125"
       >
         <AvatarImage src={comment.byUser.profilePictureUrl} />
         <AvatarFallback>
@@ -370,11 +370,11 @@ const CommentItem = ({ comment }) => {
         <div className="flex items-center gap-2">
           <span
             onClick={() => alert("Coming Soon")}
-            className="font-semibold cursor-pointer hover:text-primary transition-colors"
+            className="hover:text-primary cursor-pointer font-semibold transition-colors"
           >
             {comment.byUser.firstName} {comment.byUser.lastName}
           </span>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             • {dayjs(comment.createdAt).fromNow()}
           </span>
         </div>
@@ -388,7 +388,7 @@ const CommentItem = ({ comment }) => {
             onCancel={() => setIsEditing(false)}
           />
         ) : (
-          <p className="text-sm text-muted-foreground">{comment.content}</p>
+          <p className="text-muted-foreground text-sm">{comment.content}</p>
         )}
       </div>
 
@@ -396,11 +396,11 @@ const CommentItem = ({ comment }) => {
       {isLoggedIn && comment.byUser._id === userDetails?._id && (
         <Popover open={isOptionOpen} onOpenChange={setIsOptionOpen}>
           <PopoverTrigger asChild>
-            <button className="hover:text-primary transition-colors cursor-pointer">
+            <button className="hover:text-primary cursor-pointer transition-colors">
               <MoreVertical className="size-5" />
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-28 p-0 overflow-hidden">
+          <PopoverContent className="w-28 overflow-hidden p-0">
             <Button
               variant="ghost"
               className="w-full justify-center rounded-none"
@@ -410,7 +410,7 @@ const CommentItem = ({ comment }) => {
             </Button>
             <Button
               variant="ghost"
-              className="w-full justify-center text-destructive-foreground rounded-none"
+              className="text-destructive-foreground w-full justify-center rounded-none"
               onClick={handleDelete}
             >
               Delete
@@ -463,13 +463,13 @@ const CommentTextArea = ({ type = "add", value = "", onChange, onSave, onCancel 
         <Button
           size="icon"
           variant="ghost"
-          className="absolute bottom-2 right-2 p-2"
+          className="absolute right-2 bottom-2 p-2"
           onClick={handleAddComment}
         >
-          <SendHorizontal className="size-5 text-muted-foreground" />
+          <SendHorizontal className="text-muted-foreground size-5" />
         </Button>
       ) : (
-        <div className="flex justify-end gap-2 mt-2">
+        <div className="mt-2 flex justify-end gap-2">
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
@@ -486,7 +486,7 @@ const RecipeTabs = () => {
   const { ingredients, procedure } = recipe;
 
   return (
-    <Card className="w-full p-0 pt-2 overflow-hidden rounded-b-lg rounded-t-none bg-background border-0 text-foreground">
+    <Card className="bg-background text-foreground w-full overflow-hidden rounded-t-none rounded-b-lg border-0 p-0 pt-2">
       {/* Tabs */}
       <div className="flex border-b">
         {[
@@ -495,7 +495,7 @@ const RecipeTabs = () => {
         ].map((tab) => (
           <button
             key={tab.id}
-            className={`py-1 px-5 cursor-pointer hover:opacity-80 transition-opacity font-bold border-b-3 ${
+            className={`cursor-pointer border-b-3 px-5 py-1 font-bold transition-opacity hover:opacity-80 ${
               activeTab === tab.id ? "border-primary" : "border-background"
             }`}
             onClick={() => setActiveTab(tab.id)}
@@ -508,7 +508,7 @@ const RecipeTabs = () => {
       {/* Content */}
       <CardContent className="text-sm">
         {activeTab === "ingredients" ? (
-          <ul className="list-disc px-5 space-y-2">
+          <ul className="list-disc space-y-2 px-5">
             {ingredients.map(({ _id, quantity, unit, name }) => (
               <li key={_id}>
                 {quantity} {unit} {name}
@@ -526,7 +526,7 @@ const RecipeTabs = () => {
         )}
       </CardContent>
 
-      <div className="border-t flex items-center p-5">
+      <div className="flex items-center border-t p-5">
         <Button onClick={() => alert("Coming Soon")}>
           <Download className="size-5" />
           Download
@@ -546,12 +546,12 @@ const VideoPlayer = ({ src }) => {
   };
 
   return (
-    <div className="relative w-full rounded-t-lg overflow-hidden">
+    <div className="relative w-full overflow-hidden rounded-t-lg">
       {/* Video with Blur */}
       <video
         ref={videoRef}
         src={src}
-        className={`w-full h-auto rounded-t-lg transition ${
+        className={`h-auto w-full rounded-t-lg transition ${
           !isPlaying ? "blur-xs brightness-50" : "blur-0 brightness-100"
         }`}
         controls={isPlaying}
@@ -561,9 +561,9 @@ const VideoPlayer = ({ src }) => {
       {!isPlaying && (
         <button
           onClick={handlePlay}
-          className="absolute inset-0 flex items-center justify-center bg-black/10 rounded-lg group cursor-pointer"
+          className="group absolute inset-0 flex cursor-pointer items-center justify-center rounded-lg bg-black/10"
         >
-          <Play className="size-20 text-white transition-colors group-hover:text-primary" />
+          <Play className="group-hover:text-primary size-20 text-white transition-colors" />
         </button>
       )}
     </div>
@@ -585,7 +585,7 @@ const RecipeImages = () => {
       <img
         src={mainPictureUrl}
         alt="Main Recipe"
-        className="w-full h-[400px] sm:h-[600px] md:h-[700px] lg:h-[600px] 2xl:h-[700px] object-cover rounded-lg shadow-lg cursor-zoom-in transition hover:opacity-80 will-change-[transform,opacity]"
+        className="h-[400px] w-full cursor-zoom-in rounded-lg object-cover shadow-lg transition will-change-[transform,opacity] hover:opacity-80 sm:h-[600px] md:h-[700px] lg:h-[600px] 2xl:h-[700px]"
         onClick={() => handleImageClick(mainPictureUrl)}
         loading="lazy"
       />
@@ -595,12 +595,12 @@ const RecipeImages = () => {
         {additionalPicturesUrls.map((url, index) => (
           <div
             key={index}
-            className="w-full h-16 min-[500px]:h-20 sm:h-24 md:h-28 lg:h-32 overflow-hidden shadow-lg rounded-lg aspect-square"
+            className="aspect-square h-16 w-full overflow-hidden rounded-lg shadow-lg min-[500px]:h-20 sm:h-24 md:h-28 lg:h-32"
           >
             <img
               src={url}
               alt={`Additional ${index + 1}`}
-              className="w-full h-full object-cover cursor-zoom-in transition hover:opacity-80 will-change-[transform,opacity]"
+              className="h-full w-full cursor-zoom-in object-cover transition will-change-[transform,opacity] hover:opacity-80"
               onClick={() => handleImageClick(url)}
               loading="lazy"
             />
@@ -621,19 +621,19 @@ const CommentsAndReactionButtons = () => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-2 justify-center max-w-fit">
-      <div className="flex items-center border rounded-lg max-w-fit overflow-hidden">
+    <div className="flex max-w-fit flex-col justify-center gap-2 sm:flex-row">
+      <div className="flex max-w-fit items-center overflow-hidden rounded-lg border">
         {isLoggedIn && <AddReactionButton onReact={handleReaction} />}
         <CommentsDialog />
         <ReactionsDialog />
       </div>
 
-      <div className="flex gap-3 justify-center">
-        <p className="text-muted-foreground text-xs flex gap-1 items-center">
+      <div className="flex justify-center gap-3">
+        <p className="text-muted-foreground flex items-center gap-1 text-xs">
           {`${totalReactions} ${totalReactions === 1 ? "Reaction" : "Reactions"}`}
         </p>
 
-        <p className="text-muted-foreground text-xs flex gap-1 items-center">
+        <p className="text-muted-foreground flex items-center gap-1 text-xs">
           {`${totalComments} ${totalComments === 1 ? "Comment" : "Comments"}`}
         </p>
       </div>
@@ -660,10 +660,10 @@ const AddReactionButton = () => {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <button
-          className={`py-2 px-4 cursor-pointer w-auto max-w-fit text-sm ${
+          className={`w-auto max-w-fit cursor-pointer px-4 py-2 text-sm ${
             selectedReaction
               ? "transition-transform hover:scale-125"
-              : "transition-colors hover:text-primary"
+              : "hover:text-primary transition-colors"
           }`}
         >
           {selectedReaction ? (
@@ -683,7 +683,7 @@ const AddReactionButton = () => {
         {reactions.map(({ value, reaction }) => (
           <button
             key={value}
-            className="text-2xl transition-transform hover:scale-125 cursor-pointer"
+            className="cursor-pointer text-2xl transition-transform hover:scale-125"
             onClick={() => handleReactionClick(value)}
           >
             {reaction}
@@ -705,7 +705,7 @@ const RecipeTitleSection = () => {
   return (
     <div className="flex justify-between gap-3">
       <div className="flex flex-col gap-1">
-        <p className="text-2xl min-[400px]:text-3xl sm:text-5xl lg:max-xl:text-4xl font-bold text-primary">
+        <p className="text-primary text-2xl font-bold min-[400px]:text-3xl sm:text-5xl lg:max-xl:text-4xl">
           {title}
         </p>
         <p className="text-sm">
@@ -722,11 +722,11 @@ const RecipeTitleSection = () => {
       {isLoggedIn && byUser._id === userDetails?._id && (
         <Popover>
           <PopoverTrigger asChild>
-            <button className="hover:text-primary transition-colors cursor-pointer">
+            <button className="hover:text-primary cursor-pointer transition-colors">
               <MoreVertical className="size-10" />
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-28 p-0 overflow-hidden">
+          <PopoverContent className="w-28 overflow-hidden p-0">
             <Button
               variant="ghost"
               className="w-full justify-center rounded-none"
@@ -737,7 +737,7 @@ const RecipeTitleSection = () => {
 
             <Button
               variant="ghost"
-              className="w-full justify-center text-destructive-foreground rounded-none"
+              className="text-destructive-foreground w-full justify-center rounded-none"
               onClick={() => alert("Coming Soon")}
             >
               Delete
@@ -761,7 +761,7 @@ const RecipeDescription = () => {
   const fullText = formattedDescription.join("\n");
   if (fullText.length <= MAX_LENGTH) {
     return (
-      <div className="text-sm leading-loose text-justify text-muted-foreground">
+      <div className="text-muted-foreground text-justify text-sm leading-loose">
         <ParagraphList paragraphs={formattedDescription} />
       </div>
     );
@@ -782,7 +782,7 @@ const RecipeDescription = () => {
   }
 
   return (
-    <div className="text-sm leading-loose text-justify text-muted-foreground flex flex-col ">
+    <div className="text-muted-foreground flex flex-col text-justify text-sm leading-loose">
       <ParagraphList paragraphs={isExpanded ? formattedDescription : truncatedText} />
       <Button onClick={() => setIsExpanded(!isExpanded)} className="mt-8 self-start">
         {isExpanded ? "Show Less" : "Show More"}
@@ -810,18 +810,18 @@ const OwnerProfileCard = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-xl pb-10 px-10 rounded-lg bg-background text-foreground flex flex-col items-center border shadow-lg">
+    <div className="bg-background text-foreground flex max-w-xl flex-col items-center rounded-lg border px-10 pb-10 shadow-lg">
       <img
         src={profilePictureUrl}
         alt="ownerPic"
-        className="size-32 sm:size-40 lg:max-xl:size-36 -translate-y-1/2 rounded-full border-3 border-primary object-cover aspect-square"
+        className="border-primary aspect-square size-32 -translate-y-1/2 rounded-full border-3 object-cover sm:size-40 lg:max-xl:size-36"
       />
 
-      <div className="flex flex-col items-center gap-3 sm:gap-8 lg:max-xl:gap-5 -mt-14 min-[400px]:-mt-10 sm:-mt-16 lg:max-xl:-mt-12">
-        <p className="font-bold text-xl sm:text-3xl lg:max-xl:text-xl xl:max-2xl:text-2xl">
+      <div className="-mt-14 flex flex-col items-center gap-3 min-[400px]:-mt-10 sm:-mt-16 sm:gap-8 lg:max-xl:-mt-12 lg:max-xl:gap-5">
+        <p className="text-xl font-bold sm:text-3xl lg:max-xl:text-xl xl:max-2xl:text-2xl">
           {ownerName}
         </p>
-        <p className="text-sm leading-loose text-center">{truncatedBio}</p>
+        <p className="text-center text-sm leading-loose">{truncatedBio}</p>
 
         <Button className="w-full" onClick={() => navigate(`/profile/${recipe?.byUser?._id}`)}>
           View Profile

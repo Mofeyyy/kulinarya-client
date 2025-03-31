@@ -20,7 +20,7 @@ export const recipeDefaultValues = {
   },
 };
 
-const useRecipeFormStore = create((set, get) => ({
+const useCreateRecipeStore = create((set, get) => ({
   ...recipeDefaultValues,
 
   setFirstStepValues: (data) => set({ firstStepValues: data }),
@@ -34,4 +34,4 @@ const useRecipeFormStore = create((set, get) => ({
   clearStepsValues: () => set({ ...recipeDefaultValues }),
 }));
 
-export default useRecipeFormStore;
+export default useCreateRecipeStore;

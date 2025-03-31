@@ -8,7 +8,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 // Imported Items For Forms
 import { thirdStepSchema } from "@/schemas/recipeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useRecipeFormStore from "@/hooks/stores/useRecipeFormStore";
+import useCreateRecipeStore from "@/hooks/stores/useCreateRecipeStore";
 import useConfirmDialog from "@/components/useConfirmDialog";
 import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
 
@@ -39,7 +39,7 @@ import { validateImageDimensions, validateFileSize, validateFileType } from "@/h
 const StepThree = ({ onFormValidated, onBack }) => {
   const { openDialog, ConfirmDialog } = useConfirmDialog();
   const { mediaPreview, fileNames, setMediaPreview, setFileNames } = useMediaPreviewStore();
-  const getThirdStepValues = useRecipeFormStore((state) => state.getThirdStepValues);
+  const getThirdStepValues = useCreateRecipeStore((state) => state.getThirdStepValues);
 
   const form = useForm({
     defaultValues: getThirdStepValues(),
@@ -151,32 +151,18 @@ const StepThree = ({ onFormValidated, onBack }) => {
     event.target.value = "";
   };
 
-  // TODO: Refactor this in edit mode
   const handleRemoveMainPicture = async () => {
-    if (mediaPreview.mainPictureUrl === recipe?.mainPictureUrl && !!recipe) {
-      toast.error("You cannot remove the old main picture. Change it!");
-      return;
-    }
+    setMediaPreview((prev) => ({
+      ...prev,
+      mainPictureUrl: null, // Restore original if it exists
+    }));
 
-    const isConfirmed = await openDialog(
-      `Are you sure you want to ${
-        !!recipe ? "restore to the old picture" : "remove this main picture"
-      }?`,
-    );
+    setFileNames((prev) => ({
+      ...prev,
+      mainPicture: null,
+    }));
 
-    if (isConfirmed) {
-      setMediaPreview((prev) => ({
-        ...prev,
-        mainPictureUrl: recipe?.mainPictureUrl || null, // Restore original if it exists
-      }));
-
-      setFileNames((prev) => ({
-        ...prev,
-        mainPicture: null,
-      }));
-
-      setValue("mainPicture", recipe?.mainPictureUrl || null);
-    }
+    setValue("mainPicture", recipe?.mainPictureUrl || null);
   };
 
   const handleRemoveVideo = async () => {

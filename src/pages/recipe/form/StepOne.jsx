@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { ChevronRight } from "lucide-react";
 
 // Imported Items For Forms
-import { firstStepSchema, secondStepSchema, thirdStepSchema } from "@/schemas/recipeSchema";
+import { firstStepSchema } from "@/schemas/recipeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useRecipeFormStore from "@/hooks/stores/useRecipeFormStore";
+import useCreateRecipeStore from "@/hooks/stores/useCreateRecipeStore";
 
 // Imported Components
 import { Form } from "@/components/ui/form";
@@ -22,7 +22,7 @@ import FormSelectFoodCategory from "./components/FormSelectFoodCategory";
 // -----------------------------------------------------------
 
 const StepOne = ({ onFormValidated }) => {
-  const getFirstStepValues = useRecipeFormStore((state) => state.getFirstStepValues);
+  const getFirstStepValues = useCreateRecipeStore((state) => state.getFirstStepValues);
 
   const form = useForm({
     defaultValues: getFirstStepValues(),

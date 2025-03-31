@@ -1,24 +1,43 @@
 import { cn } from "@/lib/utils";
 import { useFieldArray } from "react-hook-form";
-import useRecipeForm from "@/forms/useRecipeForm";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { LoaderCircle } from "lucide-react";
-import { useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
+
+// Imported Components
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+
+// Imported Icons
+import { LoaderCircle } from "lucide-react";
+
+// Imported Custom Hooks
 import useRecipeStore from "@/hooks/stores/useRecipeStore";
+import useMediaPreviewStore from "@/hooks/stores/useMediaPreviewStore";
 import useConfirmDialog from "@/components/useConfirmDialog";
+import useUpdateRecipe from "@/hooks/mutations/useUpdateRecipe";
+import useUnsavedChangesStore from "@/hooks/stores/useUnsavedChangesStore";
 
-// -------------------------------------------------------------
+// Imported Schemas
+import recipeSchema from "@/schemas/recipeSchema";
 
+// Imported Constants
+import {
+  MAX_WIDTH,
+  MAX_HEIGHT,
+  MAX_IMAGE_SIZE_MB,
+  MAX_VIDEO_SIZE_MB,
+  ALLOWED_IMAGE_TYPES,
+  ALLOWED_VIDEO_TYPES,
+} from "@/constants/recipeFormConstants";
+
+// Imported Helpers
+import { validateImageDimensions, validateFileSize, validateFileType } from "@/helpers/formHelpers";
+import { convertToWebP } from "@/helpers/formHelpers";
+
+// Imported Custom Components
 import AdditionalPicturesUploadField from "./components/AdditionalPicturesUploadField";
 import VideoUploadField from "./components/VideoUploadField";
 import MainPictureField from "./components/MainPictureField";
@@ -31,23 +50,32 @@ import ProcedureFieldArray from "./components/ProcedureFieldArray";
 import IngredientsFieldArray from "./components/IngredientsFieldArray";
 import useProcedureFieldArray from "@/forms/field/useProcedureFieldArray";
 
-const RecipeForm = () => {
-  const { recipe } = useRecipeStore();
+// -------------------------------------------------------------
+
+const EditRecipeForm = ({ recipe }) => {
+  const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
+  const mediaPreview = useMediaPreviewStore((state) => state.mediaPreview);
+  const fileNames = useMediaPreviewStore((state) => state.fileNames);
+  const setMediaPreview = useMediaPreviewStore((state) => state.setMediaPreview);
+  const setFileNames = useMediaPreviewStore((state) => state.setFileNames);
+  const resetAllMediaPreview = useMediaPreviewStore((state) => state.resetAllMediaPreview);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
+  const navigateTo = useNavigate();
+
+  const { mutateAsync: updateRecipe, isPending: isUpdating } = useUpdateRecipe();
+
+  const form = useForm({
+    defaultValues: recipe,
+    mode: "onTouched",
+    resolver: zodResolver(recipeSchema),
+  });
   const {
-    recipeForm,
     control,
     handleSubmit,
-    isSubmitting,
-    onSubmit,
-    isPending,
-
-    // For setting values manually
-    setValue,
+    formState: { errors, isSubmitting, dirtyFields },
     getValues,
-  } = useRecipeForm(recipe);
-
-  console.log("RENDDDEERRR!!!!!");
+    setValue,
+  } = form;
 
   const {
     fields: ingredientFields,
@@ -58,53 +86,138 @@ const RecipeForm = () => {
     name: "ingredients",
   });
 
-  const { mediaPreview, fileNames, setMediaPreview, setFileNames } = useMediaPreviewStore();
-
-  useEffect(() => {
-    if (recipe) {
-      setMediaPreview({
-        mainPictureUrl: recipe.mainPictureUrl || null,
-        videoUrl: recipe.videoUrl || null,
-        additionalPicturesUrls: recipe.additionalPicturesUrls || [],
-      });
-    }
-  }, [recipe, setMediaPreview]);
-
   const { procedureFields, addProcedure, removeProcedure } = useProcedureFieldArray(
     control,
     setValue,
     getValues,
   );
 
-  const handleFileUpload = useCallback((event, type, fieldType) => {
+  const onSubmit = async (data) => {
+    try {
+      // Convert images to WebP (only if they are files)
+      const convertedMainPicture =
+        data.mainPicture instanceof File ? await convertToWebP(data.mainPicture) : data.mainPicture;
+
+      const convertedAdditionalPictures = await Promise.all(
+        data.additionalPictures.map((file) => (file instanceof File ? convertToWebP(file) : file)),
+      );
+
+      const finalData = {
+        ...data,
+        mainPicture: convertedMainPicture,
+        additionalPictures: convertedAdditionalPictures,
+      };
+
+      console.log("Final data:", finalData); // For Debugging
+
+      const confirm = await openDialog("Are you sure you want to update this recipe?");
+
+      if (confirm) {
+        await toast.promise(
+          updateRecipe({ recipeId: recipe._id, ...finalData }),
+          {
+            loading: "Updating recipe...",
+            success: "Recipe updated successfully!",
+          },
+          {
+            duration: 5000,
+          },
+        );
+
+        resetAllMediaPreview();
+        setHasUnsavedChanges(false);
+        navigateTo(`/recipes/${recipe._id}`);
+      }
+    } catch (error) {
+      console.error("Failed to update recipe", error);
+      toast.error(`Failed to update recipe: ${error}`);
+    }
+  };
+
+  const handleFileUpload = async (event, type, fieldType) => {
     const files = event.target.files;
     if (!files?.length) return;
 
+    // If the media type is additionalPicturesUrls (Multiple files)
     if (type === "additionalPicturesUrls") {
       if (mediaPreview.additionalPicturesUrls.length >= 5) {
         toast.error("Max additional pictures reached!");
         return;
-      } // Prevent upload if already at the limit
+      }
 
       const newFiles = Array.from(files).slice(0, 5 - mediaPreview.additionalPicturesUrls.length); // Limit to 5
+      const validFiles = [];
+
+      for (const file of newFiles) {
+        if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
+          toast.error(`Only JPEG, PNG, and WebP allowed`);
+          continue;
+        }
+
+        if (validateFileSize(file, MAX_IMAGE_SIZE_MB)) {
+          toast.error(`Image must be under ${MAX_IMAGE_SIZE_MB}MB`);
+          continue;
+        }
+
+        const isValidDimensions = await validateImageDimensions(file);
+        if (!isValidDimensions) {
+          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+          continue;
+        }
+
+        validFiles.push(file);
+      }
+
+      if (validFiles.length === 0) return;
 
       setMediaPreview((prev) => ({
         ...prev,
         additionalPicturesUrls: [
           ...prev.additionalPicturesUrls,
-          ...newFiles.map((file) => URL.createObjectURL(file)),
+          ...validFiles.map((file) => URL.createObjectURL(file)),
         ],
       }));
 
       setFileNames((prev) => ({
         ...prev,
-        additionalPictures: [...prev.additionalPictures, ...newFiles.map((f) => f.name)],
+        additionalPictures: [...prev.additionalPictures, ...validFiles.map((f) => f.name)],
       }));
 
       // Set multiple files in react-hook-form
-      setValue(fieldType, [...(getValues(fieldType) || []), ...newFiles]);
+      setValue(fieldType, [...(getValues(fieldType) || []), ...validFiles], { shouldDirty: true });
     } else {
+      // Single file uploads (Main picture, Video)
       const file = files[0];
+
+      if (type === "videoUrl") {
+        // Video-specific validation
+        if (validateFileType(file, ALLOWED_VIDEO_TYPES)) {
+          toast.error("Only MP4 files allowed");
+          return;
+        }
+
+        if (validateFileSize(file, MAX_VIDEO_SIZE_MB)) {
+          toast.error(`Video must be under ${MAX_VIDEO_SIZE_MB}MB`);
+          return;
+        }
+      } else {
+        // Image-specific validation
+        if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
+          toast.error("Only JPEG, PNG, and WebP allowed");
+          return;
+        }
+
+        if (validateFileSize(file, MAX_IMAGE_SIZE_MB)) {
+          toast.error(`File must be under ${MAX_IMAGE_SIZE_MB}MB`);
+          return;
+        }
+
+        const isValidDimensions = await validateImageDimensions(file);
+        if (!isValidDimensions) {
+          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+          return;
+        }
+      }
 
       setMediaPreview((prev) => ({
         ...prev,
@@ -116,17 +229,15 @@ const RecipeForm = () => {
         [type.replace("Url", "")]: file.name,
       }));
 
-      console.log("Uploaded File:", file);
-
       // Set the file in react-hook-form
-      setValue(fieldType, file);
+      setValue(fieldType, file, { shouldDirty: true });
     }
 
     // Reset input field to allow re-uploading the same file
     event.target.value = "";
-  }, []);
+  };
 
-  const handleRemoveMainPicture = useCallback(async () => {
+  const handleRemoveMainPicture = async () => {
     if (mediaPreview.mainPictureUrl === recipe?.mainPictureUrl && !!recipe) {
       toast.error("You cannot remove the old main picture. Change it!");
       return;
@@ -151,9 +262,9 @@ const RecipeForm = () => {
 
       setValue("mainPicture", recipe?.mainPictureUrl || null);
     }
-  }, []);
+  };
 
-  const handleRemoveVideo = useCallback(async () => {
+  const handleRemoveVideo = async () => {
     const isConfirmed = await openDialog("Are you sure you want to remove this video?");
 
     if (isConfirmed) {
@@ -169,9 +280,9 @@ const RecipeForm = () => {
 
       setValue("video", null);
     }
-  }, []);
+  };
 
-  const removeAdditionalPicture = useCallback(async (index) => {
+  const removeAdditionalPicture = async (index) => {
     const isConfirmed = await openDialog(
       "Are you sure you want to remove this additional picture?",
     );
@@ -192,16 +303,38 @@ const RecipeForm = () => {
         (getValues("additionalPictures") || []).filter((_, i) => i !== index),
       );
     }
-  }, []);
+  };
+
+  // Monitor for unsaved changes
+  useEffect(() => {
+    setHasUnsavedChanges(Object.keys(dirtyFields).length > 0);
+  }, [dirtyFields]);
+
+  // Set existing media once recipe is loaded
+  useEffect(() => {
+    if (recipe) {
+      setMediaPreview({
+        mainPictureUrl: recipe.mainPicture || null,
+        videoUrl: recipe.video || null,
+        additionalPicturesUrls: recipe.additionalPictures || [],
+      });
+    }
+  }, [recipe]);
 
   // FOR DEBUGGING - useForm Errors
   useEffect(() => {
-    console.log("Form State:", recipeForm.formState);
-    console.log("Form Errors", recipeForm.formState.errors);
-  }, [recipeForm.formState]);
+    console.log("Form Errors", errors);
+  }, [errors]);
+
+  // Clear Media Preview on unmount
+  useEffect(() => {
+    return () => {
+      resetAllMediaPreview();
+    };
+  }, []);
 
   return (
-    <Form {...recipeForm}>
+    <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-10 lg:grid lg:grid-cols-2 xl:gap-14 2xl:gap-20"
@@ -214,7 +347,7 @@ const RecipeForm = () => {
             name="title"
             formLabel="Recipe Title"
             inputPlaceholder="Recipe Name"
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
 
           {/* Food Origin and Category */}
@@ -225,7 +358,7 @@ const RecipeForm = () => {
               name="originProvince"
               formLabel="Province Origin"
               Component={FormSelectRecipeOrigin}
-              isDisabled={isPending || isSubmitting}
+              isDisabled={isUpdating || isSubmitting}
             />
 
             {/* Food Category Field */}
@@ -234,7 +367,7 @@ const RecipeForm = () => {
               name="foodCategory"
               formLabel="Food Category"
               Component={FormSelectFoodCategory}
-              isDisabled={isPending || isSubmitting}
+              isDisabled={isUpdating || isSubmitting}
             />
           </div>
 
@@ -244,7 +377,7 @@ const RecipeForm = () => {
             name="description"
             formLabel="Description"
             textAreaPlaceholder="Description"
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
 
           {/* Ingredients  Field */}
@@ -253,7 +386,7 @@ const RecipeForm = () => {
             ingredientFields={ingredientFields}
             addIngredient={addIngredient}
             removeIngredient={removeIngredient}
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
 
           {/* Procedure Field */}
@@ -262,7 +395,7 @@ const RecipeForm = () => {
             procedureFields={procedureFields}
             addProcedure={addProcedure}
             removeProcedure={removeProcedure}
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
         </div>
 
@@ -275,7 +408,7 @@ const RecipeForm = () => {
             fileNames={fileNames}
             handleFileUpload={handleFileUpload}
             handleRemoveMainPicture={handleRemoveMainPicture}
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
 
           {/* Video Field */}
@@ -285,7 +418,7 @@ const RecipeForm = () => {
             fileNames={fileNames}
             handleFileUpload={handleFileUpload}
             handleRemoveVideo={handleRemoveVideo}
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
 
           {/* Additional Pictures */}
@@ -295,7 +428,7 @@ const RecipeForm = () => {
             fileNames={fileNames}
             handleFileUpload={handleFileUpload}
             removeAdditionalPicture={removeAdditionalPicture}
-            isDisabled={isPending || isSubmitting}
+            isDisabled={isUpdating || isSubmitting}
           />
         </div>
 
@@ -304,11 +437,11 @@ const RecipeForm = () => {
           <Button
             type="submit"
             className={cn("bg-primary w-full lg:w-1/2", {
-              "opacity-50": isSubmitting || isPending,
+              "opacity-50": isSubmitting || isUpdating,
             })}
-            disabled={isSubmitting || isPending}
+            disabled={isSubmitting || isUpdating}
           >
-            {isSubmitting || isPending ? (
+            {isSubmitting || isUpdating ? (
               <LoaderCircle className="animate-spin" />
             ) : (
               <p>{!!recipe ? "Update" : "Submit"}</p>
@@ -321,6 +454,4 @@ const RecipeForm = () => {
   );
 };
 
-// ! Custom Components To Be Moved Soon -----------------------------------------
-
-export default RecipeForm;
+export default EditRecipeForm;

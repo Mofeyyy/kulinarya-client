@@ -2,7 +2,7 @@
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
 // Imported Items For Forms
-import useRecipeFormStore from "@/hooks/stores/useRecipeFormStore";
+import useCreateRecipeStore from "@/hooks/stores/useCreateRecipeStore";
 
 // Imported Components
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 
 // -----------------------------------------------------------
 
-const StepFour = ({ onBack, onSubmit }) => {
-  const firstStepValues = useRecipeFormStore((state) => state.firstStepValues);
-  const secondStepValues = useRecipeFormStore((state) => state.secondStepValues);
-  const thirdStepValues = useRecipeFormStore((state) => state.thirdStepValues);
+const StepFour = ({ onBack, onSubmit, isCreating }) => {
+  const firstStepValues = useCreateRecipeStore((state) => state.firstStepValues);
+  const secondStepValues = useCreateRecipeStore((state) => state.secondStepValues);
+  const thirdStepValues = useCreateRecipeStore((state) => state.thirdStepValues);
 
   return (
     <div className="flex w-full max-w-[500px] flex-col gap-5">
@@ -102,11 +102,17 @@ const StepFour = ({ onBack, onSubmit }) => {
       </Card>
 
       <div className="flex justify-between rounded-lg border p-5 shadow-sm">
-        <Button type="button" onClick={onBack} variant="ghost" className="border !pr-4">
+        <Button
+          type="button"
+          onClick={onBack}
+          variant="ghost"
+          className="border !pr-4"
+          disabled={isCreating}
+        >
           <ChevronLeft />
           Previous
         </Button>
-        <Button type="button" onClick={onSubmit} className="!pl-4">
+        <Button type="button" onClick={onSubmit} className="!pl-4" disabled={isCreating}>
           Submit
           <ChevronRight />
         </Button>
