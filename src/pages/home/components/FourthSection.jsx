@@ -6,7 +6,7 @@ const FourthSection = () => {
           About <span className="text-primary">Us</span>
         </h1>
 
-        <p className="text-muted-foreground text-justify text-[clamp(12px,2vw,18px)] leading-loose">
+        <p className="text-muted-foreground text-justify text-[clamp(14px,2vw,18px)] leading-loose">
           Kulinarya is dedicated to showcasing and celebrating the rich flavors of Filipino cuisine.
           Our mission is to preserve and promote our gastronomic heritage by bringing together food
           lovers to share authentic recipes, cooking tips, and food stories. Through this platform,
@@ -15,7 +15,7 @@ const FourthSection = () => {
         </p>
       </div>
 
-      <div className="hidden overflow-hidden rounded-lg lg:flex">
+      <div className="hidden overflow-hidden rounded-lg shadow-lg lg:flex">
         <img
           src="https://wzevoniotfkqscqmqmiv.supabase.co/storage/v1/object/public/kulinarya-bucket/assets/chef-cooking.jpg"
           alt="chefCooking"

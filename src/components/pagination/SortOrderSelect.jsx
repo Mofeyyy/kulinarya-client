@@ -9,11 +9,9 @@ import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 
 // ------------------------------------------------------------
 
-const SortOrderSelect = () => {
-  const { sortOrder, setSortOrder } = useRecipeFilterStore();
-
+const SortOrderSelect = ({ value, onChange }) => {
   return (
-    <Select value={sortOrder} onValueChange={setSortOrder}>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full sm:w-40">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>

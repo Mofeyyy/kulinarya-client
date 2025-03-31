@@ -9,14 +9,9 @@ import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 
 // ------------------------------------------------------------
 
-const LimitSelect = () => {
-  const { limit, setLimit } = useRecipeFilterStore();
-
+const LimitSelect = ({ value, onChange }) => {
   return (
-    <Select
-      value={String(limit)}
-      onValueChange={(value) => setLimit(Number(value))}
-    >
+    <Select value={String(value)} onValueChange={onChange}>
       <SelectTrigger className="w-full sm:w-24">
         <SelectValue placeholder="Limit" />
       </SelectTrigger>

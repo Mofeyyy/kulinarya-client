@@ -8,21 +8,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { groupByIsland } from "@/utils/recipeUtils";
-import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 import provinces from "@/data/provinces.json";
 
 // ------------------------------------------------------------
 
-const SelectRecipeOrigin = () => {
+const SelectRecipeOrigin = ({ value, onChange }) => {
   const groupedProvinces = groupByIsland(provinces);
 
-  const { origin, setOrigin } = useRecipeFilterStore();
-  const handleChange = (value) => {
-    setOrigin(value);
-  };
-
   return (
-    <Select value={origin} onValueChange={handleChange}>
+    <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full md:w-[150px] lg:w-[180px] xl:w-[200px]">
         <SelectValue placeholder="Origin" />
       </SelectTrigger>

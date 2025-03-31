@@ -17,6 +17,7 @@ const AppLayout = () => {
 
         {/* <Footer /> */}
       </main>
+
       <GlobalNavigationBlocker />
     </div>
   );

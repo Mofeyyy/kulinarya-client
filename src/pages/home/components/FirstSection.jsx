@@ -18,7 +18,7 @@ const FirstSection = () => {
           <span className="text-primary">Enjoy</span>!
         </h1>
 
-        <p className="text-muted-foreground text-justify text-[clamp(12px,2vw,18px)] leading-loose">
+        <p className="text-muted-foreground text-justify text-[clamp(14px,2vw,18px)] leading-loose">
           Kulinarya is a community-driven platform for food lovers to share recipes, explore new
           dishes, and connect. Celebrating Filipino gastronomy, it highlights rich flavors, unique
           techniques, and diverse traditions. Whether you're a seasoned chef or a beginner,

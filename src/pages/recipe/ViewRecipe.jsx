@@ -36,6 +36,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useRecipeStore from "@/hooks/stores/useRecipeStore";
+import RecipeOptions from "./components/RecipeOptions";
 import useAuthStore from "@/hooks/stores/useAuthStore";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
@@ -719,32 +720,7 @@ const RecipeTitleSection = () => {
         </p>
       </div>
 
-      {isLoggedIn && byUser._id === userDetails?._id && (
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="hover:text-primary cursor-pointer transition-colors">
-              <MoreVertical className="size-10" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-28 overflow-hidden p-0">
-            <Button
-              variant="ghost"
-              className="w-full justify-center rounded-none"
-              onClick={() => navigateTo(`/recipes/${recipeId}/edit`)}
-            >
-              Edit
-            </Button>
-
-            <Button
-              variant="ghost"
-              className="text-destructive-foreground w-full justify-center rounded-none"
-              onClick={() => alert("Coming Soon")}
-            >
-              Delete
-            </Button>
-          </PopoverContent>
-        </Popover>
-      )}
+      {isLoggedIn && byUser._id === userDetails?._id && <RecipeOptions recipeId={recipeId} />}
     </div>
   );
 };

@@ -8,7 +8,7 @@ const ThirdSection = () => {
 
   return (
     <div className="grid w-full justify-center gap-10 lg:grid-cols-2 2xl:gap-20">
-      <div className="hidden overflow-hidden rounded-lg lg:flex">
+      <div className="hidden overflow-hidden rounded-lg shadow-lg lg:flex">
         <img
           src="https://wzevoniotfkqscqmqmiv.supabase.co/storage/v1/object/public/kulinarya-bucket/assets/chef-cooking.jpg"
           alt="chefCooking"
@@ -21,7 +21,7 @@ const ThirdSection = () => {
           <span className="text-primary">Share</span> Your Favorite Recipes
         </h1>
 
-        <p className="text-muted-foreground text-justify text-[clamp(12px,2vw,18px)] leading-loose">
+        <p className="text-muted-foreground text-justify text-[clamp(14px,2vw,18px)] leading-loose">
           Join our community and celebrate the rich flavors of Filipino cuisine! Share your favorite
           recipes, cooking tips, and food stories to help preserve and promote our culinary
           heritage. Let’s cook, connect, and savor the taste of home together!

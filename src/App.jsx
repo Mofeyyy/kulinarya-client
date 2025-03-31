@@ -28,7 +28,7 @@ const HomePage = lazy(() => import("@/pages/home/Home"));
 const LoginPage = lazy(() => import("@/pages/auth/Login"));
 const SignupPage = lazy(() => import("@/pages/auth/Signup"));
 const VerifyPage = lazy(() => import("@/pages/auth/Verify"));
-const RecipePage = lazy(() => import("@/pages/recipe/Recipe"));
+const RecipeFeedPage = lazy(() => import("@/pages/recipe/RecipeFeed"));
 const CreateRecipePage = lazy(() => import("@/pages/recipe/CreateRecipe"));
 const ViewRecipePage = lazy(() => import("@/pages/recipe/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementForm /> },
       { path: "announcements/:announcementId", element: <AnnouncementView /> },
-      { path: "recipes", element: <RecipePage /> },
+      { path: "recipes", element: <RecipeFeedPage /> },
       { path: "recipes/:recipeId", element: <ViewRecipePage /> },
 
       {

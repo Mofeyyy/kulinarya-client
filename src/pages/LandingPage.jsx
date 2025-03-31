@@ -11,7 +11,7 @@ import useTopEngagedRecipes from "@/hooks/queries/useTopEngagedRecipes";
 
 const LandingPage = () => {
   const { data: featuredRecipesData = [] } = useFeaturedRecipes();
-  const featuredRecipes = featuredRecipesData.slice(0, 10); // Limit to 10
+  // const featuredRecipes = featuredRecipesData.slice(0, 10);
 
   const { data: topRecipeSharers = [] } = useTopSharers();
   const { data: topEngagedRecipes = [] } = useTopEngagedRecipes();
