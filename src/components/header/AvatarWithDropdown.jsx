@@ -44,7 +44,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
         <Avatar
-          className={`border-2 border-background size-24 sm:size-16 cursor-pointer flex justify-center items-center hover:opacity-80 transition`}
+          className={`border-background flex size-24 cursor-pointer items-center justify-center border-2 transition hover:opacity-80 sm:size-16`}
         >
           <AvatarImage src={userProfilePictureUrl} />
           <AvatarFallback className="text-primary text-lg font-semibold">
@@ -54,9 +54,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel className="text-center text-primary">
-          {userName}
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-primary text-center">{userName}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {[
@@ -80,11 +78,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
               onClick: handleLogout,
             },
           ].map(({ label, Icon, onClick }) => (
-            <DropdownMenuItem
-              key={label}
-              onClick={onClick}
-              className="cursor-pointer"
-            >
+            <DropdownMenuItem key={label} onClick={onClick} className="cursor-pointer">
               <Icon />
               <p>{label}</p>
             </DropdownMenuItem>

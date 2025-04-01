@@ -105,11 +105,13 @@ const CreateRecipeForm = () => {
                 duration: 5000,
               },
             );
+            setHasUnsavedChanges(false);
             clearStepsValues();
             resetAllMediaPreview();
             setCurrentStep(0);
-            setHasUnsavedChanges(false);
-            navigateTo("/recipes");
+
+            // Delay to ensure states are updated before navigate
+            setTimeout(() => navigateTo("/recipes"), 0);
           }
         } catch (error) {
           console.error("Error creating recipe:", error);
@@ -121,6 +123,7 @@ const CreateRecipeForm = () => {
     />,
   ];
 
+  // Setting unsaved changes
   const hasUnsavedChanges = useMemo(() => {
     return (
       isFormStepChanged(firstStepValues, recipeDefaultValues.firstStepValues) ||

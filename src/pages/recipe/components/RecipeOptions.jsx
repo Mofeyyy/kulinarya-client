@@ -2,10 +2,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------
 
 const RecipeOptions = ({ recipeId, className, buttonClassName }) => {
+  const navigateTo = useNavigate();
+
   return (
     <Popover>
       <PopoverTrigger asChild>

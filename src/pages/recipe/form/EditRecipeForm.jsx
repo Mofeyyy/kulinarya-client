@@ -126,7 +126,9 @@ const EditRecipeForm = ({ recipe }) => {
 
         resetAllMediaPreview();
         setHasUnsavedChanges(false);
-        navigateTo(`/recipes/${recipe._id}`);
+
+        // Delay to ensure states are updated before navigate
+        setTimeout(() => navigateTo(`/recipes/${recipe._id}`), 0);
       }
     } catch (error) {
       console.error("Failed to update recipe", error);

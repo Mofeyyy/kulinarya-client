@@ -9,7 +9,7 @@ const useToggleReaction = (recipeId) => {
 
   const toggleReaction = async (reactionType) => {
     return handleApiRequest(async () =>
-      API.post(`/reactions/${recipeId}/toggle`, { reaction: reactionType })
+      API.post(`/reactions/${recipeId}/toggle`, { reaction: reactionType }),
     )();
   };
 
@@ -17,12 +17,41 @@ const useToggleReaction = (recipeId) => {
   return useMutation({
     mutationFn: toggleReaction,
 
-    onSuccess: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]);
+    onMutate: async (reactionValue) => {
+      // Cancel any outgoing refetches to avoid race conditions
+      await queryClient.cancelQueries(["recipe", recipeId]);
+
+      // Get the current cached data
+      const prevRecipe = queryClient.getQueryData(["recipe", recipeId]);
+
+      if (!prevRecipe) return;
+
+      const prevReaction = prevRecipe.userReaction?.reaction;
+      const isRemovingReaction = reactionValue === null;
+      const isAddingReaction = prevReaction === null && reactionValue !== null;
+
+      // Optimistically update the cache
+      queryClient.setQueryData(["recipe", recipeId], {
+        ...prevRecipe,
+        userReaction: isRemovingReaction
+          ? null
+          : { _id: prevRecipe.userReaction?._id || "newId", reaction: reactionValue },
+        totalReactions:
+          prevRecipe.totalReactions + (isAddingReaction ? 1 : isRemovingReaction ? -1 : 0),
+      });
+
+      // Return a rollback function in case of error
+      return { prevRecipe };
     },
 
-    onError: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]);
+    onError: (_, __, context) => {
+      if (context?.prevRecipe) {
+        queryClient.setQueryData(["recipe", recipeId], context.prevRecipe); // Rollback on error
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries(["recipe", recipeId]); // Ensure fresh data in the background
     },
   });
 };

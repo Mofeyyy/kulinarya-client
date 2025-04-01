@@ -30,7 +30,7 @@ const SignupPage = lazy(() => import("@/pages/auth/Signup"));
 const VerifyPage = lazy(() => import("@/pages/auth/Verify"));
 const RecipeFeedPage = lazy(() => import("@/pages/recipe/RecipeFeed"));
 const CreateRecipePage = lazy(() => import("@/pages/recipe/CreateRecipe"));
-const ViewRecipePage = lazy(() => import("@/pages/recipe/ViewRecipe"));
+const ViewRecipePage = lazy(() => import("@/pages/recipe/view/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
@@ -76,7 +76,7 @@ const router = createBrowserRouter([
   { path: "verify-email", element: <VerifyPage /> },
 
   // Catch-all for 404 pages
-  { path: "*", element: <NotFoundPage /> },
+  { path: "*", element: <NotFoundPage className="h-screen" /> },
 ]);
 
 // --------------------------------------------------------------------
