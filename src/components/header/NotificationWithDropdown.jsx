@@ -41,9 +41,7 @@ const NotificationDropdown = () => {
     try {
       await API.patch(`/notifications/${id}/read`);
       setNotifications((prev) =>
-        prev.map((notif) =>
-          notif._id === id ? { ...notif, isRead: true } : notif
-        )
+        prev.map((notif) => (notif._id === id ? { ...notif, isRead: true } : notif)),
       );
     } catch (error) {
       console.error("Error marking notification as read", error);
@@ -76,11 +74,11 @@ const NotificationDropdown = () => {
   return (
     <DropdownMenu>
       {isLoggedIn || isAdmin ? (
-        <DropdownMenuTrigger className="relative flex items-center gap-2 p-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full hover:scale-105 transition-transform shadow-md">
+        <DropdownMenuTrigger className="relative flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 p-2 shadow-md transition-transform hover:scale-105">
           <div className="relative">
-            <Bell className="w-6 h-6 text-white" />
+            <Bell className="h-6 w-6 text-white" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white shadow-lg">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
@@ -88,9 +86,9 @@ const NotificationDropdown = () => {
         </DropdownMenuTrigger>
       ) : null}
 
-      <DropdownMenuContent className="w-80 bg-white p-4 rounded-lg shadow-xl text-black border border-gray-200">
-        <div className="flex justify-between items-center mb-2">
-          <p className="font-semibold text-lg text-gray-800">🔔 Notifications</p>
+      <DropdownMenuContent className="w-80 rounded-lg border border-gray-200 bg-white p-4 text-black shadow-xl">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-lg font-semibold text-gray-800">🔔 Notifications</p>
           {notifications.length > 0 && (
             <button
               onClick={handleReadAllNotifications}
@@ -101,39 +99,38 @@ const NotificationDropdown = () => {
           )}
         </div>
 
-        <div className="max-h-72 overflow-y-auto space-y-2">
+        <div className="max-h-72 space-y-2 overflow-y-auto">
           {loading ? (
             <p className="text-center text-gray-400">Loading notifications...</p>
           ) : notifications.length > 0 ? (
             notifications.map((notif) => (
               <DropdownMenuItem
-  key={notif._id}
-  className={`flex flex-col p-3 rounded-lg transition duration-200 shadow-sm ${
-    notif.isRead ? "bg-gray-100" : "bg-orange-50"
-  } hover:bg-orange-100`}
-  onClick={async () => {
-    if (!notif.isRead) {
-      await handleReadNotification(notif._id); // Mark as read before navigating
-    }
+                key={notif._id}
+                className={`flex flex-col rounded-lg p-3 shadow-sm transition duration-200 ${
+                  notif.isRead ? "bg-gray-100" : "bg-orange-50"
+                } hover:bg-orange-100`}
+                onClick={async () => {
+                  if (!notif.isRead) {
+                    await handleReadNotification(notif._id); // Mark as read before navigating
+                  }
 
-    // Navigate based on notification type
-    if (notif.type === "announcement") {
-      navigate(`/announcements/${notif.fromPost}`);
-    } else if (notif.type === "recipe") {
-      navigate(`/recipes/${notif.fromPost}`);
-    }
-  }}
->
-
+                  // Navigate based on notification type
+                  if (notif.type === "announcement") {
+                    navigate(`/announcements/${notif.fromPost}`);
+                  } else if (notif.type === "recipe") {
+                    navigate(`/recipes/${notif.fromPost}`);
+                  }
+                }}
+              >
                 <div className="flex items-center gap-3">
                   {notif.byUser?.profilePictureUrl ? (
                     <img
                       src={notif.byUser.profilePictureUrl}
                       alt="Profile"
-                      className="w-9 h-9 rounded-full border border-gray-300 shadow-sm"
+                      className="h-9 w-9 rounded-full border border-gray-300 shadow-sm"
                     />
                   ) : (
-                    <User className="w-9 h-9 text-gray-400 bg-gray-200 rounded-full p-1" />
+                    <User className="h-9 w-9 rounded-full bg-gray-200 p-1 text-gray-400" />
                   )}
 
                   <div className="flex-1">
@@ -142,21 +139,19 @@ const NotificationDropdown = () => {
                         ? `${notif.byUser.firstName} ${notif.byUser.lastName}`.trim()
                         : "Unknown User"}
                     </span>
-                    <p className="text-xs text-gray-500">
-                      {dayjs(notif.createdAt).fromNow()}
-                    </p>
+                    <p className="text-xs text-gray-500">{dayjs(notif.createdAt).fromNow()}</p>
                   </div>
 
                   {!notif.isRead && (
                     <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent dropdown item click
-                      handleReadNotification(notif._id);
-                    }}
-                    className="group cursor-pointer"
-                  >
-                    <CheckCircle className="w-5 h-5 text-green-500 group-hover:text-green-700 transition-colors duration-200" />
-                  </button>
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent dropdown item click
+                        handleReadNotification(notif._id);
+                      }}
+                      className="group cursor-pointer"
+                    >
+                      <CheckCircle className="h-5 w-5 text-green-500 transition-colors duration-200 group-hover:text-green-700" />
+                    </button>
                   )}
 
                   <button
@@ -166,36 +161,33 @@ const NotificationDropdown = () => {
                     }}
                     className="group cursor-pointer"
                   >
-                    <Trash className="w-5 h-5 text-red-500 group-hover:text-red-700 transition-colors duration-200" />
+                    <Trash className="h-5 w-5 text-red-500 transition-colors duration-200 group-hover:text-red-700" />
                   </button>
-                                  </div>
+                </div>
 
-                <p className="text-sm text-gray-700 mt-1">{notif.content}</p>
+                <p className="mt-1 text-sm text-gray-700">{notif.content}</p>
 
                 {notif.fromPost && (
-  <button
-    onClick={async (e) => {
-      e.stopPropagation(); // Prevent dropdown from closing immediately
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation(); // Prevent dropdown from closing immediately
 
-      if (!notif.isRead) {
-        await handleReadNotification(notif._id); // Mark as read before navigating
-      }
+                      if (!notif.isRead) {
+                        await handleReadNotification(notif._id); // Mark as read before navigating
+                      }
 
-      // Check notification type
-      if (notif.type === "announcement") {
-        navigate(`/announcements/${notif.fromPost}`); // Redirect to announcement
-      } else {
-        navigate(`/recipes/${notif.fromPost}`); // Redirect to recipe
-      }
-    }}
-    className="text-xs text-orange-600 hover:underline font-medium mt-1 inline-block"
-  >
-    View Post
-  </button>
-)}
-
-
-
+                      // Check notification type
+                      if (notif.type === "announcement") {
+                        navigate(`/announcements/${notif.fromPost}`); // Redirect to announcement
+                      } else {
+                        navigate(`/recipes/${notif.fromPost}`); // Redirect to recipe
+                      }
+                    }}
+                    className="mt-1 inline-block text-xs font-medium text-orange-600 hover:underline"
+                  >
+                    View Post
+                  </button>
+                )}
               </DropdownMenuItem>
             ))
           ) : (
