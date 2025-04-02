@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 // Imported Components
 import Header from "@/components/header/Header";
 import Footer from "@/components/Footer";
+import GlobalNavigationBlocker from "@/components/GlobalNavigationBlocker";
 
 // -------------------------------------------------------------------
 
@@ -14,8 +15,10 @@ const AppLayout = () => {
       <main className="w-full flex-1 overflow-y-auto">
         <Outlet />
 
-        <Footer />
+        {/* <Footer /> */}
       </main>
+
+      <GlobalNavigationBlocker />
     </div>
   );
 };

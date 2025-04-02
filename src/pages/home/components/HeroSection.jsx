@@ -14,16 +14,16 @@ const HeroSection = () => {
 
       {/* Text Content */}
       <div className="z-10">
-        <h1 className="text-primary text-4xl font-bold tracking-[6px] sm:text-5xl lg:text-7xl lg:tracking-[8px]">
+        <h1 className="text-primary text-[clamp(40px,8vw,80px)] font-bold tracking-[6px] lg:tracking-[8px]">
           Kulinarya
         </h1>
 
-        <p className="mt-1 text-xs font-light text-white sm:text-sm lg:mt-2 lg:text-xl">
+        <p className="-mt-1 text-[clamp(12px,1.8vw,22px)] font-light text-white sm:-mt-2 md:-mt-3">
           Where Flavor Meets Tradition
         </p>
 
         <Link to="/recipes">
-          <Button className="mt-4 rounded-lg lg:px-6 lg:py-5 lg:text-lg">Explore Now</Button>
+          <Button className="mt-4 rounded-lg text-xs sm:text-sm">Explore Now</Button>
         </Link>
       </div>
     </div>

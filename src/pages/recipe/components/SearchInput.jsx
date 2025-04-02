@@ -1,28 +1,22 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useDebouncedCallback } from "use-debounce";
-import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 
 // ------------------------------------------------------------
 
-// TODO: -----------------------
-// Control the value
-// TODO: -----------------------
-
-const SearchInput = () => {
-  const { setSearch } = useRecipeFilterStore();
-
+const SearchInput = ({ value, onChange }) => {
   const debouncedSetSearch = useDebouncedCallback((value) => {
-    setSearch(value);
-  }, 300);
+    onChange(value);
+  }, 500);
 
   return (
-    <div className="relative flex items-center hover:opacity-80 min-w-[16rem]">
-      <Search className="absolute left-3 text-foreground" size={20} />
+    <div className="relative flex w-full items-center hover:opacity-80 md:w-[25vw]">
+      <Search className="text-foreground absolute left-3" size={20} />
       <Input
         type="text"
+        defaultValue={value}
         onChange={(e) => debouncedSetSearch(e.target.value)}
-        className="pl-10 pr-10"
+        className="pr-10 pl-10"
         placeholder="Search..."
       />
     </div>

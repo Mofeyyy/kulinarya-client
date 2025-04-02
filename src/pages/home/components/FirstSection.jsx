@@ -11,25 +11,23 @@ const heroImages = [
 
 const FirstSection = () => {
   return (
-    <div className="grid w-full justify-center gap-10 xl:grid-cols-2 2xl:gap-20">
-      <div className="flex flex-col gap-6">
-        <h1 className="text-3xl leading-tight font-bold sm:text-5xl lg:text-6xl">
+    <div className="grid w-full justify-center gap-10 lg:grid-cols-2 2xl:gap-20">
+      <div className="flex flex-col gap-3 lg:gap-6">
+        <h1 className="text-[clamp(24px,4vw,48px)] leading-tight font-bold">
           <span className="text-primary">Share, Discover,</span> and{" "}
           <span className="text-primary">Enjoy</span>!
         </h1>
 
-        <p className="text-muted-foreground text-justify text-sm leading-loose sm:text-lg">
-          Kulinarya is a community-driven platform where foodies and home cooks can share their
-          favorite recipes, explore new dishes, and connect with like-minded individuals. Focused on
-          celebrating Filipino gastronomy, Kulinarya showcases the rich flavors, unique cooking
-          techniques, and diverse culinary traditions of the Philippines. Whether you're a seasoned
-          chef or just starting your culinary journey, Kulinarya offers a space to discover,
-          preserve, and share the essence of Filipino cuisine with the world.
+        <p className="text-muted-foreground text-justify text-[clamp(14px,2vw,18px)] leading-loose">
+          Kulinarya is a community-driven platform for food lovers to share recipes, explore new
+          dishes, and connect. Celebrating Filipino gastronomy, it highlights rich flavors, unique
+          techniques, and diverse traditions. Whether you're a seasoned chef or a beginner,
+          Kulinarya is your space to discover, preserve, and share Filipino cuisine with the world.
         </p>
       </div>
 
       {/* Swiper.js Slideshow */}
-      <div className="hidden items-center justify-center xl:flex">
+      <div className="hidden items-center justify-center lg:flex">
         <Swiper
           modules={[Pagination, Autoplay]}
           spaceBetween={20}

@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import usePageStore from "@/hooks/stores/usePageStore";
 import CustomBreadCrumb from "@/components/CustomBreadCrumb";
-import RecipeForm from "./components/RecipeForm";
-import useRecipeStore from "@/hooks/stores/useRecipeStore";
+import EditRecipeForm from "./form/EditRecipeForm";
 import useFetchRecipe from "@/hooks/queries/useFetchRecipe";
 import ScreenLoader from "@/components/ScreenLoader";
 
@@ -11,35 +10,45 @@ const EditRecipe = () => {
   const { recipeId } = useParams();
   const { setPage, setSubPage } = usePageStore();
 
-  const { recipe, setRecipe, clearRecipe } = useRecipeStore();
-  const { data: fetchedData, isLoading, error } = useFetchRecipe(recipeId);
+  // Fetch Recipe Data
+  const { data: recipe, isLoading, error } = useFetchRecipe(recipeId);
 
   useEffect(() => {
     document.title = "Edit | Kulinarya";
     setPage({ href: "/recipes", name: "Recipes" });
     setSubPage({ href: `/recipes/${recipeId}/edit`, name: "Edit Recipe" });
+  }, []);
 
-    if (fetchedData?.recipe) {
-      setRecipe(fetchedData.recipe);
-    }
+  const transformedRecipe = useMemo(() => {
+    if (!recipe) return null;
 
-    return () => {
-      console.log("Clearing recipe...");
-      clearRecipe();
+    const { mainPictureUrl, videoUrl, additionalPicturesUrls, ingredients, ...rest } = recipe;
+
+    return {
+      ...rest,
+      mainPicture: mainPictureUrl,
+      video: videoUrl,
+      additionalPictures: additionalPicturesUrls,
+      ingredients: ingredients.map((ingredient) => ({
+        ...ingredient,
+        quantity: String(ingredient.quantity ?? ""),
+      })),
     };
-  }, [recipeId, fetchedData?.recipe]);
+  }, [recipe]);
 
-  if (isLoading || !recipe) return <ScreenLoader />;
+  if (isLoading) return <ScreenLoader />;
   // TODO: Create a custom error component for this things
   if (error) return <p>Error loading recipe</p>;
 
   return (
-    <section className="w-full px-5 min-[400px]:px-10 min-[500px]:px-16 sm:px-12 md:px-16 lg:px-24 xl:px-40 py-20 flex flex-col gap-10">
-      <CustomBreadCrumb />
+    <section className="flex w-full items-center justify-center py-20">
+      <div className="flex w-full max-w-[90vw] flex-col gap-10">
+        <CustomBreadCrumb />
 
-      <p className="text-4xl font-bold">Edit Recipe</p>
+        <p className="text-2xl font-bold">Edit Recipe</p>
 
-      <RecipeForm />
+        <EditRecipeForm recipe={transformedRecipe} />
+      </div>
     </section>
   );
 };

@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { Smile, MessageCircleMore, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import defaultFallbackImage from "@/assets/default-fallback-image.png";
+import ImageWithFallback from "@/components/ImageWithFallback";
+import useAuthStore from "@/hooks/stores/useAuthStore";
+import RecipeOptions from "./RecipeOptions";
 
 // ------------------------------------------------------------
 
@@ -11,39 +12,53 @@ import defaultFallbackImage from "@/assets/default-fallback-image.png";
 // TODO: --------------------------
 
 const RecipeDisplayCard = ({ recipe }) => {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const userDetails = useAuthStore((state) => state.userDetails);
   const navigateTo = useNavigate();
   const {
     title,
     byUser,
-    totalComments,
-    mainPictureUrl = 0,
+    mainPictureUrl,
+    totalComments = 0,
     totalReactions = 0,
     totalViews = 0,
   } = recipe;
 
-  const [imageSrc, setImageSrc] = useState(mainPictureUrl || defaultFallbackImage);
   const { firstName, lastName } = byUser;
   const recipeOwner = `${firstName} ${lastName}`;
 
   return (
     <div
-      onClick={() => navigateTo(`/recipes/${recipe._id}`)}
-      className="flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-3 shadow-sm transition hover:opacity-80"
+      onClick={(e) => {
+        // Prevent clicking when the RecipeOptions button is clicked
+        if (e.target.closest(".recipe-options")) return;
+
+        navigateTo(`/recipes/${recipe._id}`);
+      }}
+      className="hover:border-primary flex w-full cursor-pointer flex-col gap-2 rounded-lg border p-3 shadow-lg transition-colors"
     >
       {/* Picture */}
-      <img
-        src={imageSrc}
+      <ImageWithFallback
+        src={mainPictureUrl}
         alt="recipePicture"
-        className="bg-muted h-52 w-full rounded-sm object-cover"
-        onError={() => setImageSrc(defaultFallbackImage)}
-        loading="lazy"
+        className="h-52 w-full rounded-sm object-cover"
       />
 
       {/* Other Details  */}
       <div className="flex flex-col gap-5">
-        <div>
-          <p className="text-foreground text-xl font-bold">{title}</p>
-          <p className="text-muted-foreground text-sm">{`By ${recipeOwner}`}</p>
+        <div className="flex justify-between">
+          <div>
+            <p className="text-foreground truncate text-xl font-bold">{title}</p>
+            <p className="text-muted-foreground truncate text-sm">{`By ${recipeOwner}`}</p>
+          </div>
+
+          {isLoggedIn && byUser._id === userDetails?._id && (
+            <RecipeOptions
+              recipeId={recipe._id}
+              className="recipe-options"
+              buttonClassName="size-5"
+            />
+          )}
         </div>
 
         <div className="text-muted-foreground flex items-center gap-5 text-sm">

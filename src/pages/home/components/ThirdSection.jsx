@@ -7,8 +7,8 @@ const ThirdSection = () => {
   const { isLoggedIn } = useAuthStore();
 
   return (
-    <div className="grid w-full justify-center gap-10 xl:grid-cols-2 2xl:gap-20">
-      <div className="hidden overflow-hidden rounded-lg xl:flex">
+    <div className="grid w-full justify-center gap-10 lg:grid-cols-2 2xl:gap-20">
+      <div className="hidden overflow-hidden rounded-lg shadow-lg lg:flex">
         <img
           src="https://wzevoniotfkqscqmqmiv.supabase.co/storage/v1/object/public/kulinarya-bucket/assets/chef-cooking.jpg"
           alt="chefCooking"
@@ -16,12 +16,12 @@ const ThirdSection = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-6">
-        <h1 className="text-3xl leading-tight font-bold sm:text-5xl lg:text-6xl">
+      <div className="flex flex-col gap-3 lg:gap-6">
+        <h1 className="text-[clamp(24px,4vw,48px)] leading-tight font-bold">
           <span className="text-primary">Share</span> Your Favorite Recipes
         </h1>
 
-        <p className="text-muted-foreground text-justify text-sm leading-loose sm:text-lg">
+        <p className="text-muted-foreground text-justify text-[clamp(14px,2vw,18px)] leading-loose">
           Join our community and celebrate the rich flavors of Filipino cuisine! Share your favorite
           recipes, cooking tips, and food stories to help preserve and promote our culinary
           heritage. Let’s cook, connect, and savor the taste of home together!
@@ -35,7 +35,7 @@ const ThirdSection = () => {
             }
           }}
         >
-          <Button className="rounded-lg lg:px-6 lg:py-5 lg:text-lg">Share Now</Button>
+          <Button className="rounded-lg text-xs sm:text-sm">Share Now</Button>
         </Link>
       </div>
     </div>

@@ -5,46 +5,34 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
-import useRecipeFilterStore from "@/hooks/stores/useRecipeFilterStore";
 
 //  ------------------------------------------------------------
 
-const PaginationControl = () => {
-  const { page, setPage, limit, totalRecipeCount } = useRecipeFilterStore();
-
-  // Ensure totalPages is at least 1
+const PaginationControl = ({ page, limit, onChange, totalRecipeCount }) => {
   const totalPages = Math.max(1, Math.ceil(totalRecipeCount / limit));
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
-    }
-  };
 
   return (
     <Pagination className="flex sm:justify-end">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#"
-            onClick={() => handlePageChange(page - 1)}
+            onClick={() => onChange("page", Number(page) - 1)}
             disabled={page === 1}
-            className="hover:bg-transparent hover:text-primary transition"
+            className="hover:text-primary transition hover:bg-transparent"
           />
         </PaginationItem>
 
         <PaginationItem>
-          <p className="px-4 py-2 text-sm font-medium border rounded-lg bg-primary text-white">
+          <p className="bg-primary rounded-lg border px-4 py-2 text-sm font-medium text-white">
             {page} of {totalPages}
           </p>
         </PaginationItem>
 
         <PaginationItem>
           <PaginationNext
-            href="#"
-            onClick={() => handlePageChange(page + 1)}
+            onClick={() => onChange("page", Number(page) + 1)}
             disabled={page === totalPages}
-            className="hover:bg-transparent hover:text-primary transition"
+            className="hover:text-primary transition hover:bg-transparent"
           />
         </PaginationItem>
       </PaginationContent>

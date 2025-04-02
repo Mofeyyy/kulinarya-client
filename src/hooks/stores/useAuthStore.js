@@ -25,12 +25,8 @@ const useAuthStore = create(
     // Persist to Local Storage
     {
       name: "kulinarya-auth-storage",
-      partialize: (state) => ({
-        userDetails: state.userDetails,
-        isLoggedIn: state.isLoggedIn,
-      }),
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

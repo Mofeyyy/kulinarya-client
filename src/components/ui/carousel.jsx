@@ -148,7 +148,7 @@ function CarouselPrevious({ className, variant = "outline", size = "icon", ...pr
       className={cn(
         "absolute size-8 rounded-full",
         orientation === "horizontal"
-          ? "top-1/2 left-0 -translate-y-1/2"
+          ? "top-1/2 -left-0 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className,
       )}
@@ -173,7 +173,7 @@ function CarouselNext({ className, variant = "outline", size = "icon", ...props 
       className={cn(
         "absolute size-8 rounded-full",
         orientation === "horizontal"
-          ? "top-1/2 right-0 -translate-y-1/2"
+          ? "top-1/2 -right-0 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className,
       )}

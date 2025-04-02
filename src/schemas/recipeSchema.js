@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-const isFileOrUrl = z.union([z.string().url(), z.instanceof(File)]);
+// Helpers
+const isFileOrUrl = z.union([z.string().url(), z.instanceof(File), z.literal("")]).nullable();
 
-const recipeSchema = z.object({
+// ----------------------------------------------------------------------
+
+const recipeShema = z.object({
   title: z.string().min(2, "Title is required"),
 
   originProvince: z.string().min(1, "Origin province is required"),
@@ -29,7 +32,7 @@ const recipeSchema = z.object({
           }),
         }),
         name: z.string().min(1, "Ingredient name is required"),
-      })
+      }),
     )
     .min(1, "Ingredients are required")
     .max(50, "Maximum 50 ingredients allowed"),
@@ -43,7 +46,7 @@ const recipeSchema = z.object({
           .min(1, "Step content is required")
           .max(500, "Step content must not exceed 500 characters")
           .trim(),
-      })
+      }),
     )
     .min(1, "Procedures are required")
     .max(30, "Maximum 30 steps allowed")
@@ -51,52 +54,43 @@ const recipeSchema = z.object({
 
   // File --------------------------------------------------------------
 
-  mainPicture: isFileOrUrl
-    .nullable() // Allow null values explicitly
-    .refine((file) => file !== null && file !== undefined, {
-      message: "Main Picture is Required",
-    })
-    .refine(
-      (file) => !(file instanceof File) || file.size <= 10 * 1024 * 1024,
-      "File size must be under 10MB"
-    )
-    .refine(
-      (file) =>
-        !(file instanceof File) ||
-        ["image/jpeg", "image/png"].includes(file.type),
-      "Only JPEG or PNG allowed"
-    ),
+  // Main Picture (Required)
+  mainPicture: isFileOrUrl.refine(
+    (value) => {
+      if (!value) return false;
+      return true;
+    },
+    { message: "Main Picture is Required" },
+  ),
 
-  video: isFileOrUrl
-    .nullable()
-    .optional()
-    .refine(
-      (file) => !(file instanceof File) || file.size <= 50 * 1024 * 1024,
-      "Video size must be under 50MB"
-    )
-    .refine(
-      (file) => !(file instanceof File) || ["video/mp4"].includes(file.type),
-      "Only MP4 format allowed"
-    ),
+  // Video (Optional)
+  video: isFileOrUrl.optional(),
 
+  // Additional Pictures (Optional, Max 5)
   additionalPictures: z
-    .array(
-      isFileOrUrl
-        .refine(
-          (file) => !(file instanceof File) || file.size <= 10 * 1024 * 1024,
-          "File size must be under 10MB"
-        )
-        .refine(
-          (file) =>
-            !(file instanceof File) ||
-            ["image/jpeg", "image/png"].includes(file.type),
-          "Only JPEG or PNG allowed"
-        )
-    )
-    .max(5, "5 additional pictures allowed")
+    .array(isFileOrUrl)
+    .max(5, "Only up to 5 additional pictures allowed")
     .optional(),
 
   // File --------------------------------------------------------------
 });
 
-export default recipeSchema;
+export const firstStepSchema = recipeShema.pick({
+  title: true,
+  originProvince: true,
+  foodCategory: true,
+  description: true,
+});
+
+export const secondStepSchema = recipeShema.pick({
+  ingredients: true,
+  procedure: true,
+});
+
+export const thirdStepSchema = recipeShema.pick({
+  mainPicture: true,
+  video: true,
+  additionalPictures: true,
+});
+
+export default recipeShema;
