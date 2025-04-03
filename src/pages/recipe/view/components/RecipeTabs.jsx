@@ -3,13 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import useRecipeStore from "@/hooks/stores/useRecipeStore";
-
-// ----------------------------------------------------------------
+import generateRecipePDF from "@/pages/recipe/view/components/generateRecipePDF";
 
 const RecipeTabs = () => {
   const [activeTab, setActiveTab] = useState("ingredients");
+  const [isGenerating, setIsGenerating] = useState(false);  // New state for loading
   const recipe = useRecipeStore((state) => state.recipe);
   const { ingredients, procedure } = recipe;
+
+  const handleDownloadPDF = async () => {
+    setIsGenerating(true); // Set loading state to true
+    await generateRecipePDF(recipe); // Wait for PDF generation
+    setIsGenerating(false); // Set loading state back to false after the download is triggered
+  };
 
   return (
     <Card className="bg-background text-foreground w-full overflow-hidden rounded-t-none rounded-b-lg border-0 p-0 pt-2">
@@ -52,10 +58,17 @@ const RecipeTabs = () => {
         )}
       </CardContent>
 
+      {/* Download PDF Button */}
       <div className="flex items-center border-t p-5">
-        <Button onClick={() => alert("Coming Soon")}>
-          <Download className="size-5" />
-          Download
+        <Button onClick={handleDownloadPDF} disabled={isGenerating}>
+          {isGenerating ? (
+            <span>Generating...</span> // Feedback while generating
+          ) : (
+            <>
+              <Download className="size-5" />
+              Download
+            </>
+          )}
         </Button>
       </div>
     </Card>
