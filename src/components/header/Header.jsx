@@ -1,11 +1,10 @@
 import { NavLink } from "react-router-dom";
 import Logo from "../Logo";
 import HeaderSheet from "./HeaderSheet";
-import NotificationDropdown from "./NotificationWithDropdown";
 import HeaderUserAvatar from "./HeaderUserAvatar";
 import HeaderNavLinks from "./HeaderNavLinks";
 import ToggleThemeIconButton from "./ToggleThemeIconButton";
-import TestNewNotification from "./TestNewNotification";
+import NotificationDropdown from "./NotificationDropdown";
 
 // -------------------------------------------------------------------
 
@@ -20,13 +19,12 @@ const Header = () => {
         <div className="flex items-center">
           <div className="flex items-center gap-5 sm:gap-10">
             <HeaderNavLinks />
-            <TestNewNotification />
-            {/* <NotificationDropdown /> */}
+            <NotificationDropdown />
             <ToggleThemeIconButton />
             <HeaderUserAvatar />
           </div>
 
-          <div className="flex items-center justify-center">
+          <div className="justify-cente1 ml-5 flex items-center">
             <HeaderSheet />
           </div>
         </div>

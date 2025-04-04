@@ -9,15 +9,20 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 // Layouts
 import AppLayout from "@/layouts/AppLayout";
 
+// Imported Icons
+import { TriangleAlert } from "lucide-react";
+
 // Components
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageModal from "@/components/ImageModal";
+import PendingModerationToast from "./components/PendingModerationToast";
 
 // Hooks & Stores
 import useFetchUserDetails from "@/hooks/queries/useFetchUserDetails";
 import useAuthStore from "@/hooks/stores/useAuthStore";
 import useImageModalStore from "@/hooks/stores/useImageModalStore";
+import usePendingModerationCount from "./hooks/queries/usePendingModerationCount";
 
 // Imported Config
 import { BASE_URL } from "@/config/axios";
@@ -40,6 +45,7 @@ const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
+const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
 
 // DEFINED ROUTES
 const router = createBrowserRouter([
@@ -65,6 +71,7 @@ const router = createBrowserRouter([
         children: [
           { path: "recipes/create", element: <CreateRecipePage /> },
           { path: "recipes/:recipeId/edit", element: <EditRecipePage /> },
+          { path: "moderation/:recipeId", element: <ModerationPage /> },
         ],
       },
     ],
@@ -83,8 +90,13 @@ const router = createBrowserRouter([
 
 const App = () => {
   const { isImageModalOpen } = useImageModalStore();
-  const { setUserDetails, isLoggedIn } = useAuthStore();
+  const setUserDetails = useAuthStore((state) => state.setUserDetails);
+  const userDetails = useAuthStore((state) => state.userDetails);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { data: fetchedUserData } = useFetchUserDetails(isLoggedIn);
+
+  const isAuthorized = userDetails?.role === "admin" || userDetails?.role === "creator";
+  const { data: pendingModerationCount } = usePendingModerationCount(isAuthorized);
 
   // Initial DB Connection Check
   useEffect(() => {
@@ -108,6 +120,31 @@ const App = () => {
       setUserDetails(fetchedUserData.user);
     }
   }, [fetchedUserData, setUserDetails]);
+
+  // Pending Moderation Toast
+  useEffect(() => {
+    if (!pendingModerationCount) return;
+
+    const toastId = toast.custom(
+      (t) => (
+        <PendingModerationToast
+          toastId={t}
+          pendingModerationCount={pendingModerationCount}
+          onViewClick={() => {
+            toast.dismiss(toastId);
+            router.navigate("/recipes/");
+          }}
+        />
+      ),
+      {
+        duration: 5000,
+      },
+    );
+
+    return () => {
+      toast.dismiss(toastId);
+    };
+  }, [pendingModerationCount]);
 
   return (
     <ThemeProvider>
