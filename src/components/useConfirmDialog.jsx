@@ -35,18 +35,16 @@ const useConfirmDialog = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{content.title}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {content.description}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{content.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="text-destructive-foreground"
+              className="text-destructive-foreground notification-options"
               onClick={() => handleClose(false)}
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleClose(true)}>
+            <AlertDialogAction onClick={() => handleClose(true)} className="notification-options">
               Confirm
             </AlertDialogAction>
           </AlertDialogFooter>

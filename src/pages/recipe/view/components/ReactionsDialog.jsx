@@ -30,7 +30,9 @@ const ReactionsDialog = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          fetchNextPage();
+          setTimeout(() => {
+            fetchNextPage();
+          }, 800);
         }
       });
       if (node) observer.current.observe(node);
@@ -58,13 +60,14 @@ const ReactionsDialog = () => {
         </DialogHeader>
 
         <div className="flex max-h-[40vh] flex-col gap-5 overflow-y-auto p-2">
-          {isLoading && <Loader2 className="mx-auto animate-spin" />}
-
           {hasPageAndReactionsToLoad &&
             data.pages.map((page, pageIndex) => (
               <div key={pageIndex} className="flex flex-col gap-4">
                 {page.reactions.map((reaction, index) => {
-                  if (pageIndex === data.pages.length - 1 && index === page.reactions.length - 1) {
+                  const isLastReactorInCurrentPage =
+                    pageIndex === data.pages.length - 1 && index === page.reactions.length - 1;
+
+                  if (isLastReactorInCurrentPage) {
                     return (
                       <div ref={lastReactorRef} key={reaction._id}>
                         <ReactionItem reaction={reaction} />

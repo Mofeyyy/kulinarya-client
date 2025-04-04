@@ -14,11 +14,11 @@ const reactions = [
 const ReactionItem = ({ reaction }) => {
   return (
     <div>
-      <div className="flex items-center gap-3 rounded-lg border p-2">
+      <div className="flex items-center gap-3 rounded-lg border-2 p-2 shadow-sm">
         {/* Profile Picture */}
         <Avatar
           onClick={() => alert("Coming Soon")}
-          className="cursor-pointer transition-transform hover:scale-125"
+          className="cursor-pointer border-2 shadow-sm transition-transform hover:scale-125"
         >
           <AvatarImage src={reaction.byUser.profilePictureUrl} />
           <AvatarFallback>

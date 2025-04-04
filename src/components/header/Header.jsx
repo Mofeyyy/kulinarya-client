@@ -5,6 +5,7 @@ import NotificationDropdown from "./NotificationWithDropdown";
 import HeaderUserAvatar from "./HeaderUserAvatar";
 import HeaderNavLinks from "./HeaderNavLinks";
 import ToggleThemeIconButton from "./ToggleThemeIconButton";
+import TestNewNotification from "./TestNewNotification";
 
 // -------------------------------------------------------------------
 
@@ -17,14 +18,17 @@ const Header = () => {
         </NavLink>
 
         <div className="flex items-center">
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-5 sm:gap-10">
             <HeaderNavLinks />
-            <NotificationDropdown />
+            <TestNewNotification />
+            {/* <NotificationDropdown /> */}
+            <ToggleThemeIconButton />
             <HeaderUserAvatar />
           </div>
-          <HeaderSheet />
 
-          <ToggleThemeIconButton />
+          <div className="flex items-center justify-center">
+            <HeaderSheet />
+          </div>
         </div>
       </div>
     </header>

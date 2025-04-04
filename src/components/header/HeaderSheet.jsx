@@ -72,7 +72,7 @@ const HeaderSheet = () => {
       <SheetDescription />
 
       <SheetTrigger asChild>
-        <Button variant="icon" className="transition-opacity hover:opacity-80 sm:hidden">
+        <Button className="transition-opacity hover:opacity-80 sm:hidden">
           <Menu className="size-10 text-white" />
         </Button>
       </SheetTrigger>

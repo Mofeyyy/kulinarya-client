@@ -9,10 +9,14 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import useAuthStore from "@/hooks/stores/useAuthStore";
+import { Button } from "../ui/button";
+
+// For Date Formatting Library
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
 dayjs.extend(relativeTime);
+
+// -------------------------------------------------------------------------
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);
@@ -69,22 +73,25 @@ const NotificationDropdown = () => {
   };
 
   // Count unread notifications
-  const unreadCount = notifications.filter((notif) => !notif.isRead).length;
+  // const unreadCount = notifications.filter((notif) => !notif.isRead).length;
+  const unreadCount = 1; // Dummy for testing
 
   return (
     <DropdownMenu>
-      {isLoggedIn || isAdmin ? (
-        <DropdownMenuTrigger className="relative flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 p-2 shadow-md transition-transform hover:scale-105">
-          <div className="relative">
-            <Bell className="h-6 w-6 text-white" />
+      {isLoggedIn && (
+        <DropdownMenuTrigger asChild>
+          <Button className="relative rounded-full bg-gradient-to-r from-orange-500 to-orange-600 !p-2 text-white shadow-lg transition-transform hover:scale-110">
+            <Bell className="size-5" />
+
+            {/* Notification count */}
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white shadow-lg">
+              <span className="absolute -top-1 -right-1 flex size-5 animate-bounce items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white shadow-lg">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
-          </div>
+          </Button>
         </DropdownMenuTrigger>
-      ) : null}
+      )}
 
       <DropdownMenuContent className="w-80 rounded-lg border border-gray-200 bg-white p-4 text-black shadow-xl">
         <div className="mb-2 flex items-center justify-between">
@@ -99,7 +106,8 @@ const NotificationDropdown = () => {
           )}
         </div>
 
-        <div className="max-h-72 space-y-2 overflow-y-auto">
+        {/* //! ------------------------- ON WORK -------------------------------- */}
+        <div className="no-scrollbar max-h-72 space-y-2 overflow-y-auto">
           {loading ? (
             <p className="text-center text-gray-400">Loading notifications...</p>
           ) : notifications.length > 0 ? (
@@ -122,7 +130,9 @@ const NotificationDropdown = () => {
                   }
                 }}
               >
+                {/* //! First Section */}
                 <div className="flex items-center gap-3">
+                  {/* //! User Profile Picture */}
                   {notif.byUser?.profilePictureUrl ? (
                     <img
                       src={notif.byUser.profilePictureUrl}
@@ -132,7 +142,7 @@ const NotificationDropdown = () => {
                   ) : (
                     <User className="h-9 w-9 rounded-full bg-gray-200 p-1 text-gray-400" />
                   )}
-
+                  {/* //! User Name and Time */}
                   <div className="flex-1">
                     <span className="text-sm font-semibold text-gray-800">
                       {notif.byUser
@@ -142,6 +152,7 @@ const NotificationDropdown = () => {
                     <p className="text-xs text-gray-500">{dayjs(notif.createdAt).fromNow()}</p>
                   </div>
 
+                  {/* //! Button to mark as read */}
                   {!notif.isRead && (
                     <button
                       onClick={(e) => {
@@ -154,6 +165,7 @@ const NotificationDropdown = () => {
                     </button>
                   )}
 
+                  {/* //! Button to delete */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent dropdown item click
@@ -165,8 +177,11 @@ const NotificationDropdown = () => {
                   </button>
                 </div>
 
+                {/* //! Second Section */}
+                {/* //! Notification Content */}
                 <p className="mt-1 text-sm text-gray-700">{notif.content}</p>
 
+                {/* //! View Post Button */}
                 {notif.fromPost && (
                   <button
                     onClick={async (e) => {
@@ -195,6 +210,7 @@ const NotificationDropdown = () => {
           )}
         </div>
       </DropdownMenuContent>
+      {/* //! ------------------------- ON WORK -------------------------------- */}
     </DropdownMenu>
   );
 };
