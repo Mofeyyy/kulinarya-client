@@ -6,12 +6,6 @@ import axios from "axios";
 // Providers
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
-// Layouts
-import AppLayout from "@/layouts/AppLayout";
-
-// Imported Icons
-import { TriangleAlert } from "lucide-react";
-
 // Components
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -39,13 +33,17 @@ const ViewRecipePage = lazy(() => import("@/pages/recipe/view/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
-const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost"));
+const PendingRecipePage = lazy(() => import("@/pages/admin/PendingRecipePost"));
 const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
+
+// Layouts
+const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
+const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 
 // DEFINED ROUTES
 const router = createBrowserRouter([
@@ -56,12 +54,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "admin/dashboard", element: <AdminDashboard /> },
-      { path: "admin/pending-recipes", element: <PendingRecipePost /> },
-      { path: "admin/feature-recipes", element: <FeatureRecipes /> },
-      { path: "profile", element: <ProfilePageView /> },
-      { path: "profile/:userId", element: <SpecificUserProfileView /> },
-      { path: "announcements/create", element: <AnnouncementForm /> },
       { path: "announcements/:announcementId", element: <AnnouncementView /> },
       { path: "recipes", element: <RecipeFeedPage /> },
       { path: "recipes/:recipeId", element: <ViewRecipePage /> },
@@ -69,11 +61,32 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />, // Protects routes under this wrapper
         children: [
+          // Login Protected Recipe Routes
           { path: "recipes/create", element: <CreateRecipePage /> },
           { path: "recipes/:recipeId/edit", element: <EditRecipePage /> },
+
+          // Login Protected Moderation Route
           { path: "moderation/:recipeId", element: <ModerationPage /> },
+
+          // Login Protected Profile Routes
+          { path: "profile", element: <ProfilePageView /> },
+          { path: "profile/:userId", element: <SpecificUserProfileView /> },
         ],
       },
+    ],
+  },
+
+  // Login Protected Controll Routes
+  // TODO: Add Protection that is for admin and creators only
+  {
+    path: "control",
+    element: <ControlLayout />,
+    errorElement: <NotFoundPage />, // Handles errors inside ControlLayout
+    children: [
+      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "pending-recipes", element: <PendingRecipePage /> },
+      { path: "feature-recipes", element: <FeatureRecipes /> },
+      { path: "announcements/create", element: <AnnouncementForm /> },
     ],
   },
 
@@ -83,7 +96,10 @@ const router = createBrowserRouter([
   { path: "verify-email", element: <VerifyPage /> },
 
   // Catch-all for 404 pages
-  { path: "*", element: <NotFoundPage className="h-screen" /> },
+  {
+    path: "*",
+    element: <NotFoundPage className="h-screen" />,
+  },
 ]);
 
 // --------------------------------------------------------------------

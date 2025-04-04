@@ -4,11 +4,13 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 const ProtectedRoute = () => {
-  const { isLoggedIn } = useAuthStore();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
     if (!isLoggedIn) {
-      toast.error("You must be logged in to access this page.");
+      toast.error("You must be logged in to access this page.", {
+        duration: 5000,
+      });
     }
   }, []);
 
