@@ -6,7 +6,8 @@ import ModalWrapper from "../ui/ModalWrapper";
 const AnnouncementCreateView = ({ onClose, onAnnouncementCreated }) => {
   const { mutate: createAnnouncement, isLoading } = useCreateAnnouncement();
   const [successMessage, setSuccessMessage] = useState("");
-  const [ setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleSubmit = (data) => {
     setIsSubmitting(true);
