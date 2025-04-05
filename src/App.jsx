@@ -40,6 +40,7 @@ const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
+const AdminAnalyticsDashboard = lazy(() => import("@/pages/admin/AdminAnalyticsDashboard"))
 
 // DEFINED ROUTES
 const router = createBrowserRouter([
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
       { path: "admin/dashboard", element: <AdminDashboard /> },
       { path: "admin/pending-recipes", element: <PendingRecipePost /> },
       { path: "admin/feature-recipes", element: <FeatureRecipes /> },
+      { path: "admin/analytics", element: <AdminAnalyticsDashboard/>},
       { path: "profile", element: <ProfilePageView /> },
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementForm /> },
