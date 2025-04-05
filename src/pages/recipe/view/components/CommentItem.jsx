@@ -47,7 +47,7 @@ const CommentItem = ({ comment }) => {
       {/* Profile Picture */}
       <Avatar
         onClick={() => alert("Coming Soon")}
-        className="mt-2 size-10 cursor-pointer transition-transform hover:scale-125"
+        className="mt-2 size-12 cursor-pointer border-2 shadow-sm transition-transform hover:scale-125"
       >
         <AvatarImage src={comment.byUser.profilePictureUrl} />
         <AvatarFallback>
@@ -68,7 +68,7 @@ const CommentItem = ({ comment }) => {
           />
         ) : (
           <>
-            <div className="rounded-lg border p-2 pl-4">
+            <div className="rounded-lg border-2 p-2 pl-4 shadow-sm">
               <span
                 onClick={() => alert("Coming Soon")}
                 className="hover:text-primary cursor-pointer font-semibold transition-colors"

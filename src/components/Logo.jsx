@@ -11,11 +11,9 @@ const Logo = ({ className }) => {
     <img
       src={kulinaryaLogo}
       alt="Kulinarya Logo"
-      className={cn(
-        "size-16 rounded-full cursor-pointer hover:scale-105 transition",
-        className
-      )}
+      className={cn("size-16 cursor-pointer rounded-full transition hover:scale-105", className)}
       onClick={() => navigate("/")}
+      loading="lazy"
     />
   );
 };

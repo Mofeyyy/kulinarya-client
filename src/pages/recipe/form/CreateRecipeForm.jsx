@@ -115,7 +115,7 @@ const CreateRecipeForm = () => {
           }
         } catch (error) {
           console.error("Error creating recipe:", error);
-          toast.error(`Failed create recipe: ${error}`);
+          toast.error(`Failed create recipe: ${error}`, { duration: 5000 });
         }
       }}
       onBack={() => setCurrentStep(2)}

@@ -25,6 +25,9 @@ const CommentsDialog = () => {
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFetchComments(recipeId, open);
 
+  console.log("Comments Data:", data);
+  console.log("Pages Length:", data?.pages.length);
+
   const observer = useRef();
 
   const lastCommentRef = useCallback(
@@ -67,7 +70,10 @@ const CommentsDialog = () => {
             data.pages.map((page, pageIndex) => (
               <div key={pageIndex} className="flex flex-col gap-5">
                 {page.comments.map((comment, index) => {
-                  if (pageIndex === data.pages.length - 1 && index === page.comments.length - 1) {
+                  const isLastCommentInCurrentPage =
+                    pageIndex === data.pages.length - 1 && index === page.comments.length - 1;
+
+                  if (isLastCommentInCurrentPage) {
                     return (
                       <div ref={lastCommentRef} key={comment._id}>
                         <CommentItem comment={comment} />

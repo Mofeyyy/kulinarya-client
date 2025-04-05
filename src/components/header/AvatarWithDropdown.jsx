@@ -19,10 +19,13 @@ import useThemeStore from "@/hooks/stores/useThemeStore";
 // -----------------------------------------------------------------
 
 const AvatarWithDropdown = ({ userProfile }) => {
-  const { theme, toggleTheme } = useThemeStore();
-  const { logout } = useAuthStore();
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const logout = useAuthStore((state) => state.logout);
+
   const logoutMutation = useLogoutMutation();
   const queryClient = useQueryClient();
+
   const navigateTo = useNavigate();
   const { userFirstNameInitial, userProfilePictureUrl, userName } = userProfile;
 
@@ -40,11 +43,26 @@ const AvatarWithDropdown = ({ userProfile }) => {
     });
   };
 
+  const buttons = [
+    {
+      label: "Profile",
+      Icon: User,
+      onClick: () => {
+        navigateTo("/profile");
+      },
+    },
+    {
+      label: "Logout",
+      Icon: LogOut,
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
         <Avatar
-          className={`border-background flex size-24 cursor-pointer items-center justify-center border-2 transition hover:opacity-80 sm:size-16`}
+          className={`flex size-16 cursor-pointer items-center justify-center border-2 border-white transition hover:opacity-80`}
         >
           <AvatarImage src={userProfilePictureUrl} />
           <AvatarFallback className="text-primary text-lg font-semibold">
@@ -57,27 +75,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
         <DropdownMenuLabel className="text-primary text-center">{userName}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {[
-            {
-              label: "Profile",
-              Icon: User,
-              onClick: () => {
-                navigateTo("/profile");
-              },
-            },
-            {
-              label: "Settings",
-              Icon: Settings,
-              onClick: () => {
-                navigateTo("/settings");
-              },
-            },
-            {
-              label: "Logout",
-              Icon: LogOut,
-              onClick: handleLogout,
-            },
-          ].map(({ label, Icon, onClick }) => (
+          {buttons.map(({ label, Icon, onClick }) => (
             <DropdownMenuItem key={label} onClick={onClick} className="cursor-pointer">
               <Icon />
               <p>{label}</p>

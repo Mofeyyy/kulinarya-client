@@ -6,18 +6,17 @@ import axios from "axios";
 // Providers
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
-// Layouts
-import AppLayout from "@/layouts/AppLayout";
-
 // Components
 import ScreenLoader from "@/components/ScreenLoader";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageModal from "@/components/ImageModal";
+import PendingModerationToast from "./components/PendingModerationToast";
 
 // Hooks & Stores
 import useFetchUserDetails from "@/hooks/queries/useFetchUserDetails";
 import useAuthStore from "@/hooks/stores/useAuthStore";
 import useImageModalStore from "@/hooks/stores/useImageModalStore";
+import usePendingModerationCount from "./hooks/queries/usePendingModerationCount";
 
 // Imported Config
 import { BASE_URL } from "@/config/axios";
@@ -34,12 +33,17 @@ const ViewRecipePage = lazy(() => import("@/pages/recipe/view/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
-const PendingRecipePost = lazy(() => import("@/pages/admin/PendingRecipePost"));
+const PendingRecipePage = lazy(() => import("@/pages/admin/PendingRecipePost"));
 const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
+const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
+
+// Layouts
+const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
+const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const AdminAnalyticsDashboard = lazy(() => import("@/pages/admin/AdminAnalyticsDashboard"))
 
 // DEFINED ROUTES
@@ -54,7 +58,6 @@ const router = createBrowserRouter([
       { path: "admin/dashboard", element: <AdminDashboard /> },
       { path: "admin/pending-recipes", element: <PendingRecipePost /> },
       { path: "admin/feature-recipes", element: <FeatureRecipes /> },
-      { path: "admin/analytics", element: <AdminAnalyticsDashboard/>},
       { path: "profile", element: <ProfilePageView /> },
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementForm /> },
@@ -65,10 +68,32 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />, // Protects routes under this wrapper
         children: [
+          // Login Protected Recipe Routes
           { path: "recipes/create", element: <CreateRecipePage /> },
           { path: "recipes/:recipeId/edit", element: <EditRecipePage /> },
+
+          // Login Protected Moderation Route
+          { path: "moderation/:recipeId", element: <ModerationPage /> },
+
+          // Login Protected Profile Routes
+          { path: "profile", element: <ProfilePageView /> },
+          { path: "profile/:userId", element: <SpecificUserProfileView /> },
         ],
       },
+    ],
+  },
+
+  // Login Protected Controll Routes
+  // TODO: Add Protection that is for admin and creators only
+  {
+    path: "control",
+    element: <ControlLayout />,
+    errorElement: <NotFoundPage />, // Handles errors inside ControlLayout
+    children: [
+      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "pending-recipes", element: <PendingRecipePage /> },
+      { path: "feature-recipes", element: <FeatureRecipes /> },
+      { path: "announcements/create", element: <AnnouncementForm /> },
     ],
   },
 
@@ -78,15 +103,23 @@ const router = createBrowserRouter([
   { path: "verify-email", element: <VerifyPage /> },
 
   // Catch-all for 404 pages
-  { path: "*", element: <NotFoundPage className="h-screen" /> },
+  {
+    path: "*",
+    element: <NotFoundPage className="h-screen" />,
+  },
 ]);
 
 // --------------------------------------------------------------------
 
 const App = () => {
   const { isImageModalOpen } = useImageModalStore();
-  const { setUserDetails, isLoggedIn } = useAuthStore();
+  const setUserDetails = useAuthStore((state) => state.setUserDetails);
+  const userDetails = useAuthStore((state) => state.userDetails);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { data: fetchedUserData } = useFetchUserDetails(isLoggedIn);
+
+  const isAuthorized = userDetails?.role === "admin" || userDetails?.role === "creator";
+  const { data: pendingModerationCount } = usePendingModerationCount(isAuthorized);
 
   // Initial DB Connection Check
   useEffect(() => {
@@ -110,6 +143,31 @@ const App = () => {
       setUserDetails(fetchedUserData.user);
     }
   }, [fetchedUserData, setUserDetails]);
+
+  // Pending Moderation Toast
+  useEffect(() => {
+    if (!pendingModerationCount) return;
+
+    const toastId = toast.custom(
+      (t) => (
+        <PendingModerationToast
+          toastId={t}
+          pendingModerationCount={pendingModerationCount}
+          onViewClick={() => {
+            toast.dismiss(toastId);
+            router.navigate("/recipes/");
+          }}
+        />
+      ),
+      {
+        duration: 5000,
+      },
+    );
+
+    return () => {
+      toast.dismiss(toastId);
+    };
+  }, [pendingModerationCount]);
 
   return (
     <ThemeProvider>

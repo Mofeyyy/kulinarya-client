@@ -1,27 +1,30 @@
 import { NavLink } from "react-router-dom";
 import useAuthStore from "@/hooks/stores/useAuthStore";
 
+// -------------------------------------------------------------------
+
 const HeaderNavLinks = () => {
-  const { userDetails } = useAuthStore(); // Get user details correctly
+  const userDetails = useAuthStore((state) => state.userDetails);
+  const isUserAdminOrCreator = userDetails?.role === "admin" || userDetails?.role === "creator";
 
   const links = [
-    { name: "Home", href: "/home" },
+    { name: "Home", href: "/" },
     { name: "Recipes", href: "/recipes" },
   ];
 
-  // Ensure userDetails exists and check the role
-  if (userDetails?.role === "admin") {
+  // Add "Control" button if user is admin or creator
+  if (isUserAdminOrCreator) {
     links.push({ name: "Control", href: "/admin/dashboard" });
   }
 
   return (
-    <nav className="flex flex-col sm:flex-row items-center gap-10">
+    <nav className="hidden items-center gap-10 sm:flex">
       {links.map((link) => (
         <NavLink
           key={link.name}
           to={link.href}
           className={({ isActive }) =>
-            `hover:opacity-80 transition text-background sm:text-white text-xl sm:text-base ${
+            `text-base text-white transition-opacity hover:opacity-80 ${
               isActive ? "font-bold" : "font-medium"
             }`
           }
