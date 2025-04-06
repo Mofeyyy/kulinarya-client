@@ -147,7 +147,7 @@ const App = () => {
           pendingModerationCount={pendingModerationCount}
           onViewClick={() => {
             toast.dismiss(toastId);
-            router.navigate("/recipes/");
+            router.navigate("/control/pending-recipes");
           }}
         />
       ),
