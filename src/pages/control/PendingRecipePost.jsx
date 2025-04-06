@@ -98,7 +98,10 @@ const PendingRecipes = () => {
 
     try {
       await toast.promise(
-        moderateRecipe(moderationId, { status: decision, notes: message || "" }),
+        moderateRecipe({
+          moderationId,
+          payload: { status: decision || "pending", notes: message || "" },
+        }),
         {
           loading: `${decision === "approved" ? "Approving" : "Rejecting"} recipe...`,
           success: `${decision === "approved" ? "Approved" : "Rejected"} recipe successfully!`,
