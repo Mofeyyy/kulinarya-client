@@ -107,7 +107,9 @@ const RecipeFeed = () => {
               <CustomPagination
                 filters={filters}
                 updateFilters={updateFilters}
-                totalRecipeCount={data?.totalApprovedRecipes || 0}
+                totalCount={data?.totalApprovedRecipes || 0}
+                totalPages={data?.pagination?.totalPages || 0}
+                hasNextPage={data?.pagination?.hasNextPage || false}
               />
             )}
           </>

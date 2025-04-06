@@ -8,16 +8,15 @@ import {
 
 //  ------------------------------------------------------------
 
-const PaginationControl = ({ page, limit, onChange, totalRecipeCount }) => {
-  const totalPages = Math.max(1, Math.ceil(totalRecipeCount / limit));
-
+const PaginationControl = ({ page, onChange, totalPages, hasNextPage }) => {
   return (
     <Pagination className="flex sm:justify-end">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            onClick={() => onChange("page", Number(page) - 1)}
-            disabled={page === 1}
+            onClick={() => {
+              if (page > 1) onChange("page", Number(page) - 1);
+            }}
             className="hover:text-primary transition hover:bg-transparent"
           />
         </PaginationItem>
@@ -30,8 +29,9 @@ const PaginationControl = ({ page, limit, onChange, totalRecipeCount }) => {
 
         <PaginationItem>
           <PaginationNext
-            onClick={() => onChange("page", Number(page) + 1)}
-            disabled={page === totalPages}
+            onClick={() => {
+              if (hasNextPage) onChange("page", Number(page) + 1);
+            }}
             className="hover:text-primary transition hover:bg-transparent"
           />
         </PaginationItem>

@@ -41,10 +41,10 @@ const ControlLayout = () => {
 
       <main className="bg-background flex h-screen w-screen flex-col overflow-hidden">
         {/* Header Section */}
-        <header className="flex h-20 items-center justify-between border-b px-10">
+        <header className="flex h-20 shrink-0 items-center justify-between border-b px-10">
           <div className="flex items-center gap-4">
             <Link to="/">
-              <Button className="!pr-5">
+              <Button className="!pr-5 shadow-lg">
                 <ChevronLeft />
                 <span>Home</span>
               </Button>
@@ -57,12 +57,14 @@ const ControlLayout = () => {
         </header>
 
         {/* Content Section */}
-        <section className="flex-1 flex-col overflow-hidden">
-          <div className="flex h-20 w-full items-center border-b px-10">
+        <section className="flex flex-1 flex-col overflow-hidden">
+          {/* Breadcrumb Row */}
+          <div className="flex h-20 w-full shrink-0 items-center px-10">
             <CustomBreadCrumb />
           </div>
 
-          <div className="flex flex-1 items-center justify-center overflow-y-scroll">
+          {/* Scrollable Outlet */}
+          <div className="no-scrollbar flex flex-1 justify-center overflow-y-auto pb-5">
             <Outlet />
           </div>
         </section>

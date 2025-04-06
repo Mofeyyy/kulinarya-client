@@ -24,7 +24,6 @@ import { trackPostView } from "@/config/postViewApi";
 
 // ----------------------------------------------------------------
 // TODO: If there is no updatedAt, use createdAt
-// TODO: Seperate other components if there is time
 // TODO: Add Fallback Image When Loading Error
 
 const ViewRecipe = () => {

@@ -39,7 +39,7 @@ const items = [
       { title: "Pending", url: "/control/pending-recipes", Icon: Ellipsis },
       { title: "Approved", url: "/control/approved-recipes", Icon: CircleCheck },
       { title: "Rejected", url: "/control/rejected-recipes", Icon: CircleX },
-      { title: "Featured", url: "/control/featured-recipes", Icon: Sparkles },
+      { title: "Featured", url: "/control/feature-recipes", Icon: Sparkles },
     ],
   },
   {
