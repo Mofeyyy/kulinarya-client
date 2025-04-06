@@ -34,6 +34,11 @@ const ModerationPage = () => {
     }
   }, [userDetails, moderation]);
 
+  // For Debugging
+  useEffect(() => {
+    console.log("Moderation:", moderation);
+  }, [moderation]);
+
   if (isLoading) return <ScreenLoader />;
   if (!moderation) return <NotFoundPage />;
 

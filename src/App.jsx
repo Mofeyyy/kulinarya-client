@@ -7,8 +7,6 @@ import axios from "axios";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 // Components
-import ScreenLoader from "@/components/ScreenLoader";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageModal from "@/components/ImageModal";
 import PendingModerationToast from "./components/PendingModerationToast";
 
@@ -32,9 +30,9 @@ const CreateRecipePage = lazy(() => import("@/pages/recipe/CreateRecipe"));
 const ViewRecipePage = lazy(() => import("@/pages/recipe/view/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
-const PendingRecipePage = lazy(() => import("@/pages/admin/PendingRecipePost"));
-const FeatureRecipes = lazy(() => import("@/pages/admin/FeatureRecipes"));
+const AdminDashboard = lazy(() => import("@/pages/control/AdminDashboard"));
+const PendingRecipePage = lazy(() => import("@/pages/control/PendingRecipePost"));
+const FeatureRecipes = lazy(() => import("@/pages/control/FeatureRecipes"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
@@ -44,6 +42,8 @@ const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
+const ScreenLoader = lazy(() => import("@/components/ScreenLoader"));
+const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
 const AdminAnalyticsDashboard = lazy(() => import("@/pages/admin/AdminAnalyticsDashboard"))
 
 // DEFINED ROUTES
@@ -83,8 +83,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Login Protected Controll Routes
-  // TODO: Add Protection that is for admin and creators only
+  // Login Protected Control Routes
   {
     path: "control",
     element: <ControlLayout />,
@@ -97,7 +96,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Auth Routes (Outside AppLayout)
+  // Auth Routes (Outside AppLayout and ControlLayout)
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyPage /> },
@@ -155,7 +154,7 @@ const App = () => {
           pendingModerationCount={pendingModerationCount}
           onViewClick={() => {
             toast.dismiss(toastId);
-            router.navigate("/recipes/");
+            router.navigate("/control/pending-recipes");
           }}
         />
       ),

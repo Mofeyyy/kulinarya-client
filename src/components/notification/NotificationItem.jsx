@@ -8,6 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import NotificationOptions from "../notification/NotificationOptions";
 import NotificationContent from "../notification/NotificationContent";
 
+// Imported Mutations
+import useNotificationMutations from "@/hooks/mutations/useNotificationMutations";
+
 //  ----------------------------------------------------------
 
 const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
@@ -26,10 +29,13 @@ const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
   const createdAt = notification?.createdAt;
   const content = notification?.content;
 
+  const { markNotificationAsReadMutation } = useNotificationMutations(notificationId);
+  const { mutateAsync: markAsRead } = markNotificationAsReadMutation;
+
   // Functions
   const handleViewNotification = async () => {
     if (!isRead) {
-      await markNotificationAsReadMutation.mutateAsync();
+      await markAsRead();
     }
 
     toggleIsNotificationModalOpen();

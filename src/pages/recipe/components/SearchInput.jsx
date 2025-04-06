@@ -10,7 +10,7 @@ const SearchInput = ({ value, onChange }) => {
   }, 500);
 
   return (
-    <div className="relative flex w-full items-center hover:opacity-80 md:w-[25vw]">
+    <div className="relative flex w-full items-center hover:opacity-80 md:max-w-xs">
       <Search className="text-foreground absolute left-3" size={20} />
       <Input
         type="text"

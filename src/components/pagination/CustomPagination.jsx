@@ -2,7 +2,7 @@ import PaginationControl from "@/components/pagination/PaginationControl";
 import LimitSelect from "@/components/pagination/LimitSelect";
 import SortOrderSelect from "@/components/pagination/SortOrderSelect";
 
-const CustomPagination = ({ filters, updateFilters, totalRecipeCount }) => {
+const CustomPagination = ({ filters, updateFilters, totalCount, totalPages, hasNextPage }) => {
   return (
     <div className="flex w-full flex-col-reverse items-center gap-5 sm:grid sm:grid-cols-2">
       <div className="flex w-full flex-col gap-3 sm:flex-row">
@@ -18,9 +18,9 @@ const CustomPagination = ({ filters, updateFilters, totalRecipeCount }) => {
 
       <PaginationControl
         page={filters.page}
-        limit={filters.limit}
         onChange={updateFilters}
-        totalRecipeCount={totalRecipeCount}
+        totalPages={totalPages}
+        hasNextPage={hasNextPage}
       />
     </div>
   );

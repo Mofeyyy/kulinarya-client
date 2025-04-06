@@ -153,22 +153,26 @@ select[aria-hidden="true"] {
   display: none !important;
 }
 
-/* For Webkit-based browsers (Chrome, Edge, Safari) */
-::-webkit-scrollbar {
-  width: 10px; /* Adjust the width as needed */
+/* For Scrollbar */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a transparent;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background); /* Use your CSS variable */
+/* Webkit (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 100, 0.5); /* Customize scrollbar thumb */
-  border-radius: 5px;
+*::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 100, 100, 0.7);
+*::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
 }
 
 /* For No Scrollbar */
