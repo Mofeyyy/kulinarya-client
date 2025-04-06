@@ -53,7 +53,8 @@ const ModerationPage = () => {
   if (!moderation) return <NotFoundPage />;
 
   const { title } = moderation.forPost;
-  const { firstName, lastName } = moderation.moderatedBy;
+  const firstName = moderation.moderatedBy ? moderation.moderatedBy.firstName : "N/A";
+  const lastName = moderation.moderatedBy ? moderation.moderatedBy.lastName : "";
   const { status, notes } = moderation;
 
   return (

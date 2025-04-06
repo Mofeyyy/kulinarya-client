@@ -122,7 +122,7 @@ const PendingRecipes = () => {
   };
 
   // Table Head and Table Rows Declaration For Reusable Table
-  const tableHead = ["Recipe Title", "Author", "Status", "Created At"];
+  const tableHead = ["Recipe Title", "Author", "Reason", "Status"];
   const tableRows = pendingRecipes?.map((recipe) => {
     return {
       key: recipe._id,
@@ -140,12 +140,12 @@ const PendingRecipes = () => {
           avatarUrl: recipe.byUser?.profilePictureUrl,
           avatarFallback: `${recipe.byUser?.firstName[0]}`,
         },
-        { key: "status", value: recipe.moderationInfo?.status, className: "text-center" },
         {
-          key: "createdAt",
-          value: dayjs(recipe.createdAt).format("MMM DD, YYYY"),
+          key: "reason",
+          value: !!recipe.updatedAt ? "Recipe Update" : !!recipe.createdAt && "Recipe Creation",
           className: "text-center",
         },
+        { key: "status", value: recipe.moderationInfo?.status, className: "text-center" },
       ],
 
       actions: [

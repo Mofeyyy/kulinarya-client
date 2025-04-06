@@ -1,6 +1,9 @@
 // Imported Libraries
 import { useNavigate } from "react-router-dom";
 
+// Imported Images
+import kulinaryaLogo from "@/assets/kulinarya-logo.jpg";
+
 // Imported Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -14,20 +17,23 @@ import useNotificationMutations from "@/hooks/mutations/useNotificationMutations
 //  ----------------------------------------------------------
 
 const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
-  const { byUser } = notification;
-  const { firstName, lastName, profilePictureUrl } = byUser;
-
   const navigateTo = useNavigate();
 
   // Contants
-  const avatarFallback = `${firstName[0]}${lastName[0]}`;
-  const fromUserFullName = byUser ? `${firstName} ${lastName}` : "Unknown User";
+  const profilePictureUrl = notification?.byUser
+    ? notification?.byUser?.profilePictureUrl
+    : kulinaryaLogo;
+  const avatarFallback =
+    notification?.byUser?.firstName[0] + notification?.byUser?.lastName[0] || "KS";
+  const fromUserFullName = notification?.byUser
+    ? `${notification?.byUser?.firstName} ${notification?.byUser?.lastName}`
+    : "Kulinarya System";
   const notificationType = notification?.type;
   const isRead = notification?.isRead;
   const fromPostId = notification?.fromPost;
   const notificationId = notification?._id;
-  const createdAt = notification?.createdAt;
   const content = notification?.content;
+  const dateDisplay = notification?.updatedAt ? notification?.updatedAt : notification?.createdAt;
 
   const { markNotificationAsReadMutation } = useNotificationMutations(notificationId);
   const { mutateAsync: markAsRead } = markNotificationAsReadMutation;
@@ -53,6 +59,13 @@ const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
     }
   };
 
+  const handleClickUser = () => {
+    alert("Coming Soon");
+    if (notification?.byUser) {
+      // TODO: Navigate to User Profile
+    }
+  };
+
   return (
     <div
       className="hover:border-primary group relative flex w-full cursor-pointer gap-3 rounded-lg border-2 p-2 shadow-sm transition-colors"
@@ -65,18 +78,21 @@ const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
     >
       {/* User Avatar */}
       <Avatar
-        onClick={() => alert("Feature: User Profile")}
+        onClick={handleClickUser}
         className="group-hover:border-primary notification-options size-14 cursor-pointer border-2 transition-colors hover:scale-105"
       >
         <AvatarImage src={profilePictureUrl} />
-        <AvatarFallback>{avatarFallback}</AvatarFallback>
+        <AvatarFallback className="group-hover:text-primary transition-colors">
+          {avatarFallback}
+        </AvatarFallback>
       </Avatar>
 
       <NotificationContent
         fromUserFullName={fromUserFullName}
         content={content}
-        createdAt={createdAt}
+        dateDisplay={dateDisplay}
         isRead={isRead}
+        handleClickUser={handleClickUser}
       />
 
       <NotificationOptions

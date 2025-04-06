@@ -1,6 +1,7 @@
 // Imported  Libraries
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect, useRef } from "react";
 
 // Imported Components
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -17,7 +18,6 @@ import ControlSidebar from "@/components/control/ControlSidebar";
 
 // Import Stores
 import useAuthStore from "@/hooks/stores/useAuthStore";
-import { useEffect } from "react";
 
 // --------------------------------------------------------------
 
@@ -25,16 +25,22 @@ const ControlLayout = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const userDetails = useAuthStore((state) => state.userDetails);
   const navigateTo = useNavigate();
+  const toastShownRef = useRef(false);
 
   // Secure Route: For Admin and Creator Only
   useEffect(() => {
-    if (!isLoggedIn && userDetails?.role !== "admin" && userDetails?.role !== "creator") {
+    if (
+      (!isLoggedIn || (userDetails?.role !== "admin" && userDetails?.role !== "creator")) &&
+      !toastShownRef.current
+    ) {
       toast.error("Unauthorized Access", {
         duration: 5000,
       });
+      toastShownRef.current = true;
       navigateTo("/");
     }
-  }, [isLoggedIn, userDetails]);
+  }, [isLoggedIn, userDetails, navigateTo]);
+
   return (
     <SidebarProvider>
       <ControlSidebar />

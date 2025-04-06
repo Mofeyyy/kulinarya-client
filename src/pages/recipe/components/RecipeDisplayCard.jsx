@@ -45,11 +45,11 @@ const RecipeDisplayCard = ({ recipe }) => {
       />
 
       {/* Other Details  */}
-      <div className="flex flex-col gap-5">
-        <div className="flex justify-between">
-          <div>
-            <p className="text-foreground truncate text-xl font-bold">{title}</p>
-            <p className="text-muted-foreground truncate text-sm">{`By ${recipeOwner}`}</p>
+      <div className="flex w-full flex-col gap-5 border">
+        <div className="flex w-full justify-between gap-2 border">
+          <div className="flex w-full min-w-0 flex-col">
+            <p className="text-foreground truncate text-xl font-bold break-words">{title}</p>
+            <p className="text-muted-foreground truncate text-sm break-words">{`By ${recipeOwner}`}</p>
           </div>
 
           {isLoggedIn && byUser._id === userDetails?._id && (
