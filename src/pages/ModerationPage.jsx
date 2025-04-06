@@ -1,7 +1,9 @@
+// Imported Libraries
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+// Imported Components
 import {
   Card,
   CardContent,
@@ -11,16 +13,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+// Imported Custom Components
 import ScreenLoader from "@/components/ScreenLoader";
 import NotFoundPage from "./NotFoundPage";
 
+// Imported Queries
 import useFetchSpecificModerations from "@/hooks/queries/useFetchSpecificModeration";
+
+// Imported Stores
 import useAuthStore from "@/hooks/stores/useAuthStore";
+
+// -------------------------------------------------------------
 
 const ModerationPage = () => {
   const { recipeId } = useParams();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const userDetails = useAuthStore((state) => state.userDetails);
+
   const navigateTo = useNavigate();
 
   const { data: moderation, isLoading } = useFetchSpecificModerations(recipeId, isLoggedIn);
@@ -57,17 +67,18 @@ const ModerationPage = () => {
         <CardContent className="text-foreground">
           <div className="flex flex-col gap-3">
             {[
-              { label: "Recipe Title", value: title },
+              { label: "Recipe Title", value: title, className: "capitalize" },
               { label: "Moderated By", value: `${firstName} ${lastName}` },
               {
                 label: "Status",
                 value: status,
-                className:
+                className: `capitalize ${
                   status === "approved"
                     ? "text-green-500"
                     : status === "rejected"
                       ? "text-red-500"
-                      : "text-yellow-500",
+                      : "text-yellow-500"
+                }`,
               },
               { label: "Notes", value: notes || "No notes provided" },
             ].map(({ label, value, className }, index) => (

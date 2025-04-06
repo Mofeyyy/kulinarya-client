@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import useConfirmDialog from "@/components/useConfirmDialog";
-import { MoreVertical } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import useAuthStore from "@/hooks/stores/useAuthStore";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import CommentOptions from "./CommentOptions";
 import CommentTextArea from "./CommentTextArea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useCommentMutations from "@/hooks/mutations/useCommentMutations";
@@ -19,6 +18,8 @@ const CommentItem = ({ comment }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { updateCommentMutation, deleteCommentMutation } = useCommentMutations(comment.fromPost);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
+
+  // ----------------------------------------------------------------
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -42,12 +43,17 @@ const CommentItem = ({ comment }) => {
     }
   };
 
+  const menuItems = [
+    { icon: Pencil, label: "Edit", action: handleEdit },
+    { icon: Trash2, label: "Delete", action: handleDelete },
+  ];
+
   return (
-    <div className="flex w-full max-w-xl items-start gap-3">
+    <div className="flex w-full max-w-xl gap-3">
       {/* Profile Picture */}
       <Avatar
         onClick={() => alert("Coming Soon")}
-        className="mt-2 size-12 cursor-pointer border-2 shadow-sm transition-transform hover:scale-125"
+        className="hover:border-primary hover:text-primary mt-1 size-12 cursor-pointer border-2 shadow-sm transition-colors"
       >
         <AvatarImage src={comment.byUser.profilePictureUrl} />
         <AvatarFallback>
@@ -57,7 +63,7 @@ const CommentItem = ({ comment }) => {
       </Avatar>
 
       {/* Comment Content */}
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         {isEditing ? (
           <CommentTextArea
             type="edit"
@@ -65,19 +71,23 @@ const CommentItem = ({ comment }) => {
             onChange={setEditedComment}
             onSave={handleSave}
             onCancel={() => setIsEditing(false)}
+            className="w-full"
           />
         ) : (
           <>
-            <div className="rounded-lg border-2 p-2 pl-4 shadow-sm">
+            <div className="flex w-full flex-col rounded-lg border-2 p-2 pl-4 shadow-sm">
               <span
                 onClick={() => alert("Coming Soon")}
-                className="hover:text-primary cursor-pointer font-semibold transition-colors"
+                className="hover:text-primary max-w-fit cursor-pointer font-semibold transition-colors"
               >
                 {comment.byUser.firstName} {comment.byUser.lastName}
               </span>
 
-              <p className="text-muted-foreground text-sm">{comment.content}</p>
+              <span className="text-muted-foreground text-justify text-sm break-words">
+                {comment.content}
+              </span>
             </div>
+
             <span className="text-muted-foreground ml-4 text-[12px]">
               {dayjs(comment.createdAt).fromNow()}
             </span>
@@ -85,32 +95,17 @@ const CommentItem = ({ comment }) => {
         )}
       </div>
 
-      {/* Options Menu (Only for comment owner) */}
-      {isLoggedIn && comment.byUser._id === userDetails?._id && !isEditing && (
-        <Popover open={isOptionOpen} onOpenChange={setIsOptionOpen}>
-          <PopoverTrigger asChild>
-            <button className="hover:text-primary mt-5 cursor-pointer transition-colors">
-              <MoreVertical className="size-5" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-28 overflow-hidden p-0">
-            <Button
-              variant="ghost"
-              className="w-full justify-center rounded-none"
-              onClick={handleEdit}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="ghost"
-              className="text-destructive-foreground w-full justify-center rounded-none"
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </PopoverContent>
-        </Popover>
-      )}
+      <div className="flex flex-col justify-center pb-5">
+        {/* Options Menu (Only for comment owner) */}
+        {isLoggedIn && comment.byUser._id === userDetails?._id && !isEditing && (
+          <CommentOptions
+            isOptionOpen={isOptionOpen}
+            setIsOptionOpen={setIsOptionOpen}
+            menuItems={menuItems}
+          />
+        )}
+      </div>
+
       {ConfirmDialog}
     </div>
   );

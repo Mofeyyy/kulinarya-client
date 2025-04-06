@@ -3,22 +3,22 @@ import API from "@/config/axios";
 import handleApiRequest from "@/utils/handleApiRequest";
 
 // ----------------------------------------------------------------
-const fetchRecipeById = async ({ queryKey }) => {
+const fetchApprovedRecipeById = async ({ queryKey }) => {
   const [_, recipeId] = queryKey;
 
-  const response = await handleApiRequest(() => API.get(`/recipes/edit/${recipeId}`));
+  const response = await handleApiRequest(() => API.get(`/recipes/approved/${recipeId}`));
 
   return response?.recipe || [];
 };
 
-const useFetchRecipe = (recipeId) => {
+const useFetchApprovedRecipe = (recipeId) => {
   return useQuery({
-    queryKey: ["recipe", recipeId, "edit"],
-    queryFn: fetchRecipeById,
+    queryKey: ["recipe", recipeId, "view"],
+    queryFn: fetchApprovedRecipeById,
     enabled: !!recipeId,
     retry: false,
     refetchOnWindowFocus: false,
   });
 };
 
-export default useFetchRecipe;
+export default useFetchApprovedRecipe;

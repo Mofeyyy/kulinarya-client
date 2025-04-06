@@ -19,7 +19,7 @@ const OwnerProfileCard = () => {
     <div className="bg-background text-foreground flex w-full max-w-md flex-col items-center rounded-lg border px-10 pb-10 shadow-lg lg:max-w-none">
       <Avatar className="border-primary aspect-square size-32 -translate-y-1/2 rounded-full border-3 object-cover lg:size-40">
         <AvatarImage src={profilePictureUrl} />
-        <AvatarFallback className="text-primary text-lg font-semibold">
+        <AvatarFallback className="text-primary text-3xl font-semibold">
           {ownerFirstNameInitial}
         </AvatarFallback>
       </Avatar>

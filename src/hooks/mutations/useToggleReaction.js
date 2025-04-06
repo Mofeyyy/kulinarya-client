@@ -19,10 +19,10 @@ const useToggleReaction = (recipeId) => {
 
     onMutate: async (reactionValue) => {
       // Cancel any outgoing refetches to avoid race conditions
-      await queryClient.cancelQueries(["recipe", recipeId]);
+      await queryClient.cancelQueries(["recipe", recipeId, "view"]);
 
       // Get the current cached data
-      const prevRecipe = queryClient.getQueryData(["recipe", recipeId]);
+      const prevRecipe = queryClient.getQueryData(["recipe", recipeId, "view"]);
 
       if (!prevRecipe) return;
 
@@ -31,7 +31,7 @@ const useToggleReaction = (recipeId) => {
       const isAddingReaction = prevReaction === null && reactionValue !== null;
 
       // Optimistically update the cache
-      queryClient.setQueryData(["recipe", recipeId], {
+      queryClient.setQueryData(["recipe", recipeId, "view"], {
         ...prevRecipe,
         userReaction: isRemovingReaction
           ? null
@@ -46,12 +46,12 @@ const useToggleReaction = (recipeId) => {
 
     onError: (_, __, context) => {
       if (context?.prevRecipe) {
-        queryClient.setQueryData(["recipe", recipeId], context.prevRecipe); // Rollback on error
+        queryClient.setQueryData(["recipe", recipeId, "view"], context.prevRecipe); // Rollback on error
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]); // Ensure fresh data in the background
+      queryClient.invalidateQueries(["recipe", recipeId, "view"]); // Ensure fresh data in the background
     },
   });
 };

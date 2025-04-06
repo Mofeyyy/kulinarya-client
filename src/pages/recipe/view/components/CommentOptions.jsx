@@ -1,37 +1,23 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
-import { Pencil, Trash2 } from "lucide-react";
 
 // ----------------------------------------------------------------
 
-const RecipeOptions = ({ recipeId, className, buttonClassName }) => {
-  const navigateTo = useNavigate();
-
-  const menuItems = [
-    { icon: Pencil, label: "Edit", action: () => navigateTo(`/recipes/${recipeId}/edit`) },
-    { icon: Trash2, label: "Delete", action: () => alert("Coming Soon") },
-  ];
-
+const CommentOptions = ({ isOptionOpen, setIsOptionOpen, menuItems }) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOptionOpen} onOpenChange={setIsOptionOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className={cn(
-            "hover:bg-background hover:text-primary flex items-center justify-center border-0 !p-0 transition-colors focus-visible:ring-0",
-            className,
-          )}
+          className="hover:bg-background hover:text-primary flex items-center justify-center border-0 !p-0 transition-colors focus-visible:ring-0"
         >
-          <MoreVertical className={cn("size-10", buttonClassName)} />
+          <MoreVertical className="size-5" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -51,4 +37,4 @@ const RecipeOptions = ({ recipeId, className, buttonClassName }) => {
   );
 };
 
-export default RecipeOptions;
+export default CommentOptions;
