@@ -40,6 +40,7 @@ const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"))
 const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
 const AnnouncementCreateView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"));
 const AnnouncementFullView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"));
+const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
 const ResendVerificationPage = lazy(() => import("@/pages/auth/ResendVerificationPage"));
 
 
@@ -80,8 +81,9 @@ const router = createBrowserRouter([
           { path: "moderation/:recipeId", element: <ModerationPage /> },
 
           // Login Protected Profile Routes
-          { path: "profile", element: <ProfilePageView /> },
-          { path: "profile/:userId", element: <SpecificUserProfileView /> },
+          { path: "profile/:userId", element: <ProfilePageView /> },
+          // { path: "profile/:userId", element: <SpecificUserProfileView /> },
+          { path: "profile/edit", element: <ProfileEditPage /> },
         ],
       },
     ],

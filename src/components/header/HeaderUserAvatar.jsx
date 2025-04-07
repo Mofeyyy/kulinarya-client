@@ -31,6 +31,7 @@ const HeaderUserAvatar = () => {
             userFirstNameInitial,
             userProfilePictureUrl,
             userName,
+            userId: userDetails?._id,
           }}
         />
       ) : (
