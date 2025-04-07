@@ -14,10 +14,17 @@ import NotificationContent from "../notification/NotificationContent";
 // Imported Mutations
 import useNotificationMutations from "@/hooks/mutations/useNotificationMutations";
 
+
+import { useState } from "react";
+import API from "@/config/axios"; // adjust if using another instance
+import AnnouncementFullView from "@/pages/home/AnnouncementModal/views/AnnouncementFullView";
+
 //  ----------------------------------------------------------
 
-const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
+const NotificationItem = ({ notification, toggleIsNotificationModalOpen, setSelectedAnnouncement }) => {
   const navigateTo = useNavigate();
+  
+
 
   // Contants
   const profilePictureUrl = notification?.byUser
@@ -43,21 +50,26 @@ const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
     if (!isRead) {
       await markAsRead();
     }
-
+  
+    if (notificationType === "announcement") {
+      toggleIsNotificationModalOpen(); // Close popover first
+      const { data } = await API.get(`/announcements/${fromPostId}`);
+      setSelectedAnnouncement(data.announcement);
+      return;
+    }
+  
+    // Close parent modal AFTER setting announcement
     toggleIsNotificationModalOpen();
-
+  
     if (notificationType === "comment" || notificationType === "reaction") {
       navigateTo(`/recipes/${fromPostId}`);
     }
-
-    if (notificationType === "announcement") {
-      navigateTo(`/announcements/${fromPostId}`);
-    }
-
+  
     if (notificationType === "moderation") {
       navigateTo(`/moderation/${fromPostId}`);
     }
   };
+  
 
   const handleClickUser = () => {
     alert("Coming Soon");
@@ -103,6 +115,7 @@ const NotificationItem = ({ notification, toggleIsNotificationModalOpen }) => {
         toggleIsNotificationModalOpen={toggleIsNotificationModalOpen}
       />
     </div>
+
   );
 };
 

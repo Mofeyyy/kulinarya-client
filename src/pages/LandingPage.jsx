@@ -8,6 +8,8 @@ import CarouselSection from "./home/components/CarouselSection";
 import ThirdSection from "./home/components/ThirdSection";
 import FourthSection from "./home/components/FourthSection";
 import useTopEngagedRecipes from "@/hooks/queries/useTopEngagedRecipes";
+import AnnouncementFloatingButton from "./home/components/AnnouncementFloatingButton";
+import useActiveAnnouncements from "@/hooks/queries/useAnnouncements";
 
 const LandingPage = () => {
   const { data: featuredRecipesData = [] } = useFeaturedRecipes();
@@ -17,6 +19,8 @@ const LandingPage = () => {
   const { data: topEngagedRecipes = [] } = useTopEngagedRecipes();
   const filteredEngagedRecipes = topEngagedRecipes.filter((recipe) => recipe.totalEngagement > 0);
   console.log("Top Engaged Recipes:", topEngagedRecipes);
+
+  const { data: announcements = [] } = useActiveAnnouncements();
 
   return (
     <section className="mb-20 flex w-full flex-col items-center justify-center gap-5 overflow-x-hidden sm:gap-10 lg:gap-16">
@@ -57,6 +61,9 @@ const LandingPage = () => {
         <hr className="-mt-5" />
 
         <FourthSection />
+
+        {/* Floating Announcement Button */}
+      <AnnouncementFloatingButton announcements={announcements} />
       </div>
     </section>
   );
