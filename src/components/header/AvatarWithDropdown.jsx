@@ -27,7 +27,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
   const queryClient = useQueryClient();
 
   const navigateTo = useNavigate();
-  const { userFirstNameInitial, userProfilePictureUrl, userName } = userProfile;
+  const { userFirstNameInitial, userProfilePictureUrl, userName, userId } = userProfile;
 
   const handleLogout = async () => {
     logoutMutation.mutate(null, {
@@ -48,7 +48,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
       label: "Profile",
       Icon: User,
       onClick: () => {
-        navigateTo("/profile");
+        navigateTo(`/profile/${userId}`);
       },
     },
     {
@@ -65,7 +65,7 @@ const AvatarWithDropdown = ({ userProfile }) => {
           className={`flex size-16 cursor-pointer items-center justify-center border-2 border-white transition hover:opacity-80`}
         >
           <AvatarImage src={userProfilePictureUrl} />
-          <AvatarFallback className="text-primary text-lg font-semibold">
+          <AvatarFallback className="text-primary text-lg font-semibold capitalize">
             {userFirstNameInitial}
           </AvatarFallback>
         </Avatar>

@@ -1,0 +1,310 @@
+// Imported  Libraries
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+// Imported Components
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+// Imported Custom Components
+import CustomInputField from "../recipe/form/components/CustomInputField";
+import CustomTextAreaField from "../recipe/form/components/CustomTextAreaField";
+import useConfirmDialog from "@/components/useConfirmDialog";
+
+// Imported Stores
+import useAuthStore from "@/hooks/stores/useAuthStore";
+import useUnsavedChangesStore from "@/hooks/stores/useUnsavedChangesStore";
+
+// Imported Queries
+import useFetchUserData from "@/hooks/queries/useFetchUserData";
+
+// Imported Mutations
+import useUserInfoMutation from "@/hooks/mutations/useUserInfoMutation";
+
+// Imported Icons
+import { Loader2 } from "lucide-react";
+
+// ----------------------- Schema to move ------------------------------------
+
+const personalInfoSchema = z.object({
+  firstName: z.string().trim().min(2, "First name is required"),
+  middleName: z.string().trim().optional(),
+  lastName: z.string().trim().min(2, "Last name is required"),
+  email: z.string().trim().toLowerCase().email("Invalid email address").min(1, "Email is required"),
+  bio: z
+    .string()
+    .max(500, "Bio must be at most 500 characters")
+    .trim()
+    .refine((val) => val.length === 0 || val.trim().length > 0, {
+      message: "Bio cannot be empty or just spaces",
+    })
+    .optional(),
+});
+
+// ----------------------------------------------------------------
+
+const ProfileEditPage = () => {
+  const userDetails = useAuthStore((state) => state.userDetails);
+
+  const { data: user, isLoading, error } = useFetchUserData(userDetails?._id);
+
+  const tabItems = [
+    { value: "info", title: "Personal Info", component: <PersonalInfoTab user={user} /> },
+    { value: "picture", title: "Update Profile Picture", component: <UpdateProfilePictureTab /> },
+    { value: "password", title: "Change Password", component: <ChangePasswordTab /> },
+    { value: "delete", title: "Delete Account", component: <DeleteAccountTab /> },
+  ];
+
+  if (isLoading) return <MiniLoader />;
+  if (!user || error)
+    return <p className="text-destructive text-center font-medium">Error fetching user data</p>;
+
+  return (
+    <section className="flex h-full w-full items-center justify-center">
+      <Card className="bg-background max-w-3xl gap-5">
+        <CardHeader>
+          <CardTitle className="text-primary">Edit Profile Settings</CardTitle>
+          <CardDescription>
+            Manage your personal info, password, or delete your account.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <Tabs defaultValue="info" className="w-full gap-8">
+            <TabsList className="bg-background grid w-full grid-cols-4 rounded-none">
+              {tabItems.map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="bg-background data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b-primary cursor-pointer rounded-none border-b-4 transition-opacity hover:opacity-80"
+                >
+                  {tab.title}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {tabItems.map((tab) => (
+              <TabsContent key={tab.value} value={tab.value}>
+                {tab.component}
+              </TabsContent>
+            ))}
+          </Tabs>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
+
+const PersonalInfoTab = ({ user }) => {
+  const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
+  const { openDialog, ConfirmDialog } = useConfirmDialog();
+  const navigateTo = useNavigate();
+
+  const { mutateAsync: updateUserInfo, isPending: isUpdating } = useUserInfoMutation();
+
+  const form = useForm({
+    defaultValues: {
+      firstName: user.firstName || "",
+      middleName: user.middleName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      bio: user.bio || "",
+    },
+    resolver: zodResolver(personalInfoSchema),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    isSubmitting,
+    formState: { dirtyFields },
+  } = form;
+
+  const onSubmit = async (data) => {
+    console.log("Personal Info Data:", data);
+
+    const confirm = await openDialog("Are you sure you want to update your personal info?");
+
+    if (!confirm) return;
+
+    try {
+      await toast.promise(
+        updateUserInfo({ userId: user._id, userData: data }),
+        {
+          loading: "Saving changes...",
+          success: "Saved successfully!",
+        },
+        {
+          duration: 5000,
+        },
+      );
+      setHasUnsavedChanges(false);
+
+      // Delay to ensure states are updated before navigate
+      setTimeout(() => navigateTo(`/profile/${user._id}`), 0);
+    } catch (error) {
+      console.error("Error updating user info:", error);
+      toast.error(error.message, {
+        duration: 5000,
+      });
+    }
+  };
+
+  // Monitor for unsaved changes
+  useEffect(() => {
+    setHasUnsavedChanges(Object.keys(dirtyFields).length > 0);
+  }, [dirtyFields]);
+  return (
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-5">
+        <div className="grid w-full max-w-3xl grid-cols-1 gap-4 md:grid-cols-2">
+          <CustomInputField
+            control={control}
+            name="firstName"
+            formLabel="First Name"
+            inputPlaceholder="First Name"
+            isDisabled={isUpdating || isSubmitting}
+          />
+
+          <CustomInputField
+            control={control}
+            name="middleName"
+            formLabel="Middle Name"
+            inputPlaceholder="Middle Name"
+            isDisabled={isUpdating || isSubmitting}
+          />
+
+          <CustomInputField
+            control={control}
+            name="lastName"
+            formLabel="Last Name"
+            inputPlaceholder="Last Name"
+            isDisabled={isUpdating || isSubmitting}
+          />
+
+          <CustomInputField
+            control={control}
+            name="email"
+            formLabel="Email"
+            inputPlaceholder="Email"
+            type="email"
+            isDisabled={true}
+          />
+        </div>
+
+        <div className="w-full max-w-3xl">
+          <CustomTextAreaField
+            control={control}
+            name="bio"
+            formLabel="Bio"
+            textAreaPlaceholder="Tell us about yourself..."
+            isDisabled={isUpdating || isSubmitting}
+          />
+        </div>
+
+        <Button type="submit" className="self-end">
+          {isUpdating || isSubmitting ? <Loader2 className="animate-spin" /> : <p>Save Changes</p>}
+        </Button>
+      </form>
+
+      {ConfirmDialog}
+    </Form>
+  );
+};
+
+const UpdateProfilePictureTab = () => {
+  const [profilePic, setProfilePic] = useState(null);
+
+  return (
+    <div className="flex flex-col items-center gap-5">
+      {/* Avatar and Upload */}
+      <div className="flex flex-col items-center gap-2">
+        <Avatar className="size-40 border-4">
+          <AvatarImage
+            src={profilePic || "https://api.dicebear.com/7.x/initials/svg?seed=JD"}
+            alt="Profile"
+          />
+          <AvatarFallback>JD</AvatarFallback>
+        </Avatar>
+
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              const imageUrl = URL.createObjectURL(file);
+              setProfilePic(imageUrl);
+            }
+          }}
+          className="hidden"
+          id="file-upload"
+        />
+        <label
+          htmlFor="file-upload"
+          className="text-primary cursor-pointer text-sm hover:underline"
+        >
+          Upload New Picture
+        </label>
+      </div>
+
+      {/* Save Button */}
+      <Button className="self-end">Save Picture</Button>
+    </div>
+  );
+};
+
+const ChangePasswordTab = () => {
+  return (
+    <div className="mt-4 space-y-4">
+      <Input placeholder="Current Password" type="password" />
+      <Input placeholder="New Password" type="password" />
+      <Input placeholder="Confirm New Password" type="password" />
+      <Button className="mt-2">Update Password</Button>
+    </div>
+  );
+};
+
+const DeleteAccountTab = () => {
+  return (
+    <div className="mt-4 space-y-4">
+      <p className="text-sm text-red-600">
+        Warning: Deleting your account is irreversible. Your data will be lost.
+      </p>
+      <Input placeholder="Enter password to confirm" type="password" />
+      <Button variant="destructive">Delete My Account</Button>
+    </div>
+  );
+};
+
+const MiniLoader = () => (
+  <div className="flex items-center justify-center">
+    <Loader2 className="animate-spin" />
+  </div>
+);
+
+export default ProfileEditPage;
