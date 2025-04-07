@@ -24,9 +24,13 @@ const OwnerProfileCard = () => {
         </AvatarFallback>
       </Avatar>
 
-      <div className="-mt-10 flex flex-col items-center gap-5 lg:-mt-14">
-        <p className="text-center text-[clamp(20px,2.5vw,30px)] font-bold">{ownerName}</p>
-        <p className="text-muted-foreground text-center text-sm leading-loose">{truncatedBio}</p>
+      <div className="-mt-10 flex w-full min-w-0 flex-col items-center gap-5 lg:-mt-14">
+        <p className="w-full text-center text-[clamp(20px,2.5vw,30px)] font-bold break-words">
+          {ownerName}
+        </p>
+        <p className="text-muted-foreground w-full text-center text-sm leading-loose break-words">
+          {truncatedBio}
+        </p>
 
         <Link to={`/profile/${ownerId}`}>
           <Button className="w-full">View Profile</Button>

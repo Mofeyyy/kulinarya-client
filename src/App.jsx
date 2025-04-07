@@ -38,10 +38,13 @@ const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileVi
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
 const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
-const AnnouncementCreateView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"));
-const AnnouncementFullView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"));
+const AnnouncementCreateView = lazy(
+  () => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"),
+);
+const AnnouncementFullView = lazy(
+  () => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"),
+);
 const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
-
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -59,11 +62,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "control/dashboard", element: <AdminAnalyticsDashboard /> },
-      { path: "control/pending-recipes", element: <PendingRecipePage /> },
-      { path: "control/feature-recipes", element: <FeatureRecipes /> },
-      { path: "profile", element: <ProfilePageView /> },
-      { path: "profile/:userId", element: <SpecificUserProfileView /> },
+      // { path: "control/dashboard", element: <AdminAnalyticsDashboard /> },
+      // { path: "control/pending-recipes", element: <PendingRecipePage /> },
+      // { path: "control/feature-recipes", element: <FeatureRecipes /> },
+      // { path: "profile", element: <ProfilePageView /> },
+      // { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
       { path: "announcements/:announcementId", element: <AnnouncementFullView /> },
       { path: "recipes", element: <RecipeFeedPage /> },
@@ -94,7 +97,7 @@ const router = createBrowserRouter([
     element: <ControlLayout />,
     errorElement: <NotFoundPage />, // Handles errors inside ControlLayout
     children: [
-      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "dashboard", element: <AdminAnalyticsDashboard /> },
       { path: "pending-recipes", element: <PendingRecipePage /> },
       { path: "feature-recipes", element: <FeatureRecipes /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
