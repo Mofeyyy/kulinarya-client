@@ -25,7 +25,7 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
         </label>
         <input
           {...register("title")}
-          className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-sm"
+          className="w-full px-3 py-2 border rounded-md bg-background text-sm"
         />
         {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
       </div>
@@ -37,14 +37,14 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
         <textarea
           {...register("content")}
           rows={4}
-          className="w-full px-3 py-2 border rounded-md resize-none bg-white dark:bg-gray-700 text-sm"
+          className="w-full px-3 py-2 border rounded-md resize-none bg bg-background text-sm"
         />
         {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition-all focus:outline-none"
       >
         Submit
       </button>

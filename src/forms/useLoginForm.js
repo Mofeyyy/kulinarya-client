@@ -33,25 +33,57 @@ const useLoginForm = () => {
   } = loginForm;
 
   const onSubmit = async (data) => {
+    // Debug log to check data sent
+    console.log("Login request data:", data);
+  
     mutate(data, {
-      onSuccess: () => {
-        login(data.user); // Set isLoggedIn and userDetails State
-        queryClient.setQueryData(["userDetails"], data.user); // Update React Query Cache
-        toast.success("Login Success!", {
-          duration: 5000,
-        });
-        navigateTo("/");
-        reset();
+      onSuccess: (response) => {
+        // Debug log for the actual server response
+        console.log("Server response:", response);
+  
+        const user = response?.data?.user;
+  
+        if (!user) {
+          toast.error("Invalid response from server.");
+          return;
+        }
+  
+        // Log the email verification status to debug
+        console.log("User email verification status:", user.isEmailVerified);
+  
+        // Check if email is verified
+        if (user.isEmailVerified === false) {
+          toast.error("Please verify your email before logging in.");
+          navigateTo("/resend-verification");
+          return;
+        }
+  
+        // If the email is verified, login the user and redirect
+        login(user); // Update user in auth store
+        queryClient.setQueryData(["userDetails"], user);
+        toast.success("Login Success!", { duration: 5000 });
+  
+        // Check if userDetails and isLoggedIn are updated in the store
+        console.log("User logged in:", user);
+        console.log("Auth Store State:", useAuthStore.getState());
+  
+        // Add a slight delay to ensure the state has updated before navigation
+        setTimeout(() => {
+          navigateTo("/");  // Redirect to homepage or appropriate page
+        }, 500);  // Delay to ensure the login state is properly updated
+        reset();  // Reset the form
       },
+  
       onError: (error) => {
         toast.error(error?.message || "Login Failed! Please try again.", {
           duration: 5000,
         });
         setFocus("email");
-        reset();
+        reset();  // Reset the form on error
       },
     });
   };
+  
 
   return {
     loginForm,

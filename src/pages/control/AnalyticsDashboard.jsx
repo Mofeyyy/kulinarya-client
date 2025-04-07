@@ -102,7 +102,7 @@ const AnalyticsDashboard = () => {
 
 // Reusable Stat Card with Balanced Styling
 const StatCard = ({ icon, title, value }) => (
-  <div className="p-4 bg-white dark:bg-gray-700 rounded-lg shadow-md text-center flex flex-col items-center">
+  <div className="p-4 bg-background rounded-lg shadow-md text-center flex flex-col items-center">
     {/* Orange Accent Icon */}
     <div className="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-700 rounded-lg mb-2">
       {icon}

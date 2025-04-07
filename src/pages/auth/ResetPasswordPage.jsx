@@ -51,8 +51,8 @@ export default function ResetPasswordPage() {
 
   if (!isTokenValid) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-background px-4 py-12">
-        <div className="bg-white dark:bg-muted rounded-2xl shadow-lg p-8 max-w-md w-full text-center space-y-6">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-[#0D0D0D] px-4 py-12">
+        <div className="bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-lg p-8 max-w-md w-full text-center space-y-6">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Link Expired or Invalid
           </h2>
@@ -63,7 +63,7 @@ export default function ResetPasswordPage() {
           </p>
           <Button
             onClick={() => window.location.href = "/forgot-password"}
-            className="px-6 py-2 text-sm"
+            className="px-6 py-2 text-sm bg-[#F97316] hover:bg-[#EA580C] text-white"
           >
             Request New Link
           </Button>
@@ -73,8 +73,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gray-100 dark:bg-black">
-      <Card className="w-full max-w-md p-6 sm:p-8 shadow-xl rounded-2xl bg-white dark:bg-gray-800">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
+      <Card className="w-full max-w-md p-6 sm:p-8 shadow-xl rounded-2xl bg-background">
 
         <CardHeader className="flex flex-col items-center space-y-4">
           <Logo className="size-20" />
@@ -102,7 +102,7 @@ export default function ResetPasswordPage() {
                         type="password"
                         placeholder="••••••••"
                         {...field}
-                        className="bg-white dark:bg-gray-700 text-black dark:text-white"
+                        className="bg-white dark:bg-[#1A1A1A] text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 border border-[#2C2C2C] focus:outline-none focus:ring-2 focus:ring-[#F97316] transition duration-300"
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
@@ -111,7 +111,7 @@ export default function ResetPasswordPage() {
               />
               <Button
                 type="submit"
-                className="px-6 py-2 text-sm mx-auto block"
+                className="px-6 py-2 text-sm mx-auto block bg-[#F97316] hover:bg-[#EA580C] text-white"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

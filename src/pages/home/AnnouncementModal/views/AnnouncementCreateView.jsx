@@ -8,7 +8,6 @@ const AnnouncementCreateView = ({ onClose, onAnnouncementCreated }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
   const handleSubmit = (data) => {
     setIsSubmitting(true);
 
@@ -32,20 +31,21 @@ const AnnouncementCreateView = ({ onClose, onAnnouncementCreated }) => {
 
   return (
     <ModalWrapper onClose={onClose}>
-      <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
-        ✍️ Create Announcement
-      </h2>
+      <div className="p-6 space-y-6 bg-background  rounded-2xl shadow-lg">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-6">
+          ✍️ Create Announcement
+        </h2>
 
-      {successMessage && (
-        <div className="bg-green-100 text-green-700 p-2 mb-4 rounded-md">
-          {successMessage}
-        </div>
-      )}
+        {successMessage && (
+          <div className="bg-green-100 text-green-700 p-4 mb-6 rounded-md shadow-sm dark:bg-green-800 dark:text-green-300">
+            {successMessage}
+          </div>
+        )}
 
-      <AnnouncementForm onSubmit={handleSubmit} />
+        <AnnouncementForm onSubmit={handleSubmit} />
+      </div>
     </ModalWrapper>
   );
 };
-
 
 export default AnnouncementCreateView;

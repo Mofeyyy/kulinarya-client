@@ -40,6 +40,7 @@ const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"))
 const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
 const AnnouncementCreateView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"));
 const AnnouncementFullView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"));
+const ResendVerificationPage = lazy(() => import("@/pages/auth/ResendVerificationPage"));
 
 
 // Layouts
@@ -103,6 +104,7 @@ const router = createBrowserRouter([
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyPage /> },
+  { path: "resend-verification", element: <ResendVerificationPage /> },
   { path: "forgot-password", element: <ForgotPasswordPage /> },
   { path: "reset-password", element: <ResetPasswordPage /> },
 
@@ -143,12 +145,19 @@ const App = () => {
 
   // Fetch User Details
   useEffect(() => {
-    if (fetchedUserData) {
+    if (fetchedUserData?.user) {
       const user = fetchedUserData.user;
       const canPostRecipe = fetchedUserData.canPostRecipe;
       setUserDetails({ ...user, canPostRecipe });
+  
+      if (user.isEmailVerified === false) {
+        useAuthStore.getState().logout();
+        router.navigate("/resend-verification");
+      }
     }
   }, [fetchedUserData, setUserDetails]);
+  
+
 
   // Pending Moderation Toast
   useEffect(() => {

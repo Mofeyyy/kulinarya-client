@@ -18,7 +18,7 @@ const ModalWrapper = ({ children, onClose, maxWidth = "max-w-md" }) => {
       >
         <motion.div
           ref={modalRef}
-          className={`relative w-11/12 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800 ${maxWidth}`}
+          className={`relative w-11/12 rounded-lg bg-background ${maxWidth}`}
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
