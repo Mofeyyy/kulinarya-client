@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 // Imported Custom Hooks
 import usePageStore from "@/hooks/stores/usePageStore";
-import useFetchRecipe from "@/hooks/queries/useFetchRecipe";
+import useFetchApprovedRecipe from "@/hooks/queries/useFetchApprovedRecipe";
 import useRecipeStore from "@/hooks/stores/useRecipeStore";
 
 // Imported Custom Components
@@ -33,7 +33,7 @@ const ViewRecipe = () => {
   const setRecipe = useRecipeStore((state) => state.setRecipe);
   const clearRecipe = useRecipeStore((state) => state.clearRecipe);
 
-  const { data: recipeData, isLoading, error } = useFetchRecipe(recipeId);
+  const { data: recipeData, isLoading, error } = useFetchApprovedRecipe(recipeId);
 
   // Set and Clear Recipe State
   useEffect(() => {

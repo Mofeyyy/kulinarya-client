@@ -15,7 +15,7 @@ const useCommentMutations = (recipeId) => {
   const addCommentMutation = useMutation({
     mutationFn: addComment,
     onSuccess: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]);
+      queryClient.invalidateQueries(["recipe", recipeId, "view"]);
     },
   });
 
@@ -33,7 +33,7 @@ const useCommentMutations = (recipeId) => {
   const updateCommentMutation = useMutation({
     mutationFn: updateComment,
     onSuccess: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]);
+      queryClient.invalidateQueries(["recipe", recipeId, "view"]);
       toast.success("Comment successfully updated!", {
         duration: 5000,
       });
@@ -50,7 +50,7 @@ const useCommentMutations = (recipeId) => {
   const deleteCommentMutation = useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
-      queryClient.invalidateQueries(["recipe", recipeId]);
+      queryClient.invalidateQueries(["recipe", recipeId, "view"]);
       toast.success("Comment successfully deleted!", {
         duration: 5000,
       });

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import ImageWithFallback from "@/components/ImageWithFallback";
 import useAuthStore from "@/hooks/stores/useAuthStore";
 import RecipeOptions from "./RecipeOptions";
+import { Badge } from "@/components/ui/badge";
+import dayjs from "dayjs";
 
 // ------------------------------------------------------------
 
@@ -27,6 +29,13 @@ const RecipeDisplayCard = ({ recipe }) => {
   const { firstName, lastName } = byUser;
   const recipeOwner = `${firstName} ${lastName}`;
 
+  const showUpdatedBadge =
+    recipe.updatedAt &&
+    dayjs(recipe.updatedAt).diff(dayjs(recipe.createdAt), "minute") > 2 &&
+    dayjs().diff(dayjs(recipe.updatedAt), "hour") < 10;
+
+  console.log("Show Updated Badge:", showUpdatedBadge);
+
   return (
     <div
       onClick={(e) => {
@@ -45,11 +54,11 @@ const RecipeDisplayCard = ({ recipe }) => {
       />
 
       {/* Other Details  */}
-      <div className="flex flex-col gap-5">
-        <div className="flex justify-between">
-          <div>
-            <p className="text-foreground truncate text-xl font-bold">{title}</p>
-            <p className="text-muted-foreground truncate text-sm">{`By ${recipeOwner}`}</p>
+      <div className="flex w-full flex-col gap-5">
+        <div className="flex w-full justify-between gap-2">
+          <div className="flex w-full min-w-0 flex-col">
+            <p className="text-foreground truncate text-xl font-bold break-words">{title}</p>
+            <p className="text-muted-foreground truncate text-sm break-words">{`By ${recipeOwner}`}</p>
           </div>
 
           {isLoggedIn && byUser._id === userDetails?._id && (
@@ -76,6 +85,8 @@ const RecipeDisplayCard = ({ recipe }) => {
             <Eye className="size-5" />
             {totalViews}
           </div>
+
+          {showUpdatedBadge && <Badge className="animate-pulse text-[8px]">Updated</Badge>}
         </div>
       </div>
     </div>

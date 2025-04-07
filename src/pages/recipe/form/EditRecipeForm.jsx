@@ -117,7 +117,7 @@ const EditRecipeForm = ({ recipe }) => {
           updateRecipe({ recipeId: recipe._id, ...finalData }),
           {
             loading: "Updating recipe...",
-            success: "Recipe updated successfully!",
+            success: "Recipe updated successfully! Wait for moderation.",
           },
           {
             duration: 5000,
@@ -128,7 +128,7 @@ const EditRecipeForm = ({ recipe }) => {
         setHasUnsavedChanges(false);
 
         // Delay to ensure states are updated before navigate
-        setTimeout(() => navigateTo(`/recipes/${recipe._id}`), 0);
+        setTimeout(() => navigateTo(`/recipes`), 0);
       }
     } catch (error) {
       console.error("Failed to update recipe", error);

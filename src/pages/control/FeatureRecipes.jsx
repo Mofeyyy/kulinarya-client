@@ -90,7 +90,7 @@ const FeatureRecipes = () => {
   };
 
   // Table Head and Table Rows Declaration For Reusable Table
-  const tableHead = ["Recipe Title", "Author", "Total Engagement", "Created At", "isFeatured"];
+  const tableHead = ["Recipe Title", "Author", "Total Engagement", "Modified At", "isFeatured"];
   const tableRows = recipes?.map((recipe) => {
     return {
       key: recipe._id,
@@ -114,8 +114,10 @@ const FeatureRecipes = () => {
           className: "text-center",
         },
         {
-          key: "createdAt",
-          value: dayjs(recipe.createdAt).format("MMM DD, YYYY"),
+          key: "modifiedAt",
+          value: recipe.updatedAt
+            ? dayjs(recipe.updatedAt).format("MMM DD, YYYY")
+            : dayjs(recipe.createdAt).format("MMM DD, YYYY"),
           className: "text-center",
         },
         {
@@ -165,7 +167,11 @@ const FeatureRecipes = () => {
     <div className="flex w-full max-w-[90%] flex-col gap-5">
       {/* Search Input */}
       <div className="flex w-full items-center justify-end">
-        <SearchInput value={filters.search} onChange={(val) => updateFilters("search", val)} />
+        <SearchInput
+          value={filters.search}
+          onChange={(val) => updateFilters("search", val)}
+          className="sm:w-[100vw] sm:max-w-sm"
+        />
       </div>
 
       {/* Web Table View */}

@@ -37,12 +37,16 @@ const useLoginForm = () => {
       onSuccess: () => {
         login(data.user); // Set isLoggedIn and userDetails State
         queryClient.setQueryData(["userDetails"], data.user); // Update React Query Cache
-        toast.success("Login Success!");
+        toast.success("Login Success!", {
+          duration: 5000,
+        });
         navigateTo("/");
         reset();
       },
       onError: (error) => {
-        toast.error(error?.message || "Login Failed! Please try again.");
+        toast.error(error?.message || "Login Failed! Please try again.", {
+          duration: 5000,
+        });
         setFocus("email");
         reset();
       },

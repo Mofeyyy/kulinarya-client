@@ -7,14 +7,20 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 //  ----------------------------------------------------------
-const NotificationContent = ({ fromUserFullName, content, createdAt, isRead }) => {
+const NotificationContent = ({
+  fromUserFullName,
+  content,
+  dateDisplay,
+  isRead,
+  handleClickUser,
+}) => {
   return (
     <div className="flex flex-col">
       {/* From User Name */}
       <div className="flex items-center">
         <p
           className="text-foreground hover:text-primary notification-options cursor-pointer text-sm font-semibold transition-colors"
-          onClick={() => alert("Feature: User Profile")}
+          onClick={handleClickUser}
         >
           {fromUserFullName}
         </p>
@@ -23,7 +29,7 @@ const NotificationContent = ({ fromUserFullName, content, createdAt, isRead }) =
       </div>
 
       <p className="text-muted-foreground text-sm">{content}</p>
-      <p className="text-primary text-xs">{dayjs(createdAt).fromNow()}</p>
+      <p className="text-primary text-xs">{dayjs(dateDisplay).fromNow()}</p>
     </div>
   );
 };
