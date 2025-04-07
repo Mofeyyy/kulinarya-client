@@ -64,7 +64,7 @@ const StepThree = ({ onFormValidated, onBack }) => {
 
       for (const file of newFiles) {
         if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
-          toast.error(`Only JPEG, PNG, and WebP allowed`);
+          toast.error(`Only JPEG, JPG, PNG, and WebP allowed`);
           continue;
         }
 
@@ -117,7 +117,7 @@ const StepThree = ({ onFormValidated, onBack }) => {
       } else {
         // Image-specific validation
         if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
-          toast.error("Only JPEG, PNG, and WebP allowed");
+          toast.error("Only JPEG, JPG, PNG, and WebP allowed");
           return;
         }
 
