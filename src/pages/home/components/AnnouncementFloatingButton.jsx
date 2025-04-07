@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Megaphone } from "lucide-react"; // New icon for announcements
 import Modal from "../AnnouncementModal/AnnouncementModal"; // Import Modal
+import useAuthStore from "@/hooks/stores/useAuthStore"; // Import the auth store
 
 const AnnouncementFloatingButton = ({ announcements, userRole }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false); // State for create announcement modal
 
+  // Get the isLoggedIn state from useAuthStore
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // Use the store to check if user is logged in
+
   // Handle opening the modal to create an announcement
   const handleCreateAnnouncement = () => {
     setIsCreateModalOpen(true); // Open create modal
   };
+
+  // If the user is not logged in, return null to hide the button
+  if (!isLoggedIn) return null;
 
   return (
     <>

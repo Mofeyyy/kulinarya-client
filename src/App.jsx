@@ -31,20 +31,23 @@ const ViewRecipePage = lazy(() => import("@/pages/recipe/view/ViewRecipe"));
 const EditRecipePage = lazy(() => import("@/pages/recipe/EditRecipe"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const AdminDashboard = lazy(() => import("@/pages/control/AdminDashboard"));
-const PendingRecipePage = lazy(() => import("@/pages/control/PendingRecipePost"));
+const PendingRecipePage = lazy(() => import("@/pages/control/PendingRecipePage"));
 const FeatureRecipes = lazy(() => import("@/pages/control/FeatureRecipes"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
+const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
+//const RequestPasswordReset = lazy(() => import("@/pages/auth/RequestPasswordReset"));
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const ScreenLoader = lazy(() => import("@/components/ScreenLoader"));
 const ProtectedRoute = lazy(() => import("@/components/ProtectedRoute"));
-const AdminAnalyticsDashboard = lazy(() => import("@/pages/admin/AdminAnalyticsDashboard"))
+const AdminAnalyticsDashboard = lazy(() => import("@/pages/control/AnalyticsDashboard"));
 
 // DEFINED ROUTES
 const router = createBrowserRouter([
@@ -55,9 +58,9 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "admin/dashboard", element: <AdminDashboard /> },
-      { path: "admin/pending-recipes", element: <PendingRecipePost /> },
-      { path: "admin/feature-recipes", element: <FeatureRecipes /> },
+      { path: "control/dashboard", element: <AdminAnalyticsDashboard /> },
+      { path: "control/pending-recipes", element: <PendingRecipePage /> },
+      { path: "control/feature-recipes", element: <FeatureRecipes /> },
       { path: "profile", element: <ProfilePageView /> },
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementForm /> },
@@ -100,6 +103,8 @@ const router = createBrowserRouter([
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyPage /> },
+  { path: "forgot-password", element: <ForgotPasswordPage /> },
+  { path: "reset-password", element: <ResetPasswordPage /> },
 
   // Catch-all for 404 pages
   {

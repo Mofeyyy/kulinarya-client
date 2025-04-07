@@ -14,7 +14,7 @@ const HeaderNavLinks = () => {
 
   // Add "Control" button if user is admin or creator
   if (isUserAdminOrCreator) {
-    links.push({ name: "Control", href: "/admin/dashboard" });
+    links.push({ name: "Control", href: "/control/dashboard" });
   }
 
   return (
