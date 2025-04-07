@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createAnnouncementSchema } from "../../../../../../kulinarya-server/src/validations/announcementValidation";
+import { createAnnouncementSchema } from "@/schemas/createAnnouncementSchema";
 
 const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
   const {
