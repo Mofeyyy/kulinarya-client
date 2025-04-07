@@ -38,6 +38,7 @@ const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileVi
 const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
 const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
+const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -69,8 +70,9 @@ const router = createBrowserRouter([
           { path: "moderation/:recipeId", element: <ModerationPage /> },
 
           // Login Protected Profile Routes
-          { path: "profile", element: <ProfilePageView /> },
-          { path: "profile/:userId", element: <SpecificUserProfileView /> },
+          { path: "profile/:userId", element: <ProfilePageView /> },
+          // { path: "profile/:userId", element: <SpecificUserProfileView /> },
+          { path: "profile/edit", element: <ProfileEditPage /> },
         ],
       },
     ],
