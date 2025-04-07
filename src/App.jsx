@@ -35,12 +35,12 @@ const PendingRecipePage = lazy(() => import("@/pages/control/PendingRecipePage")
 const FeatureRecipes = lazy(() => import("@/pages/control/FeatureRecipes"));
 const ProfilePageView = lazy(() => import("@/pages/ProfileView"));
 const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileView"));
-const AnnouncementForm = lazy(() => import("@/pages/AnnouncmentForm"));
-const AnnouncementView = lazy(() => import("@/pages/AnnouncementView"));
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
 const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
-//const RequestPasswordReset = lazy(() => import("@/pages/auth/RequestPasswordReset"));
+const AnnouncementCreateView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"));
+const AnnouncementFullView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"));
+
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -63,8 +63,8 @@ const router = createBrowserRouter([
       { path: "control/feature-recipes", element: <FeatureRecipes /> },
       { path: "profile", element: <ProfilePageView /> },
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
-      { path: "announcements/create", element: <AnnouncementForm /> },
-      { path: "announcements/:announcementId", element: <AnnouncementView /> },
+      { path: "announcements/create", element: <AnnouncementCreateView /> },
+      { path: "announcements/:announcementId", element: <AnnouncementFullView /> },
       { path: "recipes", element: <RecipeFeedPage /> },
       { path: "recipes/:recipeId", element: <ViewRecipePage /> },
 
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <AdminDashboard /> },
       { path: "pending-recipes", element: <PendingRecipePage /> },
       { path: "feature-recipes", element: <FeatureRecipes /> },
-      { path: "announcements/create", element: <AnnouncementForm /> },
+      { path: "announcements/create", element: <AnnouncementCreateView /> },
     ],
   },
 
