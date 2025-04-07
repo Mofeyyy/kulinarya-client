@@ -15,6 +15,8 @@ const LandingPage = () => {
 
   const { data: topRecipeSharers = [] } = useTopSharers();
   const { data: topEngagedRecipes = [] } = useTopEngagedRecipes();
+  const filteredEngagedRecipes = topEngagedRecipes.filter((recipe) => recipe.totalEngagement > 0);
+  console.log("Top Engaged Recipes:", topEngagedRecipes);
 
   return (
     <section className="mb-20 flex w-full flex-col items-center justify-center gap-5 overflow-x-hidden sm:gap-10 lg:gap-16">
@@ -28,7 +30,7 @@ const LandingPage = () => {
 
         <CarouselSection
           title="Top Engaged Recipes"
-          items={topEngagedRecipes}
+          items={filteredEngagedRecipes}
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
         />
 

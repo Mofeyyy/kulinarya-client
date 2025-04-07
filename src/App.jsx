@@ -132,7 +132,9 @@ const App = () => {
   // Fetch User Details
   useEffect(() => {
     if (fetchedUserData) {
-      setUserDetails(fetchedUserData.user);
+      const user = fetchedUserData.user;
+      const canPostRecipe = fetchedUserData.canPostRecipe;
+      setUserDetails({ ...user, canPostRecipe });
     }
   }, [fetchedUserData, setUserDetails]);
 

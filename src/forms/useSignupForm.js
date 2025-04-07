@@ -36,7 +36,7 @@ const useSignupForm = () => {
           setFocus("firstName");
           reset();
         },
-      }
+      },
     );
   };
 

@@ -20,7 +20,7 @@ const Header = () => {
           <div className="flex items-center gap-5 sm:gap-10">
             <HeaderNavLinks />
             <NotificationDropdown />
-            <ToggleThemeIconButton className="sm:hidden" />
+            <ToggleThemeIconButton />
             <HeaderUserAvatar />
           </div>
 

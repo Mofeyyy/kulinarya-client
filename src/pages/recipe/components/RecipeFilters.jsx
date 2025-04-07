@@ -33,7 +33,11 @@ const RecipeFilters = ({ filters, updateFilters, resetFilters }) => {
       </div>
 
       <div className="flex h-full w-full flex-col gap-3 sm:w-auto md:flex-row">
-        <SearchInput value={filters.search} onChange={(val) => updateFilters("search", val)} />
+        <SearchInput
+          className="max-w-lg md:w-[30vw] md:max-w-sm"
+          value={filters.search}
+          onChange={(val) => updateFilters("search", val)}
+        />
 
         {hasFiltersChanged && (
           <Button onClick={resetFilters}>

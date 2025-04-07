@@ -1,20 +1,25 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuthStore from "@/hooks/stores/useAuthStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
 const ProtectedRoute = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const userDetails = useAuthStore((state) => state.userDetails);
+  const hasShownToast = useRef(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      toast.error("You must be logged in to access this page.", {
-        duration: 5000,
-      });
+    if (!isLoggedIn || !userDetails) {
+      if (!hasShownToast.current) {
+        toast.error("Unauthorized Access!", {
+          duration: 5000,
+        });
+        hasShownToast.current = true;
+      }
     }
   }, []);
 
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
+  return isLoggedIn && userDetails ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

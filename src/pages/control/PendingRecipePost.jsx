@@ -122,7 +122,7 @@ const PendingRecipes = () => {
   };
 
   // Table Head and Table Rows Declaration For Reusable Table
-  const tableHead = ["Recipe Title", "Author", "Reason", "Status"];
+  const tableHead = ["Recipe Title", "Author", "Reason", "Modified At"];
   const tableRows = pendingRecipes?.map((recipe) => {
     return {
       key: recipe._id,
@@ -142,10 +142,19 @@ const PendingRecipes = () => {
         },
         {
           key: "reason",
-          value: !!recipe.updatedAt ? "Recipe Update" : !!recipe.createdAt && "Recipe Creation",
+          value:
+            recipe.updatedAt && dayjs(recipe.updatedAt).diff(dayjs(recipe.createdAt), "minute") > 2
+              ? "Recipe Update"
+              : "Recipe Creation",
           className: "text-center",
         },
-        { key: "status", value: recipe.moderationInfo?.status, className: "text-center" },
+        {
+          key: "modifiedAt",
+          value: recipe.updatedAt
+            ? dayjs(recipe.updatedAt).format("MMM DD, YYYY")
+            : dayjs(recipe.createdAt).format("MMM DD, YYYY"),
+          className: "text-center",
+        },
       ],
 
       actions: [
@@ -198,7 +207,11 @@ const PendingRecipes = () => {
     <div className="flex w-full max-w-[90%] flex-col gap-5">
       {/* Search Input */}
       <div className="flex w-full items-center justify-end">
-        <SearchInput value={filters.search} onChange={(val) => updateFilters("search", val)} />
+        <SearchInput
+          value={filters.search}
+          onChange={(val) => updateFilters("search", val)}
+          className="sm:w-[100vw] sm:max-w-sm"
+        />
       </div>
 
       {/* Web Table View */}
@@ -206,7 +219,7 @@ const PendingRecipes = () => {
         tableHead={tableHead}
         tableRows={tableRows}
         isLoading={isLoading}
-        columnWidth="w-1/5"
+        columnWidth="w-1/6"
         hasPendingMutation={isModerating}
       />
 

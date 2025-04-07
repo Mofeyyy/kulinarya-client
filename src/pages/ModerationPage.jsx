@@ -98,7 +98,7 @@ const ModerationPage = () => {
             </Button>
           ) : (
             <>
-              <Button variant="outline" onClick={() => navigateTo(-1)}>
+              <Button variant="outline" className="text-foreground" onClick={() => navigateTo(-1)}>
                 Go Back
               </Button>
               <Button size="sm" onClick={() => navigateTo(`/recipes/${recipeId}/edit`)}>
