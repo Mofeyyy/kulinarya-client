@@ -86,7 +86,7 @@ const RecipeDisplayCard = ({ recipe }) => {
             {totalViews}
           </div>
 
-          {showUpdatedBadge && <Badge className="animate-pulse text-[8px]">Updated</Badge>}
+          {/* {showUpdatedBadge && <Badge className="animate-pulse text-[8px]">Updated</Badge>} */}
         </div>
       </div>
     </div>

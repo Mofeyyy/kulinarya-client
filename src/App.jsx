@@ -100,6 +100,7 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <AdminAnalyticsDashboard /> },
       { path: "pending-recipes", element: <PendingRecipePage /> },
       { path: "feature-recipes", element: <FeatureRecipes /> },
+      { path: "users", element: <AdminDashboard /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
     ],
   },

@@ -73,11 +73,11 @@ const StepThree = ({ onFormValidated, onBack }) => {
           continue;
         }
 
-        const isValidDimensions = await validateImageDimensions(file);
-        if (!isValidDimensions) {
-          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
-          continue;
-        }
+        // const isValidDimensions = await validateImageDimensions(file);
+        // if (!isValidDimensions) {
+        //   toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+        //   continue;
+        // }
 
         validFiles.push(file);
       }
@@ -126,11 +126,11 @@ const StepThree = ({ onFormValidated, onBack }) => {
           return;
         }
 
-        const isValidDimensions = await validateImageDimensions(file);
-        if (!isValidDimensions) {
-          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
-          return;
-        }
+        // const isValidDimensions = await validateImageDimensions(file);
+        // if (!isValidDimensions) {
+        //   toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+        //   return;
+        // }
       }
 
       setMediaPreview((prev) => ({

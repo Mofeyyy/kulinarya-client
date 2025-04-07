@@ -13,7 +13,7 @@ import useActiveAnnouncements from "@/hooks/queries/useAnnouncements";
 
 const LandingPage = () => {
   const { data: featuredRecipesData = [] } = useFeaturedRecipes();
-  // const featuredRecipes = featuredRecipesData.slice(0, 10);
+  const featuredRecipes = featuredRecipesData.slice(0, 10);
 
   const { data: topRecipeSharers = [] } = useTopSharers();
   const { data: topEngagedRecipes = [] } = useTopEngagedRecipes();
@@ -38,12 +38,11 @@ const LandingPage = () => {
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
         />
 
-        {/* //? Ask if this is necessary */}
-        {/* <CarouselSection
+        <CarouselSection
           title="Featured Recipes"
           items={featuredRecipes}
           renderItem={(recipe) => <RecipeDisplayCard recipe={recipe} />}
-        /> */}
+        />
 
         <hr className="-mt-5" />
 
@@ -63,7 +62,7 @@ const LandingPage = () => {
         <FourthSection />
 
         {/* Floating Announcement Button */}
-      <AnnouncementFloatingButton announcements={announcements} />
+        <AnnouncementFloatingButton announcements={announcements} />
       </div>
     </section>
   );
