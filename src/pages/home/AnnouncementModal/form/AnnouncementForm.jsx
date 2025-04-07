@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createAnnouncementSchema } from "../../../../../../kulinarya-server/src/validations/announcementValidation";
+import { createAnnouncementSchema } from "@/schemas/announcementValidation";
 
 const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
   const {
@@ -20,31 +20,31 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
           Title
         </label>
         <input
           {...register("title")}
-          className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-sm"
+          className="w-full rounded-md border bg-white px-3 py-2 text-sm dark:bg-gray-700"
         />
-        {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
+        {errors.title && <p className="text-xs text-red-500">{errors.title.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
           Content
         </label>
         <textarea
           {...register("content")}
           rows={4}
-          className="w-full px-3 py-2 border rounded-md resize-none bg-white dark:bg-gray-700 text-sm"
+          className="w-full resize-none rounded-md border bg-white px-3 py-2 text-sm dark:bg-gray-700"
         />
-        {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>}
+        {errors.content && <p className="text-xs text-red-500">{errors.content.message}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
       >
         Submit
       </button>

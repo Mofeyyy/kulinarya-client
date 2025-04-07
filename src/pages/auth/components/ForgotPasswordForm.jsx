@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { forgotPasswordSchema } from "../../../../../kulinarya-server/src/validations/userValidations";
+import { forgotPasswordSchema } from "@/schemas/userValidations";
 import API from "@/config/axios";
 import toast from "react-hot-toast";
 

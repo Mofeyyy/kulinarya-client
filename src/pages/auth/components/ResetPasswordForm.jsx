@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordSchema } from "../../../../../kulinarya-server/src/validations/userValidations";
+import { resetPasswordSchema } from "@/schemas/userValidations";
 import API from "@/config/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,11 @@ export const useResetPasswordForm = (token) => {
     mode: "onChange",
   });
 
-  const { control, handleSubmit, formState: { isSubmitting } } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = async (data) => {
     try {
