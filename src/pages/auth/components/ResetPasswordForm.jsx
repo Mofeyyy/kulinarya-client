@@ -14,7 +14,11 @@ export const useResetPasswordForm = (token) => {
     mode: "onChange",
   });
 
-  const { control, handleSubmit, formState: { isSubmitting } } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = async (data) => {
     try {

@@ -38,11 +38,14 @@ const SpecificUserProfileView = lazy(() => import("@/pages/SpecificUserProfileVi
 const ModerationPage = lazy(() => import("@/pages/ModerationPage"));
 const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPasswordPage"));
-const AnnouncementCreateView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"));
-const AnnouncementFullView = lazy(() => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"));
+const AnnouncementCreateView = lazy(
+  () => import("@/pages/home/AnnouncementModal/views/AnnouncementCreateView"),
+);
+const AnnouncementFullView = lazy(
+  () => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"),
+);
 const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
 const ResendVerificationPage = lazy(() => import("@/pages/auth/ResendVerificationPage"));
-
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -95,6 +98,7 @@ const router = createBrowserRouter([
       { path: "dashboard", element: <AdminAnalyticsDashboard /> },
       { path: "pending-recipes", element: <PendingRecipePage /> },
       { path: "feature-recipes", element: <FeatureRecipes /> },
+      { path: "users", element: <AdminDashboard /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
     ],
   },

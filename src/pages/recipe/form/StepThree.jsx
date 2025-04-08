@@ -64,7 +64,7 @@ const StepThree = ({ onFormValidated, onBack }) => {
 
       for (const file of newFiles) {
         if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
-          toast.error(`Only JPEG, PNG, and WebP allowed`);
+          toast.error(`Only JPEG, JPG, PNG, and WebP allowed`);
           continue;
         }
 
@@ -73,11 +73,11 @@ const StepThree = ({ onFormValidated, onBack }) => {
           continue;
         }
 
-        const isValidDimensions = await validateImageDimensions(file);
-        if (!isValidDimensions) {
-          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
-          continue;
-        }
+        // const isValidDimensions = await validateImageDimensions(file);
+        // if (!isValidDimensions) {
+        //   toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+        //   continue;
+        // }
 
         validFiles.push(file);
       }
@@ -117,7 +117,7 @@ const StepThree = ({ onFormValidated, onBack }) => {
       } else {
         // Image-specific validation
         if (validateFileType(file, ALLOWED_IMAGE_TYPES)) {
-          toast.error("Only JPEG, PNG, and WebP allowed");
+          toast.error("Only JPEG, JPG, PNG, and WebP allowed");
           return;
         }
 
@@ -126,11 +126,11 @@ const StepThree = ({ onFormValidated, onBack }) => {
           return;
         }
 
-        const isValidDimensions = await validateImageDimensions(file);
-        if (!isValidDimensions) {
-          toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
-          return;
-        }
+        // const isValidDimensions = await validateImageDimensions(file);
+        // if (!isValidDimensions) {
+        //   toast.error(`Image dimensions must be smaller than ${MAX_WIDTH}x${MAX_HEIGHT}px`);
+        //   return;
+        // }
       }
 
       setMediaPreview((prev) => ({

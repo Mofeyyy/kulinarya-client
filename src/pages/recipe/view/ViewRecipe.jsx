@@ -63,11 +63,11 @@ const ViewRecipe = () => {
   }, [recipe]);
 
   // Track Post View
-  // useEffect(() => {
-  //   if (recipeId) {
-  //     trackPostView(recipeId); // Track view when the page loads
-  //   }
-  // }, [recipeId]);
+  useEffect(() => {
+    if (recipeId) {
+      trackPostView(recipeId); // Track view when the page loads
+    }
+  }, [recipeId]);
 
   if (error) return <NotFoundPage />;
   if (isLoading || !recipe) return <ScreenLoader />;

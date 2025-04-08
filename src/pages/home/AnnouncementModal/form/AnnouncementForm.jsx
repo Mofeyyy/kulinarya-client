@@ -20,18 +20,18 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
           Title
         </label>
         <input
           {...register("title")}
           className="w-full px-3 py-2 border rounded-md bg-background text-sm"
         />
-        {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
+        {errors.title && <p className="text-xs text-red-500">{errors.title.message}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
           Content
         </label>
         <textarea
@@ -39,7 +39,7 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
           rows={4}
           className="w-full px-3 py-2 border rounded-md resize-none bg bg-background text-sm"
         />
-        {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>}
+        {errors.content && <p className="text-xs text-red-500">{errors.content.message}</p>}
       </div>
 
       <button
