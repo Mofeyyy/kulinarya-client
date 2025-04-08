@@ -108,7 +108,7 @@ const HeaderSheet = () => {
               {isUserAdminOrCreator && (
                 <SheetNavButton
                   label={"Control"}
-                  href={"/admin/dashboard"}
+                  href={"/control/dashboard"}
                   Icon={UserCog}
                   setOpen={setOpen}
                 />
