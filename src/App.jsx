@@ -45,6 +45,7 @@ const AnnouncementFullView = lazy(
   () => import("@/pages/home/AnnouncementModal/views/AnnouncementFullView"),
 );
 const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
+const ResendVerificationPage = lazy(() => import("@/pages/auth/ResendVerificationPage"));
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -62,11 +63,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      // { path: "control/dashboard", element: <AdminAnalyticsDashboard /> },
-      // { path: "control/pending-recipes", element: <PendingRecipePage /> },
-      // { path: "control/feature-recipes", element: <FeatureRecipes /> },
-      // { path: "profile", element: <ProfilePageView /> },
-      // { path: "profile/:userId", element: <SpecificUserProfileView /> },
+      { path: "profile", element: <ProfilePageView /> },
+      { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
       { path: "announcements/:announcementId", element: <AnnouncementFullView /> },
       { path: "recipes", element: <RecipeFeedPage /> },
@@ -109,6 +107,7 @@ const router = createBrowserRouter([
   { path: "login", element: <LoginPage /> },
   { path: "signup", element: <SignupPage /> },
   { path: "verify-email", element: <VerifyPage /> },
+  { path: "resend-verification", element: <ResendVerificationPage /> },
   { path: "forgot-password", element: <ForgotPasswordPage /> },
   { path: "reset-password", element: <ResetPasswordPage /> },
 
@@ -149,12 +148,19 @@ const App = () => {
 
   // Fetch User Details
   useEffect(() => {
-    if (fetchedUserData) {
+    if (fetchedUserData?.user) {
       const user = fetchedUserData.user;
       const canPostRecipe = fetchedUserData.canPostRecipe;
       setUserDetails({ ...user, canPostRecipe });
+  
+      if (user.isEmailVerified === false) {
+        useAuthStore.getState().logout();
+        router.navigate("/resend-verification");
+      }
     }
   }, [fetchedUserData, setUserDetails]);
+  
+
 
   // Pending Moderation Toast
   useEffect(() => {

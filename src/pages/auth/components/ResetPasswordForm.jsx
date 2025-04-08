@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resetPasswordSchema } from "@/schemas/userValidations";
+import { resetPasswordSchema } from "@/schemas/resetForgotPasswordSchema";
 import API from "@/config/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

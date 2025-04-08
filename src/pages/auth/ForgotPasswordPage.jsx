@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
         <span className="ml-2 text-gray-900 dark:text-white">Back</span>
       </Link>
 
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow p-8 space-y-6">
+      <div className="w-full max-w-md bg-background rounded-2xl shadow p-8 space-y-6">
         <Logo className="mx-auto size-20" />
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Forgot Password</h1>
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
                       type="email"
                       placeholder="m@example.com"
                       {...field}
-                      className="bg-white dark:bg-gray-700"
+                      className="bg-background"
                     />
                   </FormControl>
                   <FormMessage className="text-red-500" />

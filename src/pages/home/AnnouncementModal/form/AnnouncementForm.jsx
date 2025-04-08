@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createAnnouncementSchema } from "@/schemas/announcementValidation";
+import { createAnnouncementSchema } from "@/schemas/createAnnouncementSchema";
 
 const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
   const {
@@ -25,7 +25,7 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
         </label>
         <input
           {...register("title")}
-          className="w-full rounded-md border bg-white px-3 py-2 text-sm dark:bg-gray-700"
+          className="w-full px-3 py-2 border rounded-md bg-background text-sm"
         />
         {errors.title && <p className="text-xs text-red-500">{errors.title.message}</p>}
       </div>
@@ -37,14 +37,14 @@ const AnnouncementForm = ({ onSubmit, defaultValues = {} }) => {
         <textarea
           {...register("content")}
           rows={4}
-          className="w-full resize-none rounded-md border bg-white px-3 py-2 text-sm dark:bg-gray-700"
+          className="w-full px-3 py-2 border rounded-md resize-none bg bg-background text-sm"
         />
         {errors.content && <p className="text-xs text-red-500">{errors.content.message}</p>}
       </div>
 
       <button
         type="submit"
-        className="w-full rounded-md bg-blue-600 py-2 text-white hover:bg-blue-700"
+        className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition-all focus:outline-none"
       >
         Submit
       </button>
