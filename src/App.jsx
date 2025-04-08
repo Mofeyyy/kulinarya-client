@@ -60,9 +60,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "control/dashboard", element: <AdminAnalyticsDashboard /> },
-      { path: "control/pending-recipes", element: <PendingRecipePage /> },
-      { path: "control/feature-recipes", element: <FeatureRecipes /> },
       { path: "profile", element: <ProfilePageView /> },
       { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
@@ -95,7 +92,7 @@ const router = createBrowserRouter([
     element: <ControlLayout />,
     errorElement: <NotFoundPage />, // Handles errors inside ControlLayout
     children: [
-      { path: "dashboard", element: <AdminDashboard /> },
+      { path: "dashboard", element: <AdminAnalyticsDashboard /> },
       { path: "pending-recipes", element: <PendingRecipePage /> },
       { path: "feature-recipes", element: <FeatureRecipes /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
