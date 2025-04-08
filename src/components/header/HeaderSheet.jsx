@@ -58,7 +58,7 @@ const HeaderSheet = () => {
 
   const userButtons = isUserLoggedIn
     ? [
-        { label: "Profile", Icon: User, onClick: () => navigateTo("/profile") },
+        { label: "Profile", Icon: User, onClick: () => navigateTo(`/profile/${userDetails._id}`) },
         { label: "Logout", Icon: LogOut, onClick: handleLogout },
       ]
     : [

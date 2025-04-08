@@ -44,6 +44,7 @@ import useFetchUserData from "@/hooks/queries/useFetchUserData";
 
 // Imported Mutations
 import useUserInfoMutation from "@/hooks/mutations/useUserInfoMutation";
+import userChangePassword from "@/hooks/mutations/useChangePassword";
 
 // Imported Icons
 import { Loader2 } from "lucide-react";
@@ -69,6 +70,24 @@ const profilePictureSchema = z.object({
   profilePictureUrl: z.union([z.string().url(), z.instanceof(File), z.literal("")]).nullable(),
 });
 
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(6, "Current password is required"),
+    newPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .max(100)
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/[0-9]/, "Password must contain at least one number")
+      .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
+    confirmNewPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    path: ["confirmNewPassword"],
+    message: "Passwords do not match",
+  });
+
 // ----------------------------------------------------------------
 
 const ProfileEditPage = () => {
@@ -83,8 +102,8 @@ const ProfileEditPage = () => {
       title: "Update Profile Picture",
       component: <UpdateProfilePictureTab user={user} />,
     },
-    { value: "password", title: "Change Password", component: <ChangePasswordTab /> },
-    { value: "delete", title: "Delete Account", component: <DeleteAccountTab /> },
+    { value: "password", title: "Change Password", component: <ChangePasswordTab user={user} /> },
+    // { value: "delete", title: "Delete Account", component: <DeleteAccountTab /> },
   ];
 
   // For Debugging
@@ -108,7 +127,7 @@ const ProfileEditPage = () => {
 
         <CardContent>
           <Tabs defaultValue="info" className="w-full gap-8">
-            <TabsList className="bg-background grid w-full grid-cols-4 rounded-none">
+            <TabsList className="bg-background grid w-full grid-cols-3 rounded-none">
               {tabItems.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -250,7 +269,7 @@ const PersonalInfoTab = ({ user }) => {
   );
 };
 
-export const UpdateProfilePictureTab = ({ user }) => {
+const UpdateProfilePictureTab = ({ user }) => {
   const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
   const [previewUrl, setPreviewUrl] = useState(user.profilePictureUrl || null);
@@ -352,14 +371,106 @@ export const UpdateProfilePictureTab = ({ user }) => {
   );
 };
 
-const ChangePasswordTab = () => {
+const ChangePasswordTab = ({ user }) => {
+  const { openDialog, ConfirmDialog } = useConfirmDialog();
+  const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
+  const navigateTo = useNavigate();
+
+  console.log("User Data:", user);
+
+  const form = useForm({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    },
+    resolver: zodResolver(changePasswordSchema),
+  });
+
+  const { mutateAsync: updatePassword, isPending } = userChangePassword();
+
+  const onSubmit = async (values) => {
+    const confirm = await openDialog("Are you sure you want to change your password?");
+    if (!confirm) return;
+
+    try {
+      await toast.promise(
+        updatePassword({
+          userId: user._id,
+          passwordData: {
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+          },
+        }),
+        {
+          loading: "Updating password...",
+          success: "Password updated successfully!",
+        },
+        { duration: 5000 },
+      );
+
+      setHasUnsavedChanges(false);
+      setTimeout(() => navigateTo(`/profile/${user._id}`), 0);
+    } catch (error) {
+      console.error("Error updating password:", error);
+      toast.error(error.message || "Something went wrong", { duration: 5000 });
+    }
+  };
+
   return (
-    <div className="mt-4 space-y-4">
-      <Input placeholder="Current Password" type="password" />
-      <Input placeholder="New Password" type="password" />
-      <Input placeholder="Confirm New Password" type="password" />
-      <Button className="mt-2">Update Password</Button>
-    </div>
+    <Form {...form}>
+      <div className="flex justify-center">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex w-full max-w-sm flex-col gap-4"
+        >
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input {...field} placeholder="Current Password" type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input {...field} placeholder="New Password" type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmNewPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input {...field} placeholder="Confirm New Password" type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="self-end" disabled={isPending}>
+            {isPending ? "Updating..." : "Update Password"}
+          </Button>
+
+          {ConfirmDialog}
+        </form>
+      </div>
+    </Form>
   );
 };
 
