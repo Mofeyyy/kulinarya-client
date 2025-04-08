@@ -63,8 +63,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "profile", element: <ProfilePageView /> },
-      { path: "profile/:userId", element: <SpecificUserProfileView /> },
+      // { path: "profile", element: <ProfilePageView /> },
+      // { path: "profile/:userId", element: <SpecificUserProfileView /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
       { path: "announcements/:announcementId", element: <AnnouncementFullView /> },
       { path: "recipes", element: <RecipeFeedPage /> },
@@ -152,15 +152,13 @@ const App = () => {
       const user = fetchedUserData.user;
       const canPostRecipe = fetchedUserData.canPostRecipe;
       setUserDetails({ ...user, canPostRecipe });
-  
+
       if (user.isEmailVerified === false) {
         useAuthStore.getState().logout();
         router.navigate("/resend-verification");
       }
     }
   }, [fetchedUserData, setUserDetails]);
-  
-
 
   // Pending Moderation Toast
   useEffect(() => {
