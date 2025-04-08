@@ -65,6 +65,10 @@ const personalInfoSchema = z.object({
     .optional(),
 });
 
+const profilePictureSchema = z.object({
+  profilePictureUrl: z.union([z.string().url(), z.instanceof(File), z.literal("")]).nullable(),
+});
+
 // ----------------------------------------------------------------
 
 const ProfileEditPage = () => {
@@ -74,10 +78,19 @@ const ProfileEditPage = () => {
 
   const tabItems = [
     { value: "info", title: "Personal Info", component: <PersonalInfoTab user={user} /> },
-    { value: "picture", title: "Update Profile Picture", component: <UpdateProfilePictureTab /> },
+    {
+      value: "picture",
+      title: "Update Profile Picture",
+      component: <UpdateProfilePictureTab user={user} />,
+    },
     { value: "password", title: "Change Password", component: <ChangePasswordTab /> },
     { value: "delete", title: "Delete Account", component: <DeleteAccountTab /> },
   ];
+
+  // For Debugging
+  useEffect(() => {
+    console.log("User Data:", user);
+  }, [user]);
 
   if (isLoading) return <MiniLoader />;
   if (!user || error)
@@ -119,6 +132,7 @@ const ProfileEditPage = () => {
   );
 };
 
+// * Working
 const PersonalInfoTab = ({ user }) => {
   const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
   const { openDialog, ConfirmDialog } = useConfirmDialog();
@@ -236,45 +250,105 @@ const PersonalInfoTab = ({ user }) => {
   );
 };
 
-const UpdateProfilePictureTab = () => {
-  const [profilePic, setProfilePic] = useState(null);
+export const UpdateProfilePictureTab = ({ user }) => {
+  const setHasUnsavedChanges = useUnsavedChangesStore((state) => state.setHasUnsavedChanges);
+  const { openDialog, ConfirmDialog } = useConfirmDialog();
+  const [previewUrl, setPreviewUrl] = useState(user.profilePictureUrl || null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const navigateTo = useNavigate();
 
+  const form = useForm({
+    defaultValues: {
+      profilePictureUrl: user.profilePictureUrl || "",
+    },
+    resolver: zodResolver(profilePictureSchema),
+  });
+
+  const { mutateAsync: updateProfilePicture, isPending } = useUserInfoMutation();
+
+  const onSubmit = async () => {
+    const confirm = await openDialog("Are you sure you want to update your profile picture?");
+    if (!confirm || !selectedFile) return;
+
+    console.log("Selected File:", selectedFile);
+
+    try {
+      await toast.promise(
+        updateProfilePicture({ userId: user._id, userData: { profilePictureUrl: selectedFile } }),
+        {
+          loading: "Updating profile picture...",
+          success: "Profile picture updated successfully!",
+        },
+        {
+          duration: 5000,
+        },
+      );
+      setHasUnsavedChanges(false);
+
+      // Delay to ensure states are updated before navigate
+      setTimeout(() => navigateTo(`/profile/${user._id}`), 0);
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      toast.error(error.message, {
+        duration: 5000,
+      });
+    }
+  };
+
+  // Monitor for unsaved changes
+  useEffect(() => {
+    setHasUnsavedChanges(Object.keys(form.formState.dirtyFields).length > 0);
+  }, [form.formState.dirtyFields]);
   return (
-    <div className="flex flex-col items-center gap-5">
-      {/* Avatar and Upload */}
-      <div className="flex flex-col items-center gap-2">
-        <Avatar className="size-40 border-4">
-          <AvatarImage
-            src={profilePic || "https://api.dicebear.com/7.x/initials/svg?seed=JD"}
-            alt="Profile"
-          />
-          <AvatarFallback>JD</AvatarFallback>
-        </Avatar>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col items-center gap-5">
+        <FormField
+          control={form.control}
+          name="profilePictureUrl"
+          render={() => (
+            <FormItem>
+              <FormControl>
+                <div className="flex flex-col items-center gap-2">
+                  <Avatar className={`size-40 border-4 ${selectedFile && "border-primary"}`}>
+                    <AvatarImage src={previewUrl || ""} alt="Profile" />
+                    <AvatarFallback className="text-xl font-semibold">
+                      {user.firstName[0]}
+                      {user.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
 
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              const imageUrl = URL.createObjectURL(file);
-              setProfilePic(imageUrl);
-            }
-          }}
-          className="hidden"
-          id="file-upload"
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    id="file-upload"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSelectedFile(file);
+                        setPreviewUrl(URL.createObjectURL(file));
+                      }
+                    }}
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="text-primary cursor-pointer text-sm hover:underline"
+                  >
+                    Upload New Picture
+                  </label>
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
         />
-        <label
-          htmlFor="file-upload"
-          className="text-primary cursor-pointer text-sm hover:underline"
-        >
-          Upload New Picture
-        </label>
-      </div>
 
-      {/* Save Button */}
-      <Button className="self-end">Save Picture</Button>
-    </div>
+        <Button type="submit" className="self-end" disabled={isPending || !selectedFile}>
+          {isPending ? "Saving..." : "Save Picture"}
+        </Button>
+
+        {ConfirmDialog}
+      </form>
+    </Form>
   );
 };
 
