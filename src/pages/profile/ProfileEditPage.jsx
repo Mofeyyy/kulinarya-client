@@ -125,9 +125,9 @@ const ProfileEditPage = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="!text-foreground">
           <Tabs defaultValue="info" className="w-full gap-8">
-            <TabsList className="bg-background grid w-full grid-cols-3 rounded-none">
+            <TabsList className="bg-background grid h-fit w-full gap-2 rounded-none sm:grid-cols-3">
               {tabItems.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
