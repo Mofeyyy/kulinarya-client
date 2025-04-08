@@ -46,6 +46,7 @@ const AnnouncementFullView = lazy(
 );
 const ProfileEditPage = lazy(() => import("@/pages/profile/ProfileEditPage"));
 const ResendVerificationPage = lazy(() => import("@/pages/auth/ResendVerificationPage"));
+const RecipeRankings = lazy(() => import("@/pages/control/RecipeRankings"));
 
 // Layouts
 const ControlLayout = lazy(() => import("@/layouts/ControlLayout"));
@@ -100,6 +101,7 @@ const router = createBrowserRouter([
       { path: "feature-recipes", element: <FeatureRecipes /> },
       { path: "users", element: <AdminDashboard /> },
       { path: "announcements/create", element: <AnnouncementCreateView /> },
+      { path: "ranked-recipes", element: <RecipeRankings /> },
     ],
   },
 

@@ -6,15 +6,43 @@ import handleApiRequest from "@/utils/handleApiRequest";
 
 const fetchFilteredRecipes = async ({ queryKey }) => {
   const [_, filters] = queryKey;
-  const { origin, category, search, page, limit, sortOrder, forFeaturedRecipes, userId } = filters;
+  const {
+    origin,
+    category,
+    search,
+    page,
+    limit,
+    sortOrder,
+    forFeaturedRecipes,
+    userId,
+    forRankingRecipes,
+  } = filters;
 
   const hasParams =
-    origin || category || search || page || limit || sortOrder || forFeaturedRecipes || userId;
+    origin ||
+    category ||
+    search ||
+    page ||
+    limit ||
+    sortOrder ||
+    forFeaturedRecipes ||
+    userId ||
+    forRankingRecipes;
 
   const response = await handleApiRequest(() =>
     API.get("/recipes/approved", {
       params: hasParams
-        ? { origin, category, search, page, limit, sortOrder, forFeaturedRecipes, userId }
+        ? {
+            origin,
+            category,
+            search,
+            page,
+            limit,
+            sortOrder,
+            forFeaturedRecipes,
+            userId,
+            forRankingRecipes,
+          }
         : {},
     }),
   );

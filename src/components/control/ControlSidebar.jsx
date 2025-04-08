@@ -17,6 +17,7 @@ import {
   Ellipsis,
   CircleX,
   Sparkles,
+  AlignEndHorizontal,
 } from "lucide-react";
 
 // Imported Custom Components
@@ -40,6 +41,7 @@ const items = [
       { title: "Approved", url: "/control/approved-recipes", Icon: CircleCheck },
       { title: "Rejected", url: "/control/rejected-recipes", Icon: CircleX },
       { title: "Featured", url: "/control/feature-recipes", Icon: Sparkles },
+      { title: "Rankings", url: "/control/ranked-recipes", Icon: AlignEndHorizontal },
     ],
   },
   {
