@@ -17,7 +17,7 @@ const UserCard = ({ user }) => {
       <p className="font-semibolb flex justify-center truncate text-lg">
         {user.firstName} {user.lastName}
       </p>
-      <Link to={`/users/${user._id}`}>
+      <Link to={`/profile/${user._id}`}>
         <Button>View Profile</Button>
       </Link>
     </div>
