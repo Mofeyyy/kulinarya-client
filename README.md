@@ -71,15 +71,21 @@ I focused on **backend development** and helped in integrating key APIs into the
 - Supabase account
 - Email provider (e.g., Gmail for Nodemailer)
 
-### Backend Setup
+🌐 Live Demo
+👉 https://kulinarya-client.vercel.app/
+
+
+### Backend Setup / Frontend Setup
 ```bash
 cd backend
 npm install
 npm run dev
 
+Frontend
+
 cd client
 npm install
 npm run dev
 
-LIVE DEMO
-https://kulinarya-client.vercel.app/
+
+
